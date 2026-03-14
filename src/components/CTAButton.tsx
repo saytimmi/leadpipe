@@ -8,7 +8,7 @@ interface CTAButtonProps {
 }
 
 export default function CTAButton({
-  text = "Разобраться",
+  text = "Узнать подробнее",
   targetId = "form",
 }: CTAButtonProps) {
   const handleClick = () => {
@@ -18,17 +18,11 @@ export default function CTAButton({
   return (
     <motion.button
       onClick={handleClick}
-      whileHover={{ scale: 1.02, y: -2 }}
-      whileTap={{ scale: 0.98 }}
-      className="group relative cursor-pointer overflow-hidden rounded-full bg-dark px-10 py-5 font-display text-lg font-600 text-white transition-shadow duration-300 hover:shadow-2xl hover:shadow-dark/20"
+      whileHover={{ scale: 1.03, y: -2 }}
+      whileTap={{ scale: 0.97 }}
+      className="shimmer group relative cursor-pointer overflow-hidden rounded-full bg-gradient-to-r from-accent via-purple to-accent bg-[length:200%_auto] px-10 py-5 font-display text-lg font-600 text-white transition-all duration-500 hover:bg-right hover:shadow-[0_0_40px_rgba(0,71,255,0.3),0_0_80px_rgba(124,58,237,0.15)]"
     >
       <span className="relative z-10">{text}</span>
-      <motion.div
-        className="absolute inset-0 bg-accent"
-        initial={{ x: "-100%" }}
-        whileHover={{ x: 0 }}
-        transition={{ duration: 0.3, ease: "easeInOut" }}
-      />
     </motion.button>
   );
 }

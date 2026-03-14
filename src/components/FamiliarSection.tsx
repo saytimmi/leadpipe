@@ -5,11 +5,11 @@ import { useRef } from "react";
 import AnimatedText from "./AnimatedText";
 
 const paragraphs = [
-  "Ты запускаешь рекламу. Люди начинают писать.",
-  "Кто-то спрашивает цену — ему ответили через три часа. Он уже нашёл другого.",
-  "Кто-то написал вечером — ему ответили утром. Он забыл, о чём спрашивал.",
-  "Кто-то задал вопрос, ему ответили, он сказал «подумаю» — и всё. Никто ему больше не написал.",
-  "В конце месяца ты смотришь: на рекламу ушло нормально. Заявки были. А клиентов — три с половиной.",
+  "Ты вложил в рекламу. Люди написали. Кто-то спросил цену — ему ответили через три часа. Он уже купил у конкурента.",
+  "Кто-то написал вечером — ему ответили утром. Он забыл, зачем писал. Ты потерял клиента, который был готов платить.",
+  "Кто-то спросил, ему ответили, он сказал «подумаю» — и тишина. Ему никто не написал. А он ждал.",
+  "И так каждый день. Ты платишь за каждого из этих людей. Они приходят. А потом просто исчезают.",
+  "В конце месяца цифры: на рекламу ушло 150 000. Заявок — 80. Клиентов — четыре. И ты думаешь: «Реклама не работает». Но реклама работала. Не работал процесс после неё.",
 ];
 
 export default function FamiliarSection() {
@@ -26,6 +26,9 @@ export default function FamiliarSection() {
       id="familiar"
       className="relative flex min-h-screen flex-col items-center justify-center px-6 py-32"
     >
+      {/* Decorative elements */}
+      <div className="pointer-events-none absolute right-0 top-1/4 h-[500px] w-[500px] rounded-full bg-accent/5 blur-[150px]" />
+
       <div className="mx-auto max-w-3xl">
         {/* Section label */}
         <motion.div
@@ -36,20 +39,22 @@ export default function FamiliarSection() {
           className="mb-16"
         >
           <span className="font-display text-xs font-600 uppercase tracking-[0.3em] text-warm">
-            01 — Ситуация
+            01 — Узнаёшь себя?
           </span>
-          <h2 className="mt-4 font-display text-5xl font-800 tracking-tight text-dark md:text-7xl">
-            Знакомо?
+          <h2 className="mt-4 font-display text-5xl font-800 tracking-tight text-white md:text-7xl">
+            Деньги в рекламу.
+            <br />
+            <span className="text-white/20">Клиенты — мимо.</span>
           </h2>
         </motion.div>
 
         {/* Content with animated left line */}
         <div className="relative pl-10 md:pl-16">
-          {/* Animated vertical line */}
-          <div className="absolute left-0 top-0 h-full w-px bg-dark/5">
+          {/* Animated vertical line with gradient */}
+          <div className="absolute left-0 top-0 h-full w-px bg-white/5">
             <motion.div
               style={{ height: lineHeight }}
-              className="w-full bg-warm"
+              className="w-full bg-gradient-to-b from-warm via-accent to-purple"
             />
           </div>
 
