@@ -5,13 +5,11 @@ import { motion } from "framer-motion";
 interface CTAButtonProps {
   text?: string;
   targetId?: string;
-  variant?: "primary" | "secondary";
 }
 
 export default function CTAButton({
   text = "Разобраться",
   targetId = "form",
-  variant = "primary",
 }: CTAButtonProps) {
   const handleClick = () => {
     document.getElementById(targetId)?.scrollIntoView({ behavior: "smooth" });
@@ -20,15 +18,17 @@ export default function CTAButton({
   return (
     <motion.button
       onClick={handleClick}
-      whileHover={{ scale: 1.03 }}
+      whileHover={{ scale: 1.02, y: -2 }}
       whileTap={{ scale: 0.98 }}
-      className={`cursor-pointer rounded-full px-8 py-4 text-lg font-semibold transition-all ${
-        variant === "primary"
-          ? "cta-gradient text-white shadow-lg shadow-accent/25 hover:shadow-xl hover:shadow-accent/30"
-          : "border-2 border-gray-200 bg-white text-dark hover:border-accent hover:text-accent"
-      }`}
+      className="group relative cursor-pointer overflow-hidden rounded-full bg-dark px-10 py-5 font-display text-lg font-600 text-white transition-shadow duration-300 hover:shadow-2xl hover:shadow-dark/20"
     >
-      {text}
+      <span className="relative z-10">{text}</span>
+      <motion.div
+        className="absolute inset-0 bg-accent"
+        initial={{ x: "-100%" }}
+        whileHover={{ x: 0 }}
+        transition={{ duration: 0.3, ease: "easeInOut" }}
+      />
     </motion.button>
   );
 }

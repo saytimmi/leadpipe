@@ -1,6 +1,7 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
+import { useRef } from "react";
 import AnimatedText from "./AnimatedText";
 
 const paragraphs = [
@@ -12,30 +13,46 @@ const paragraphs = [
 ];
 
 export default function FamiliarSection() {
+  const ref = useRef(null);
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start end", "end start"],
+  });
+  const lineHeight = useTransform(scrollYProgress, [0, 0.8], ["0%", "100%"]);
+
   return (
     <section
+      ref={ref}
       id="familiar"
-      className="relative flex min-h-screen flex-col items-center justify-center px-6 py-24"
+      className="relative flex min-h-screen flex-col items-center justify-center px-6 py-32"
     >
-      {/* Decorative element */}
-      <div className="absolute right-0 top-0 h-full w-1/3 dots-pattern opacity-30" />
-
-      <div className="relative z-10 mx-auto max-w-2xl">
+      <div className="mx-auto max-w-3xl">
+        {/* Section label */}
         <motion.div
-          initial={{ opacity: 0, x: -20 }}
+          initial={{ opacity: 0, x: -30 }}
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
+          className="mb-16"
         >
-          <span className="mb-4 inline-block rounded-full bg-accent/10 px-4 py-1.5 text-sm font-medium text-accent">
-            Узнаёшь себя?
+          <span className="font-display text-xs font-600 uppercase tracking-[0.3em] text-warm">
+            01 — Ситуация
           </span>
-          <h2 className="mb-12 text-4xl font-extrabold tracking-tight text-dark md:text-6xl">
+          <h2 className="mt-4 font-display text-5xl font-800 tracking-tight text-dark md:text-7xl">
             Знакомо?
           </h2>
         </motion.div>
 
-        <div className="border-l-2 border-accent/20 pl-8">
+        {/* Content with animated left line */}
+        <div className="relative pl-10 md:pl-16">
+          {/* Animated vertical line */}
+          <div className="absolute left-0 top-0 h-full w-px bg-dark/5">
+            <motion.div
+              style={{ height: lineHeight }}
+              className="w-full bg-warm"
+            />
+          </div>
+
           <AnimatedText paragraphs={paragraphs} />
         </div>
       </div>

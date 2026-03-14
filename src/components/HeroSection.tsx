@@ -1,100 +1,110 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
+import { useRef } from "react";
 import CTAButton from "./CTAButton";
 
 const floatingMessages = [
-  { text: "Сколько стоит?", x: "8%", y: "22%", delay: 0 },
-  { text: "Здравствуйте!", x: "78%", y: "18%", delay: 0.8 },
-  { text: "Хочу записаться", x: "65%", y: "72%", delay: 1.6 },
-  { text: "Есть в наличии?", x: "12%", y: "68%", delay: 2.4 },
-  { text: "Подскажите...", x: "82%", y: "48%", delay: 3.2 },
-  { text: "Когда можно?", x: "5%", y: "45%", delay: 4 },
-  { text: "Цена?", x: "72%", y: "35%", delay: 1.2 },
+  { text: "Сколько стоит?", x: "6%", y: "25%", delay: 0 },
+  { text: "Здравствуйте!", x: "80%", y: "20%", delay: 1 },
+  { text: "Хочу записаться", x: "70%", y: "75%", delay: 2 },
+  { text: "Есть в наличии?", x: "8%", y: "70%", delay: 3 },
+  { text: "Подскажите...", x: "85%", y: "50%", delay: 4 },
+  { text: "Цена?", x: "15%", y: "48%", delay: 1.5 },
 ];
 
 export default function HeroSection() {
+  const ref = useRef(null);
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start start", "end start"],
+  });
+  const y = useTransform(scrollYProgress, [0, 1], [0, 200]);
+  const opacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
+
   return (
     <section
+      ref={ref}
       id="hero"
-      className="hero-gradient relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-6"
+      className="hero-mesh noise-overlay relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-6"
     >
-      {/* Decorative circles */}
-      <div className="absolute left-1/2 top-1/2 h-[600px] w-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full border border-accent/5" />
-      <div className="absolute left-1/2 top-1/2 h-[400px] w-[400px] -translate-x-1/2 -translate-y-1/2 rounded-full border border-accent/10" />
-      <div className="absolute left-1/2 top-1/2 h-[200px] w-[200px] -translate-x-1/2 -translate-y-1/2 rounded-full border border-accent/15" />
+      {/* Large decorative text in background */}
+      <div className="absolute inset-0 flex items-center justify-center overflow-hidden">
+        <span className="select-none font-display text-[20vw] font-900 leading-none text-dark/[0.02]">
+          LEADPIPE
+        </span>
+      </div>
 
-      {/* Floating message bubbles */}
+      {/* Floating messages */}
       {floatingMessages.map((msg, i) => (
         <motion.div
           key={i}
-          className="absolute hidden rounded-2xl border border-gray-100 bg-white px-4 py-2.5 text-sm text-muted shadow-sm md:block"
+          className="absolute hidden rounded-full border border-dark/5 bg-white/90 px-5 py-2.5 font-display text-sm font-500 text-muted shadow-sm backdrop-blur-sm md:block"
           style={{ left: msg.x, top: msg.y }}
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{
-            opacity: [0, 0.8, 0.8, 0],
-            scale: [0.8, 1, 1, 0.6],
-            y: [0, -5, -5, -80],
+            opacity: [0, 0.6, 0.6, 0],
+            scale: [0.8, 1, 1, 0.7],
+            y: [0, -8, -8, -100],
           }}
           transition={{
-            duration: 5,
+            duration: 6,
             delay: msg.delay,
             repeat: Infinity,
-            repeatDelay: 4,
+            repeatDelay: 5,
           }}
         >
-          <div className="absolute -bottom-1 left-4 h-3 w-3 rotate-45 border-b border-r border-gray-100 bg-white" />
           {msg.text}
         </motion.div>
       ))}
 
-      <div className="relative z-10 text-center">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
+      <motion.div style={{ y, opacity }} className="relative z-10 text-center">
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+          className="mb-6 font-display text-sm font-600 uppercase tracking-[0.3em] text-accent"
         >
-          <h1 className="mx-auto max-w-4xl text-5xl font-extrabold leading-[1.1] tracking-tight text-dark md:text-7xl lg:text-8xl">
-            Ты тратишь на{" "}
-            <span className="bg-gradient-to-r from-dark to-muted bg-clip-text">рекламу.</span>
-            <br />
-            <span className="text-muted/60">Люди пишут.</span>
-            <br />
-            <span className="bg-gradient-to-r from-accent to-blue-400 bg-clip-text text-transparent">
-              А дальше?
-            </span>
-          </h1>
-        </motion.div>
+          Для тех, кто устал гадать
+        </motion.p>
+
+        <motion.h1
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
+          className="mx-auto max-w-5xl font-display text-5xl font-800 leading-[1.05] tracking-tight text-dark md:text-7xl lg:text-[5.5rem]"
+        >
+          Ты тратишь
+          <br />
+          на рекламу.
+          <br />
+          <span className="italic text-muted/40" style={{ fontFamily: "var(--font-body)" }}>
+            Люди пишут.
+          </span>
+          <br />
+          <span className="relative inline-block">
+            <span className="relative z-10 text-accent">А дальше?</span>
+            <motion.span
+              initial={{ scaleX: 0 }}
+              animate={{ scaleX: 1 }}
+              transition={{ duration: 0.6, delay: 1.2, ease: [0.16, 1, 0.3, 1] }}
+              className="absolute bottom-2 left-0 right-0 -z-0 h-3 origin-left bg-accent/10 md:h-4"
+            />
+          </span>
+        </motion.h1>
 
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.8 }}
-          className="mt-12 flex flex-col items-center gap-4 sm:flex-row sm:justify-center"
+          transition={{ duration: 0.6, delay: 1 }}
+          className="mt-14"
         >
-          <CTAButton text="Читай дальше" targetId="familiar" />
+          <CTAButton text="Читай дальше ↓" targetId="familiar" />
         </motion.div>
+      </motion.div>
 
-        {/* Scroll indicator */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 2 }}
-          className="mt-16"
-        >
-          <motion.div
-            animate={{ y: [0, 8, 0] }}
-            transition={{ duration: 2, repeat: Infinity }}
-            className="mx-auto h-10 w-6 rounded-full border-2 border-gray-300"
-          >
-            <motion.div
-              animate={{ y: [2, 14, 2] }}
-              transition={{ duration: 2, repeat: Infinity }}
-              className="mx-auto mt-1 h-2 w-1.5 rounded-full bg-gray-400"
-            />
-          </motion.div>
-        </motion.div>
-      </div>
+      {/* Bottom gradient line */}
+      <div className="absolute bottom-0 left-0 right-0 h-px gradient-line" />
     </section>
   );
 }

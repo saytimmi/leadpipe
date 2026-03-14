@@ -15,40 +15,41 @@ export default function ProblemSection() {
   return (
     <section
       id="problem"
-      className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-light px-6 py-24"
+      className="noise-overlay relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-cream px-6 py-32"
     >
-      {/* Decorative gradient blob */}
-      <div className="absolute -left-32 top-1/4 h-64 w-64 rounded-full bg-red-100/50 blur-3xl" />
-      <div className="absolute -right-32 bottom-1/4 h-64 w-64 rounded-full bg-orange-100/50 blur-3xl" />
-
-      <div className="relative z-10 mx-auto max-w-2xl">
+      <div className="relative z-10 mx-auto max-w-3xl">
         <motion.div
-          initial={{ opacity: 0, x: -20 }}
+          initial={{ opacity: 0, x: -30 }}
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
+          className="mb-16"
         >
-          <span className="mb-4 inline-block rounded-full bg-red-50 px-4 py-1.5 text-sm font-medium text-red-500">
-            Проблема
+          <span className="font-display text-xs font-600 uppercase tracking-[0.3em] text-warm">
+            02 — Проблема
           </span>
-          <h2 className="mb-12 text-4xl font-extrabold tracking-tight text-dark md:text-6xl">
-            Вот в чём проблема
+          <h2 className="mt-4 font-display text-5xl font-800 tracking-tight text-dark md:text-7xl">
+            Вот в чём
+            <br />
+            <span className="italic text-warm" style={{ fontFamily: "var(--font-body)" }}>
+              проблема
+            </span>
           </h2>
         </motion.div>
 
         <AnimatedText paragraphs={paragraphs} />
 
         <motion.div
-          initial={{ opacity: 0, y: 40 }}
+          initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
-          className="mt-16 rounded-2xl border border-gray-200/60 bg-white/80 p-8 backdrop-blur-sm"
+          className="mt-20"
         >
           <FunnelDiagram />
         </motion.div>
 
-        <div className="mt-12 text-center">
+        <div className="mt-16 text-center">
           <CTAButton />
         </div>
       </div>

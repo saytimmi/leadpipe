@@ -25,80 +25,93 @@ export default function SolutionSection() {
   return (
     <section
       id="solution"
-      className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-light px-6 py-24"
+      className="noise-overlay relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-cream px-6 py-32"
     >
-      <div className="absolute inset-0 dots-pattern opacity-20" />
-
-      <div className="relative z-10 mx-auto max-w-2xl">
+      <div className="relative z-10 mx-auto max-w-3xl">
         <motion.div
-          initial={{ opacity: 0, x: -20 }}
+          initial={{ opacity: 0, x: -30 }}
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
+          className="mb-16"
         >
-          <span className="mb-4 inline-block rounded-full bg-accent/10 px-4 py-1.5 text-sm font-medium text-accent">
-            Как это работает
+          <span className="font-display text-xs font-600 uppercase tracking-[0.3em] text-accent">
+            04 — Решение
           </span>
-          <h2 className="mb-12 text-4xl font-extrabold tracking-tight text-dark md:text-6xl">
-            Что мы делаем
+          <h2 className="mt-4 font-display text-5xl font-800 tracking-tight text-dark md:text-7xl">
+            Что мы
+            <br />
+            <span className="italic" style={{ fontFamily: "var(--font-body)" }}>
+              делаем
+            </span>
           </h2>
         </motion.div>
 
         <AnimatedText paragraphs={paragraphs} />
 
-        {/* Phone mockup with chat */}
+        {/* Phone mockup */}
         <motion.div
-          initial={{ opacity: 0, y: 50 }}
+          initial={{ opacity: 0, y: 60 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
-          className="mt-16 flex justify-center"
+          transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+          className="mt-20 flex justify-center"
         >
-          <div className="w-full max-w-sm overflow-hidden rounded-[2rem] border-[3px] border-gray-800 bg-gray-800 shadow-2xl">
-            {/* Phone top bar */}
-            <div className="flex items-center justify-center bg-gray-800 py-2">
-              <div className="h-5 w-24 rounded-full bg-gray-900" />
+          <div className="w-full max-w-[340px] overflow-hidden rounded-[2.5rem] border-[6px] border-dark bg-dark shadow-2xl shadow-dark/30">
+            {/* Phone notch */}
+            <div className="flex items-center justify-center bg-dark py-2">
+              <div className="h-6 w-28 rounded-full bg-dark" />
             </div>
 
             {/* Chat header */}
-            <div className="flex items-center gap-3 bg-white px-4 py-3 border-b border-gray-100">
-              <div className="flex h-9 w-9 items-center justify-center rounded-full bg-accent">
-                <span className="text-xs font-bold text-white">LP</span>
+            <div className="flex items-center gap-3 bg-[#075E54] px-4 py-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white/20">
+                <span className="font-display text-xs font-700 text-white">LP</span>
               </div>
               <div>
-                <p className="text-sm font-semibold text-dark">LeadPipe</p>
-                <p className="text-xs text-green-500">онлайн</p>
+                <p className="font-display text-sm font-600 text-white">LeadPipe</p>
+                <p className="font-display text-xs text-white/70">онлайн</p>
               </div>
             </div>
 
-            {/* Chat messages */}
-            <div className="space-y-2 bg-[#ECE5DD] p-4" style={{ minHeight: "380px" }}>
+            {/* Chat */}
+            <div
+              className="space-y-2 bg-[#ECE5DD] p-3"
+              style={{
+                backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23000' fill-opacity='0.02'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+              }}
+            >
               {chatMessages.map((msg, i) => (
                 <motion.div
                   key={i}
-                  initial={{ opacity: 0, y: 15, scale: 0.95 }}
+                  initial={{ opacity: 0, y: 12, scale: 0.95 }}
                   whileInView={{ opacity: 1, y: 0, scale: 1 }}
                   viewport={{ once: true }}
-                  transition={{ duration: 0.3, delay: i * 0.15 }}
+                  transition={{ duration: 0.3, delay: i * 0.12 }}
                   className={`flex ${msg.from === "client" ? "justify-end" : "justify-start"}`}
                 >
                   <div
-                    className={`relative max-w-[80%] rounded-xl px-3 py-2 text-sm chat-shadow ${
+                    className={`relative max-w-[80%] rounded-lg px-3 py-2 text-[13px] leading-relaxed shadow-sm ${
                       msg.from === "client"
                         ? "bg-[#DCF8C6] text-dark"
                         : "bg-white text-dark"
                     }`}
                   >
                     {msg.text}
-                    <span className="ml-2 text-[10px] text-gray-400">{msg.time}</span>
+                    <span className="ml-2 text-[10px] text-dark/30">{msg.time}</span>
                   </div>
                 </motion.div>
               ))}
             </div>
+
+            {/* Phone bottom bar */}
+            <div className="flex items-center justify-center bg-dark py-2">
+              <div className="h-1 w-32 rounded-full bg-white/30" />
+            </div>
           </div>
         </motion.div>
 
-        <div className="mt-12 text-center">
+        <div className="mt-16 text-center">
           <CTAButton />
         </div>
       </div>
