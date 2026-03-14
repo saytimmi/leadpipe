@@ -1,5 +1,6 @@
 "use client";
 
+import { motion } from "framer-motion";
 import AnimatedText from "./AnimatedText";
 import FunnelDiagram from "./FunnelDiagram";
 import CTAButton from "./CTAButton";
@@ -14,16 +15,39 @@ export default function ProblemSection() {
   return (
     <section
       id="problem"
-      className="flex min-h-screen flex-col items-center justify-center bg-light px-6 py-24"
+      className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-light px-6 py-24"
     >
-      <div className="mx-auto max-w-2xl">
-        <h2 className="mb-12 text-3xl font-bold text-dark md:text-5xl">
-          Вот в чём проблема
-        </h2>
+      {/* Decorative gradient blob */}
+      <div className="absolute -left-32 top-1/4 h-64 w-64 rounded-full bg-red-100/50 blur-3xl" />
+      <div className="absolute -right-32 bottom-1/4 h-64 w-64 rounded-full bg-orange-100/50 blur-3xl" />
+
+      <div className="relative z-10 mx-auto max-w-2xl">
+        <motion.div
+          initial={{ opacity: 0, x: -20 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+        >
+          <span className="mb-4 inline-block rounded-full bg-red-50 px-4 py-1.5 text-sm font-medium text-red-500">
+            Проблема
+          </span>
+          <h2 className="mb-12 text-4xl font-extrabold tracking-tight text-dark md:text-6xl">
+            Вот в чём проблема
+          </h2>
+        </motion.div>
+
         <AnimatedText paragraphs={paragraphs} />
-        <div className="mt-16">
+
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
+          className="mt-16 rounded-2xl border border-gray-200/60 bg-white/80 p-8 backdrop-blur-sm"
+        >
           <FunnelDiagram />
-        </div>
+        </motion.div>
+
         <div className="mt-12 text-center">
           <CTAButton />
         </div>

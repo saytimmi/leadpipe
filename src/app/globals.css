@@ -2,6 +2,7 @@
 
 @theme inline {
   --color-accent: #2563EB;
+  --color-accent-light: #DBEAFE;
   --color-accent-dark: #1D4ED8;
   --color-dark: #111827;
   --color-muted: #6B7280;
@@ -15,4 +16,48 @@ html {
 
 body {
   @apply bg-white text-dark antialiased;
+}
+
+/* Hero gradient background */
+.hero-gradient {
+  background: radial-gradient(ellipse 80% 60% at 50% -20%, rgba(37, 99, 235, 0.12) 0%, transparent 70%);
+}
+
+/* Section divider wave */
+.section-wave {
+  background: linear-gradient(180deg, transparent 0%, var(--color-light) 100%);
+}
+
+/* Glow effect for dashboard mockup */
+.dashboard-glow {
+  box-shadow: 0 0 80px rgba(37, 99, 235, 0.1), 0 20px 60px rgba(0, 0, 0, 0.08);
+}
+
+/* Chat bubble subtle shadow */
+.chat-shadow {
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+}
+
+/* Animated gradient for CTA */
+.cta-gradient {
+  background: linear-gradient(135deg, #2563EB 0%, #1D4ED8 50%, #3B82F6 100%);
+  background-size: 200% 200%;
+  animation: gradient-shift 3s ease infinite;
+}
+
+@keyframes gradient-shift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Decorative dots pattern */
+.dots-pattern {
+  background-image: radial-gradient(circle, rgba(37, 99, 235, 0.08) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+/* Funnel gradient bars */
+.funnel-bar {
+  background: linear-gradient(90deg, rgba(37, 99, 235, 0.15) 0%, rgba(37, 99, 235, 0.05) 100%);
 }

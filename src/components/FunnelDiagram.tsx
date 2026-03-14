@@ -3,36 +3,48 @@
 import { motion } from "framer-motion";
 
 const stages = [
-  { label: "Написали", width: 100 },
-  { label: "Получили ответ", width: 70 },
-  { label: "Узнали что нужно", width: 40 },
-  { label: "Дошли до конца", width: 20 },
-  { label: "Стали клиентами", width: 8 },
+  { label: "Написали", count: "100 человек", width: 100, color: "bg-accent/20" },
+  { label: "Получили ответ", count: "60", width: 65, color: "bg-accent/15" },
+  { label: "Узнали что нужно", count: "30", width: 38, color: "bg-orange-100" },
+  { label: "Дошли до конца", count: "10", width: 18, color: "bg-red-100" },
+  { label: "Стали клиентами", count: "3", width: 8, color: "bg-red-200" },
 ];
 
 export default function FunnelDiagram() {
   return (
-    <div className="mx-auto flex max-w-md flex-col items-center gap-2">
+    <div className="mx-auto flex max-w-lg flex-col items-center gap-3">
+      <p className="mb-4 text-center text-sm font-medium text-muted">
+        Куда уходят заявки?
+      </p>
       {stages.map((stage, i) => (
         <motion.div
           key={stage.label}
           initial={{ opacity: 0, scaleX: 0 }}
           whileInView={{ opacity: 1, scaleX: 1 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: i * 0.2 }}
-          className="flex flex-col items-center"
+          transition={{ duration: 0.6, delay: i * 0.15, ease: "easeOut" }}
+          className="flex w-full flex-col items-center origin-center"
         >
           <div
-            className="rounded-lg bg-accent/20 py-3 text-center text-sm font-medium text-dark transition-all"
-            style={{ width: `${stage.width * 3.5}px` }}
+            className={`${stage.color} flex items-center justify-between rounded-xl px-5 py-3.5 transition-all`}
+            style={{ width: `${Math.max(stage.width, 25)}%` }}
           >
-            {stage.label}
+            <span className="text-sm font-medium text-dark">{stage.label}</span>
+            <span className="text-sm font-bold text-dark/60">{stage.count}</span>
           </div>
-          {i < stages.length - 1 && (
-            <div className="h-2 w-px bg-accent/30" />
-          )}
         </motion.div>
       ))}
+      <motion.p
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true }}
+        transition={{ delay: 1.2 }}
+        className="mt-4 text-center text-sm text-muted"
+      >
+        Остальные 97 — не плохие заявки.
+        <br />
+        Им просто никто нормально не ответил.
+      </motion.p>
     </div>
   );
 }
