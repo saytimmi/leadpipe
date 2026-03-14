@@ -3,18 +3,18 @@
 import { motion } from "framer-motion";
 
 const stages = [
-  { label: "Написали", count: "100", width: 100 },
-  { label: "Получили ответ", count: "60", width: 60 },
-  { label: "Узнали что нужно", count: "30", width: 30 },
-  { label: "Дошли до конца", count: "10", width: 10 },
-  { label: "Стали клиентами", count: "3", width: 3 },
+  { label: "Написали", count: "100", width: 100, color: "from-accent to-accent/80" },
+  { label: "Получили ответ", count: "60", width: 60, color: "from-accent/70 to-purple/60" },
+  { label: "Узнали что нужно", count: "30", width: 30, color: "from-purple/60 to-warm/50" },
+  { label: "Дошли до конца", count: "10", width: 10, color: "from-warm/50 to-warm/40" },
+  { label: "Стали клиентами", count: "3", width: 3, color: "from-warm/40 to-warm/30" },
 ];
 
 export default function FunnelDiagram() {
   return (
-    <div className="rounded-3xl border border-dark/5 bg-white p-8 md:p-12">
-      <p className="mb-8 font-display text-sm font-600 uppercase tracking-[0.2em] text-muted">
-        Куда уходят заявки
+    <div className="glass overflow-hidden rounded-2xl p-8 md:p-12">
+      <p className="mb-8 font-display text-sm font-600 uppercase tracking-[0.2em] text-white/30">
+        Куда утекают твои деньги
       </p>
 
       <div className="space-y-4">
@@ -27,21 +27,22 @@ export default function FunnelDiagram() {
             transition={{ duration: 0.5, delay: i * 0.12 }}
             className="flex items-center gap-4"
           >
-            <span className="w-20 shrink-0 text-right font-display text-2xl font-800 text-dark md:w-24 md:text-3xl">
+            <span className="w-16 shrink-0 text-right font-display text-2xl font-800 text-white md:w-20 md:text-3xl">
               {stage.count}
             </span>
             <div className="flex-1">
-              <div className="relative h-10 overflow-hidden rounded-lg bg-dark/[0.03]">
+              <div className="relative h-12 overflow-hidden rounded-xl bg-white/[0.03]">
                 <motion.div
                   initial={{ width: 0 }}
                   whileInView={{ width: `${stage.width}%` }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.8, delay: 0.3 + i * 0.15, ease: [0.16, 1, 0.3, 1] }}
-                  className={`absolute inset-y-0 left-0 rounded-lg ${
-                    i < 2 ? "bg-accent/15" : i < 4 ? "bg-warm/20" : "bg-warm/40"
-                  }`}
+                  className={`absolute inset-y-0 left-0 rounded-xl bg-gradient-to-r ${stage.color}`}
+                  style={{
+                    boxShadow: i === 0 ? "0 0 30px rgba(0, 71, 255, 0.2)" : undefined,
+                  }}
                 />
-                <span className="relative flex h-full items-center px-4 font-display text-sm font-500 text-dark">
+                <span className="relative flex h-full items-center px-4 font-display text-sm font-500 text-white/70">
                   {stage.label}
                 </span>
               </div>
@@ -50,17 +51,21 @@ export default function FunnelDiagram() {
         ))}
       </div>
 
-      <motion.p
+      <motion.div
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
         viewport={{ once: true }}
         transition={{ delay: 1.2 }}
-        className="mt-8 border-t border-dark/5 pt-6 text-center font-body text-lg italic text-muted"
+        className="mt-8 border-t border-white/5 pt-6 text-center"
       >
-        Остальные 97 — не плохие заявки.
-        <br />
-        Им просто никто нормально не ответил.
-      </motion.p>
+        <p className="font-body text-lg text-white/40">
+          97 человек заплатили за рекламу. Но{" "}
+          <span className="font-semibold text-warm">никто им нормально не ответил.</span>
+        </p>
+        <p className="mt-2 font-display text-sm font-500 text-white/20">
+          Это не плохие заявки. Это потерянные деньги.
+        </p>
+      </motion.div>
     </div>
   );
 }

@@ -6,12 +6,15 @@ import VisibilitySection from "@/components/VisibilitySection";
 import SolutionSection from "@/components/SolutionSection";
 import FormSection from "@/components/FormSection";
 import Footer from "@/components/Footer";
+import ScrollBackground from "@/components/ScrollBackground";
+import SmoothScroll from "@/components/SmoothScroll";
 
 export default function Home() {
   return (
-    <>
+    <SmoothScroll>
+      <ScrollBackground />
       <Header />
-      <main className="pt-16">
+      <main>
         <HeroSection />
         <FamiliarSection />
         <ProblemSection />
@@ -20,6 +23,6 @@ export default function Home() {
         <FormSection />
       </main>
       <Footer />
-    </>
+    </SmoothScroll>
   );
 }
