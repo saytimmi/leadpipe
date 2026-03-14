@@ -1,64 +1,43 @@
 "use client";
 
-import { motion, useScroll, useTransform } from "framer-motion";
-import { useRef } from "react";
-import AnimatedText from "./AnimatedText";
+import { motion } from "framer-motion";
 
-const paragraphs = [
-  "Ты вложил в рекламу. Люди написали. Кто-то спросил цену — ему ответили через три часа. Он уже купил у конкурента.",
-  "Кто-то написал вечером — ему ответили утром. Он забыл, зачем писал. Ты потерял клиента, который был готов платить.",
-  "Кто-то спросил, ему ответили, он сказал «подумаю» — и тишина. Ему никто не написал. А он ждал.",
-  "И так каждый день. Ты платишь за каждого из этих людей. Они приходят. А потом просто исчезают.",
-  "В конце месяца цифры: на рекламу ушло 150 000. Заявок — 80. Клиентов — четыре. И ты думаешь: «Реклама не работает». Но реклама работала. Не работал процесс после неё.",
+const problems = [
+  { icon: "⏰", title: "Отвечаешь через 3 часа", desc: "Клиент уже купил у конкурента" },
+  { icon: "🌙", title: "Написали вечером", desc: "Утром уже всё забыли" },
+  { icon: "👻", title: "Сказал «подумаю»", desc: "Никто не напомнил. Ушёл навсегда" },
+  { icon: "📉", title: "150 000 ₽ на рекламу", desc: "В итоге — 4 клиента" },
 ];
 
 export default function FamiliarSection() {
-  const ref = useRef(null);
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start end", "end start"],
-  });
-  const lineHeight = useTransform(scrollYProgress, [0, 0.8], ["0%", "100%"]);
-
   return (
-    <section
-      ref={ref}
-      id="familiar"
-      className="relative flex min-h-screen flex-col items-center justify-center px-6 py-32"
-    >
-      {/* Decorative elements */}
-      <div className="pointer-events-none absolute right-0 top-1/4 h-[500px] w-[500px] rounded-full bg-accent/5 blur-[150px]" />
-
-      <div className="mx-auto max-w-3xl">
-        {/* Section label */}
-        <motion.div
-          initial={{ opacity: 0, x: -30 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="mb-16"
-        >
-          <span className="font-display text-xs font-600 uppercase tracking-[0.3em] text-warm">
-            01 — Узнаёшь себя?
-          </span>
-          <h2 className="mt-4 font-display text-5xl font-800 tracking-tight text-white md:text-7xl">
-            Деньги в рекламу.
-            <br />
-            <span className="text-white/20">Клиенты — мимо.</span>
-          </h2>
+    <section id="familiar" className="relative px-6 py-32">
+      <div className="mx-auto max-w-5xl">
+        <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-6 text-center">
+          <span className="font-display text-xs font-600 uppercase tracking-[0.3em] text-warm">01 — Узнаёшь?</span>
         </motion.div>
 
-        {/* Content with animated left line */}
-        <div className="relative pl-10 md:pl-16">
-          {/* Animated vertical line with gradient */}
-          <div className="absolute left-0 top-0 h-full w-px bg-white/5">
-            <motion.div
-              style={{ height: lineHeight }}
-              className="w-full bg-gradient-to-b from-warm via-accent to-purple"
-            />
-          </div>
+        <motion.h2 initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.1 }}
+          className="mb-16 text-center font-display text-5xl font-800 leading-tight text-white md:text-6xl">
+          Деньги потрачены.<br />
+          <span className="text-white/20">Клиенты — нет.</span>
+        </motion.h2>
 
-          <AnimatedText paragraphs={paragraphs} />
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          {problems.map((p, i) => (
+            <motion.div key={i}
+              initial={{ opacity: 0, y: 40, scale: 0.95 }}
+              whileInView={{ opacity: 1, y: 0, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: i * 0.1 }}
+              whileHover={{ y: -4, scale: 1.02 }}
+              className="glass rounded-2xl p-8 transition-all duration-300 hover:border-white/15"
+            >
+              <div className="mb-4 text-4xl">{p.icon}</div>
+              <h3 className="mb-2 font-display text-xl font-700 text-white">{p.title}</h3>
+              <p className="font-display text-base text-white/40">{p.desc}</p>
+            </motion.div>
+          ))}
         </div>
       </div>
     </section>
