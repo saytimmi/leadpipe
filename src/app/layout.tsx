@@ -2,16 +2,12 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "LeadPipe — Перестань терять клиентов",
+  title: "LeadPipe — Ты тратишь на рекламу. А дальше?",
   description:
-    "Система, которая мгновенно отвечает каждому клиенту, ведёт до записи и показывает реальные цифры твоего бизнеса. Для малого и среднего бизнеса.",
+    "Система, которая отвечает каждому клиенту, ведёт до конца и показывает реальные цифры твоего бизнеса.",
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="ru">
       <body>{children}</body>
