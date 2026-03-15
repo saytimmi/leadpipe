@@ -11,7 +11,7 @@ export default function HeroSection() {
   const scale = useTransform(scrollYProgress, [0, 1], [1, 0.88]);
 
   return (
-    <section ref={ref} className="noise relative h-[180vh]">
+    <section ref={ref} className="noise relative h-[120vh]">
       <div className="sticky top-0 flex h-[100dvh] flex-col items-center justify-center overflow-hidden px-6">
         <motion.div style={{ y, opacity, scale }} className="relative z-10 w-full max-w-[1400px]">
           {["Ты тратишь", "на рекламу.", "А дальше?"].map((line, i) => (

@@ -47,7 +47,6 @@ const colorMap: Record<string, string> = {
   lime: "#CCFF00", warm: "#FF6B35", dim: "#777777", white: "#ffffff",
 };
 
-// Only render lines near current scroll position — solves overflow on mobile
 const VISIBLE_WINDOW = 8;
 
 export default function StorySection() {
@@ -59,13 +58,11 @@ export default function StorySection() {
 
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  // Track which line is "current" based on scroll
   useMotionValueEvent(scrollYProgress, "change", (v) => {
     const idx = Math.floor(v * lines.length);
     setCurrentIndex(Math.min(idx, lines.length - 1));
   });
 
-  // Which lines to render: window around current
   const visibleRange = useMemo(() => {
     const start = Math.max(0, currentIndex - VISIBLE_WINDOW);
     const end = Math.min(lines.length, currentIndex + VISIBLE_WINDOW);
@@ -74,13 +71,13 @@ export default function StorySection() {
 
   return (
     <section ref={ref} id="story" className="relative" style={{ height: "400vh" }}>
-      <div className="sticky top-0 flex h-[100dvh] items-center overflow-hidden px-5 md:px-10">
-        {/* Gradient masks */}
-        <div className="pointer-events-none absolute inset-x-0 top-0 z-10 h-28 bg-gradient-to-b from-bg to-transparent" />
-        <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-28 bg-gradient-to-t from-bg to-transparent" />
+      <div className="sticky top-0 h-[100dvh] overflow-hidden">
+        {/* Gradient masks — 15% top and bottom */}
+        <div className="pointer-events-none absolute inset-x-0 top-0 z-10 h-[15dvh] bg-gradient-to-b from-bg via-bg/80 to-transparent" />
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-[15dvh] bg-gradient-to-t from-bg via-bg/80 to-transparent" />
 
-        {/* Section label */}
-        <div className="absolute inset-x-0 top-0 z-20 px-5 pt-20 md:px-10">
+        {/* Section label — inside top mask area */}
+        <div className="absolute inset-x-0 top-0 z-20 px-5 pt-[5dvh] md:px-10">
           <div className="mx-auto flex max-w-[1400px] items-center gap-4">
             <span className="font-display text-[10px] font-700 uppercase tracking-[0.3em] text-lime">01</span>
             <div className="h-px flex-1 bg-white/[0.04]" />
@@ -88,28 +85,28 @@ export default function StorySection() {
           </div>
         </div>
 
-        {/* Text — only render nearby lines */}
-        <div className="mx-auto w-full max-w-[1400px]">
-          <div className="space-y-3 md:space-y-3">
-            {lines.slice(visibleRange.start, visibleRange.end).map((line, localI) => {
-              const i = visibleRange.start + localI;
-              if (line.text === "") return <div key={i} className="h-3 md:h-4" />;
+        {/* Text area — centered between 15% top and 15% bottom = 70% middle zone */}
+        <div className="absolute inset-x-0 top-[18dvh] bottom-[15dvh] flex items-center px-5 md:px-10">
+          <div className="mx-auto w-full max-w-[1400px]">
+            <div className="space-y-2.5 md:space-y-3">
+              {lines.slice(visibleRange.start, visibleRange.end).map((line, localI) => {
+                const i = visibleRange.start + localI;
+                if (line.text === "") return <div key={i} className="h-2.5 md:h-4" />;
 
-              // How far is this line from "current"
-              const progress = scrollYProgress;
-              const linePos = i / lines.length;
+                const linePos = i / lines.length;
 
-              return (
-                <StoryLineDynamic
-                  key={i}
-                  line={line.text}
-                  linePos={linePos}
-                  scrollYProgress={progress}
-                  colorType={line.color || "white"}
-                  big={line.big || false}
-                />
-              );
-            })}
+                return (
+                  <StoryLineDynamic
+                    key={i}
+                    line={line.text}
+                    linePos={linePos}
+                    scrollYProgress={scrollYProgress}
+                    colorType={line.color || "white"}
+                    big={line.big || false}
+                  />
+                );
+              })}
+            </div>
           </div>
         </div>
       </div>
@@ -124,11 +121,10 @@ function StoryLineDynamic({ line, linePos, scrollYProgress, colorType, big }: {
   colorType: string;
   big: boolean;
 }) {
-  // Each line peaks when scroll matches its position
-  const before = Math.max(0, linePos - 0.08);
-  const after = Math.min(1, linePos + 0.15);
+  const before = Math.max(0, linePos - 0.1);
+  const after = Math.min(1, linePos + 0.18);
 
-  const opacity = useTransform(scrollYProgress, [before, linePos, after], [0.12, 1, 0.18]);
+  const opacity = useTransform(scrollYProgress, [before, linePos, after], [0.12, 1, 0.2]);
   const peakColor = colorMap[colorType] || "#ffffff";
   const color = useTransform(scrollYProgress, [before, linePos, after], ["#222", peakColor, "#333"]);
   const scale = useTransform(scrollYProgress, [before, linePos, after], [0.97, 1, 0.98]);
