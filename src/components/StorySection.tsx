@@ -3,38 +3,48 @@
 import { motion, useScroll, useTransform, MotionValue } from "framer-motion";
 import { useRef } from "react";
 
-const lines = [
-  "Пятница. Вечер.",
-  "Ты наконец запустил рекламу.",
-  "",
-  "Суббота, 23:14.",
-  "Кто-то пишет в WhatsApp:",
-  "«Здравствуйте, сколько стоит?»",
-  "",
-  "Ты видишь сообщение",
-  "в понедельник утром.",
-  "Открываешь чат.",
-  "Человек уже в сторис конкурента.",
-  "",
-  "Воскресенье, 10:00.",
-  "«Хочу записаться на среду.»",
-  "Ты отвечаешь в 19:00.",
-  "Девять часов.",
-  "Человек уже забыл, куда хотел.",
-  "",
-  "Ещё один пишет.",
-  "Ты ответил. Он спросил цену.",
-  "Ты скинул. Он написал «подумаю».",
-  "Ты не написал больше.",
-  "Он — тоже.",
-  "Навсегда.",
-  "",
-  "Конец месяца.",
-  "Реклама — 237 000 ₸.",
-  "Заявок — 93.",
-  "",
-  "Клиентов?",
-  "Восемь.",
+// color: "lime" | "warm" | "dim" | "white" (default)
+// big: true for emphasis lines
+const lines: { text: string; color?: string; big?: boolean }[] = [
+  { text: "Пятница. Вечер." },
+  { text: "Таргетолог запустил рекламу.", color: "dim" },
+  { text: "Бюджет — 237 000 ₸.", color: "lime" },
+  { text: "" },
+  { text: "Суббота, 23:14." },
+  { text: "В WhatsApp бизнес-аккаунта прилетает:", color: "dim" },
+  { text: "«Здравствуйте, сколько стоит?»", color: "lime" },
+  { text: "" },
+  { text: "Менеджер видит сообщение" },
+  { text: "в понедельник утром.", color: "warm" },
+  { text: "36 часов.", color: "warm", big: true },
+  { text: "Человек давно в сторис конкурента.", color: "dim" },
+  { text: "" },
+  { text: "Воскресенье, 10:00." },
+  { text: "«Хочу записаться на среду»", color: "lime" },
+  { text: "Отдел продаж отвечает в понедельник.", color: "dim" },
+  { text: "Человек забыл, куда хотел.", color: "warm" },
+  { text: "" },
+  { text: "Ещё одна заявка." },
+  { text: "Менеджер ответил. Клиент спросил цену.", color: "dim" },
+  { text: "Менеджер скинул прайс.", color: "dim" },
+  { text: "«Подумаю»", color: "lime" },
+  { text: "Менеджер не написал больше.", color: "warm" },
+  { text: "Клиент — тоже.", color: "warm" },
+  { text: "Навсегда.", color: "lime", big: true },
+  { text: "" },
+  { text: "Конец месяца." },
+  { text: "Таргетолог скидывает отчёт:", color: "dim" },
+  { text: "«107 лидов, цена лида 2 219 ₸»", color: "lime" },
+  { text: "Ты смотришь в CRM.", color: "dim" },
+  { text: "Клиентов?", color: "warm" },
+  { text: "Восемь.", color: "lime", big: true },
+  { text: "" },
+  { text: "Таргетолог отработал нормально." },
+  { text: "Реклама нормальная.", color: "dim" },
+  { text: "Продукт нужный.", color: "dim" },
+  { text: "Просто между «заявка» и «клиент» —" },
+  { text: "чёрная дыра.", color: "warm", big: true },
+  { text: "И никто не видит, что внутри.", color: "dim" },
 ];
 
 export default function StorySection() {
@@ -45,7 +55,7 @@ export default function StorySection() {
   });
 
   return (
-    <section ref={ref} id="story" className="relative" style={{ height: `${lines.length * 90 + 900}px` }}>
+    <section ref={ref} id="story" className="relative" style={{ height: `${lines.length * 85 + 1000}px` }}>
       <div className="sticky top-0 flex h-[100dvh] flex-col justify-center overflow-hidden px-6 lg:px-10">
         <div className="mx-auto w-full max-w-[1400px]">
           <div className="mb-8 flex items-center gap-4 md:mb-10">
@@ -56,21 +66,19 @@ export default function StorySection() {
 
           <div className="space-y-0.5 md:space-y-1">
             {lines.map((line, i) => {
-              if (line === "") return <div key={i} className="h-3 md:h-5" />;
-              const total = lines.length + 6;
+              if (line.text === "") return <div key={i} className="h-3 md:h-5" />;
+              const total = lines.length + 8;
               const start = Math.max(0, (i - 1) / total);
               const peak = (i + 0.5) / total;
               const end = Math.min(1, (i + 5) / total);
-              const isAccent = line === "Восемь." || line === "Навсегда." || line.startsWith("«");
-              const isDim = line.startsWith("Ты ") || line.startsWith("Он ");
               return (
                 <StoryLine
                   key={i}
-                  line={line}
+                  line={line.text}
                   scrollYProgress={scrollYProgress}
                   start={start} peak={peak} end={end}
-                  isAccent={isAccent}
-                  isDim={isDim}
+                  colorType={line.color || "white"}
+                  big={line.big || false}
                 />
               );
             })}
@@ -81,21 +89,28 @@ export default function StorySection() {
   );
 }
 
-function StoryLine({ line, scrollYProgress, start, peak, end, isAccent, isDim }: {
+const colorMap: Record<string, string> = {
+  lime: "#CCFF00",
+  warm: "#FF6B35",
+  dim: "#888888",
+  white: "#ffffff",
+};
+
+function StoryLine({ line, scrollYProgress, start, peak, end, colorType, big }: {
   line: string; scrollYProgress: MotionValue<number>;
   start: number; peak: number; end: number;
-  isAccent: boolean; isDim: boolean;
+  colorType: string; big: boolean;
 }) {
   const opacity = useTransform(scrollYProgress, [start, peak, end], [0.04, 1, 0.08]);
   const y = useTransform(scrollYProgress, [start, peak], [6, 0]);
-  const peakColor = isAccent ? "#CCFF00" : isDim ? "#999999" : "#ffffff";
-  const color = useTransform(scrollYProgress, [start, peak, end], ["#222222", peakColor, "#222222"]);
+  const peakColor = colorMap[colorType] || "#ffffff";
+  const color = useTransform(scrollYProgress, [start, peak, end], ["#1a1a1a", peakColor, "#1a1a1a"]);
 
   return (
     <motion.p
       style={{ opacity, y, color }}
       className={`font-display leading-[1.4] md:leading-[1.5] ${
-        isAccent
+        big
           ? "text-xl font-800 md:text-4xl lg:text-5xl"
           : "text-base font-600 md:text-2xl lg:text-[2.2rem]"
       }`}
