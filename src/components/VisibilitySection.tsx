@@ -17,7 +17,10 @@ const metrics = [
 ];
 
 const qualStages = [
-  { name: "Лиды", count: 93, loss: null, hint: null },
+  { name: "Показы", count: 237450, isCurrency: false, loss: null, hint: "Охват в норме → обсудить частоту с таргетологом" },
+  { name: "Охваты", count: 19567, loss: null, hint: "Креативы видят 19.5к людей → обсудить сегменты с таргетологом" },
+  { name: "Клики", count: 3718, loss: null, hint: "CTR 19% — выше среднего → креативщик молодец" },
+  { name: "Лиды", count: 93, loss: "−3625", hint: "Конверсия в лид 2.5% → обсудить оффер с маркетологом" },
   { name: "Имя", count: 54, loss: "−39", hint: "Менеджер не отвечает вовремя → обсудить с РОПом" },
   { name: "Боль", count: 34, loss: "−20", hint: "Скрипт не раскрывает потребность → обсудить с маркетологом" },
   { name: "Презентация", count: 17, loss: "−17", hint: "Продукт не доносится → обсудить с РОПом и маркетологом" },
@@ -123,7 +126,8 @@ export default function VisibilitySection() {
 
               <div className="space-y-2">
                 {qualStages.map((stage, i) => {
-                  const barWidth = (stage.count / 93) * 100;
+                  const maxCount = qualStages[0].count;
+                  const barWidth = (stage.count / maxCount) * 100;
                   const isLast = i === qualStages.length - 1;
                   return (
                     <motion.div key={stage.name}
@@ -143,7 +147,9 @@ export default function VisibilitySection() {
                             className={`absolute inset-y-0 left-0 rounded ${isLast ? "bg-lime/20" : "bg-white/[0.04]"}`}
                           />
                           <div className="relative flex h-full items-center justify-between px-2.5">
-                            <span className={`font-display text-xs font-800 ${isLast ? "text-lime" : "text-text"}`}>{stage.count}</span>
+                            <span className={`font-display text-xs font-800 ${isLast ? "text-lime" : "text-text"}`}>
+                              {stage.count.toLocaleString("ru-RU")}{(stage as { isCurrency?: boolean }).isCurrency ? " ₸" : ""}
+                            </span>
                             {stage.loss && <span className="font-display text-[10px] font-500 text-warm">{stage.loss}</span>}
                           </div>
                         </div>
