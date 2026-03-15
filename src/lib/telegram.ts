@@ -8,15 +8,16 @@ export async function sendToTelegram(data: Record<string, string>) {
   }
 
   const text = [
-    "Новая заявка с LeadPipe:",
+    "🔥 Новая заявка с LeadPipe",
     "",
-    `Имя: ${data.name}`,
-    `Бизнес: ${data.business}`,
-    `Трафик: ${data.hasTraffic}`,
-    `Заявок в день: ${data.leadsPerDay}`,
-    `Кто отвечает: ${data.whoAnswers}`,
-    `Мессенджер: ${data.messenger}`,
-    `Контакт: ${data.contact}`,
+    `👤 Имя: ${data.name}`,
+    `🏢 Бизнес: ${data.business}`,
+    `📢 Трафик: ${data.hasTraffic}`,
+    `💰 Бюджет: ${data.budget}`,
+    `📊 Заявок в день: ${data.leadsPerDay}`,
+    `👥 Кто отвечает: ${data.whoAnswers}`,
+    `💬 Мессенджер: ${data.messenger}`,
+    `📱 Контакт: ${data.contact}`,
   ].join("\n");
 
   await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
