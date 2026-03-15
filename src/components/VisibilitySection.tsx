@@ -16,11 +16,19 @@ const metrics = [
   { label: "Цена клиента", value: 29681, suffix: " ₸", accent: true },
 ];
 
+const qualStages = [
+  { name: "Лиды", count: 93, loss: null, hint: null },
+  { name: "Имя", count: 54, loss: "−39", hint: "Менеджер не отвечает вовремя → обсудить с РОПом" },
+  { name: "Боль", count: 34, loss: "−20", hint: "Скрипт не раскрывает потребность → обсудить с маркетологом" },
+  { name: "Презентация", count: 17, loss: "−17", hint: "Продукт не доносится → обсудить с РОПом и маркетологом" },
+  { name: "Встреча", count: 8, loss: "−9", hint: "Нет дожима после презентации → обсудить с менеджером" },
+];
+
 const features = [
-  "Видишь расход по каждой кампании — какая реклама приносит клиентов, а какая просто сжирает бюджет",
-  "Видишь CTR, клики, цену клика — помогает твоему таргетологу понять, где кликабельность хуже и что менять",
-  "Видишь на каком этапе переписки люди уходят — имя, боль, презентация, встреча",
-  "Всё обновляется само. Без Excel, без отчётов маркетолога, без «подожди, я соберу данные»",
+  "Видишь расход по каждой кампании — какая реклама приносит клиентов, а какая сжирает бюджет",
+  "Помогает таргетологу понять, где кликабельность хуже и что менять",
+  "Видишь на каком этапе переписки люди уходят и почему",
+  "Подсказки: какой этап просел и с кем из команды это обсудить",
 ];
 
 export default function VisibilitySection() {
@@ -50,34 +58,24 @@ export default function VisibilitySection() {
                   className={`font-display text-4xl font-800 uppercase leading-[0.95] tracking-tight md:text-5xl lg:text-7xl ${
                     i === 3 ? "text-lime" : ""
                   }`}
-                >
-                  {word}
-                </motion.p>
+                >{word}</motion.p>
               </div>
             ))}
           </div>
           <div className="flex items-end">
             <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.3 }}>
               <p className="max-w-md font-body text-sm leading-relaxed text-text-muted md:text-base">
-                Ты открываешь одну страницу — и там вся картина. От расхода на рекламу до конкретного клиента. Не «заявки были» — а кто, когда, на каком этапе и почему ушёл.
+                Одна страница — вся картина. От рекламы до клиента. Система сама подсказывает какой этап просел и с кем из команды это обсудить.
               </p>
-
-              {/* Feature list */}
-              <div className="mt-6 space-y-3">
+              <div className="mt-5 space-y-2.5">
                 {features.map((f, i) => (
-                  <motion.div key={i}
-                    initial={{ opacity: 0, x: -10 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: 0.4 + i * 0.08 }}
-                    className="flex gap-3"
-                  >
+                  <motion.div key={i} initial={{ opacity: 0, x: -10 }} whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }} transition={{ delay: 0.4 + i * 0.08 }} className="flex gap-3">
                     <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-lime" />
                     <p className="font-body text-xs leading-relaxed text-text-muted md:text-sm">{f}</p>
                   </motion.div>
                 ))}
               </div>
-
               <button onClick={open}
                 className="mt-8 cursor-pointer rounded-full border border-lime/20 px-6 py-3 font-display text-[10px] font-700 uppercase tracking-[0.15em] text-lime transition-all active:bg-lime/5 hover:bg-lime/5 md:px-8 md:py-4 md:text-xs">
                 Разобраться
@@ -117,32 +115,49 @@ export default function VisibilitySection() {
               ))}
             </div>
 
-            {/* Funnel mini chart */}
-            <div className="mt-4 rounded-xl bg-white/[0.02] p-4 md:mt-5 md:p-5">
-              <div className="mb-3 flex justify-between font-display text-[9px] font-500 uppercase tracking-wider text-text-dim md:text-[10px]">
-                <span>Этапы квалификации</span>
-                <span>Потери на каждом шаге</span>
+            {/* Qualification stages with hints */}
+            <div className="mt-5 rounded-xl bg-white/[0.02] p-4 md:p-5">
+              <div className="mb-4 font-display text-[9px] font-700 uppercase tracking-wider text-text-dim md:text-[10px]">
+                Этапы квалификации
               </div>
-              <div className="flex items-end gap-1" style={{ height: "70px" }}>
-                {[
-                  { h: 100, label: "Лиды" },
-                  { h: 58, label: "Имя" },
-                  { h: 37, label: "Боль" },
-                  { h: 18, label: "Презент." },
-                  { h: 9, label: "Встреча" },
-                ].map((bar, i) => (
-                  <div key={i} className="flex flex-1 flex-col items-center gap-1">
-                    <motion.div
-                      initial={{ scaleY: 0 }}
-                      whileInView={{ scaleY: 1 }}
+
+              <div className="space-y-2">
+                {qualStages.map((stage, i) => {
+                  const barWidth = (stage.count / 93) * 100;
+                  const isLast = i === qualStages.length - 1;
+                  return (
+                    <motion.div key={stage.name}
+                      initial={{ opacity: 0, x: -15 }}
+                      whileInView={{ opacity: 1, x: 0 }}
                       viewport={{ once: true }}
-                      transition={{ duration: 0.5, delay: 0.2 + i * 0.08, ease: [0.65, 0.05, 0, 1] }}
-                      style={{ height: `${bar.h}%`, transformOrigin: "bottom" }}
-                      className={`w-full rounded-t ${i >= 3 ? "bg-lime/25" : "bg-white/[0.06]"}`}
-                    />
-                    <span className="font-display text-[8px] text-text-dim">{bar.label}</span>
-                  </div>
-                ))}
+                      transition={{ delay: 0.3 + i * 0.08 }}
+                    >
+                      <div className="flex items-center gap-2">
+                        <span className="w-20 shrink-0 font-display text-[10px] font-500 text-text-dim md:w-24 md:text-xs">{stage.name}</span>
+                        <div className="relative h-7 flex-1 overflow-hidden rounded bg-white/[0.02] md:h-8">
+                          <motion.div
+                            initial={{ width: 0 }}
+                            whileInView={{ width: `${barWidth}%` }}
+                            viewport={{ once: true }}
+                            transition={{ duration: 0.7, delay: 0.4 + i * 0.1, ease: [0.65, 0.05, 0, 1] }}
+                            className={`absolute inset-y-0 left-0 rounded ${isLast ? "bg-lime/20" : "bg-white/[0.04]"}`}
+                          />
+                          <div className="relative flex h-full items-center justify-between px-2.5">
+                            <span className={`font-display text-xs font-800 ${isLast ? "text-lime" : "text-text"}`}>{stage.count}</span>
+                            {stage.loss && <span className="font-display text-[10px] font-500 text-warm">{stage.loss}</span>}
+                          </div>
+                        </div>
+                      </div>
+                      {/* Hint — owner insight */}
+                      {stage.hint && (
+                        <div className="ml-20 mt-1 flex items-start gap-1.5 md:ml-24">
+                          <span className="mt-0.5 text-[9px]">💡</span>
+                          <p className="font-body text-[10px] leading-snug text-warm/80 md:text-[11px]">{stage.hint}</p>
+                        </div>
+                      )}
+                    </motion.div>
+                  );
+                })}
               </div>
             </div>
           </div>

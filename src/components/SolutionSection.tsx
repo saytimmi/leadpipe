@@ -4,48 +4,19 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef, useState, useEffect } from "react";
 import { useFormModal } from "./FormModal";
 
+// Realistic WOW conversation — client is brief, bot is warm & human
 const chatMessages = [
-  { from: "client", text: "Здравствуйте, сколько стоит имплантация?" },
-  { from: "bot", text: "Сәлеметсіз бе! Имплантация — от 180 000 ₸. Как вас зовут?" },
-  { from: "client", text: "Марат" },
-  { from: "bot", text: "Марат, расскажите вашу ситуацию — сколько зубов, есть ли снимок?" },
-  { from: "client", text: "Один зуб, снимок есть" },
-  { from: "bot", text: "Отлично. Когда удобно на бесплатную консультацию — завтра 14:00 или 16:00?" },
-  { from: "client", text: "В 14:00" },
-  { from: "bot", text: "Записал! Адрес и напоминание пришлю за 2 часа. До встречи, Марат ✅" },
-];
-
-const capabilities = [
-  {
-    title: "Полная картина от рекламы до клиента",
-    desc: "Видишь всё в одном месте: бюджет → охваты → клики → лиды → квалификация → встречи → клиенты. Не «лид по 2 200» — а реальная цена того, кто пришёл и заплатил.",
-    color: "lime",
-  },
-  {
-    title: "Эффективность каждой кампании",
-    desc: "Запустил 3 объявления — сразу видно какое приносит клиентов, а какое просто жрёт бюджет. Данные для таргетолога чтобы оптимизировать, а не гадать.",
-    color: "lime",
-  },
-  {
-    title: "Мгновенная обработка заявок",
-    desc: "Клиент пишет в 23:14 — ответ через 3 секунды. Не ждёт понедельника. Бот спрашивает имя, узнаёт что нужно, предлагает время.",
-    color: "warm",
-  },
-  {
-    title: "Квалификация по шагам",
-    desc: "Каждый лид проходит воронку: имя → боль → презентация → встреча. Видно на каком этапе люди уходят и почему.",
-    color: "warm",
-  },
-  {
-    title: "Дожим и напоминания",
-    desc: "Замолчал после «подумаю»? Бот мягко напомнит через 2 часа. Не отвечает 3 дня — закроет. Никаких мёртвых лидов в воронке.",
-    color: "warm",
-  },
-  {
-    title: "Горячий клиент → менеджеру",
-    desc: "Менеджер получает не «лид из Facebook», а: Марат, имплантация 1 зуб, снимок есть, завтра 14:00. Осталось только встретить.",
-    color: "lime",
-  },
+  { from: "client", text: "здрасте" },
+  { from: "bot", text: "Привет! 😊 Вы по поводу чистки зубов или другой услуги?" },
+  { from: "client", text: "чистка да, скок стоит" },
+  { from: "bot", text: "Комплексная чистка — 12 000 ₸. Включает ультразвук + полировку + фторирование. Как вас зовут?" },
+  { from: "client", text: "Айгерим" },
+  { from: "bot", text: "Айгерим, приятно! А вы раньше делали чистку или первый раз? Просто чтобы предупредить доктора 🙂" },
+  { from: "client", text: "первый раз" },
+  { from: "bot", text: "Ничего страшного, процедура безболезненная, займёт 40 минут. Когда удобно — завтра в 11:00 или послезавтра в 15:00?" },
+  { from: "client", text: "завтра" },
+  { from: "bot", text: "Записала вас на завтра, 11:00! 📍 Адрес: ул. Абая 52, 2 этаж. За 2 часа пришлю напоминание. Если будут вопросы — пишите прямо сюда. Хорошего вечера, Айгерим! ✨" },
+  { from: "client", text: "ого, спасибо! 👍 вообще не ожидала что так быстро" },
 ];
 
 function TypingMessage({ msg, delay }: { msg: typeof chatMessages[0]; delay: number }) {
@@ -58,42 +29,53 @@ function TypingMessage({ msg, delay }: { msg: typeof chatMessages[0]; delay: num
     const obs = new IntersectionObserver(([e]) => {
       if (e.isIntersecting) {
         setTimeout(() => setPhase("typing"), delay * 1000);
-        setTimeout(() => setPhase("done"), (delay + 0.5) * 1000);
+        setTimeout(() => setPhase("done"), (delay + 0.4) * 1000);
         obs.disconnect();
       }
-    }, { threshold: 0.3 });
+    }, { threshold: 0.2 });
     obs.observe(el);
     return () => obs.disconnect();
   }, [delay]);
 
+  const isBot = msg.from === "bot";
+
   return (
-    <div ref={ref} className={`flex ${msg.from === "bot" ? "justify-start" : "justify-end"}`} style={{ minHeight: "28px" }}>
+    <div ref={ref} className={`flex ${isBot ? "justify-start" : "justify-end"}`} style={{ minHeight: "24px" }}>
       {phase === "typing" && (
-        <div className={`rounded-2xl px-3 py-2 ${msg.from === "bot" ? "bg-card" : "bg-lime/10"}`}>
+        <div className={`rounded-2xl px-3 py-2 ${isBot ? "bg-card" : "bg-lime/10"}`}>
           <div className="flex gap-1">
             {[0, 1, 2].map(d => (
               <motion.span key={d} animate={{ opacity: [0.3, 1, 0.3], y: [0, -2, 0] }}
-                transition={{ duration: 0.7, repeat: Infinity, delay: d * 0.12 }}
+                transition={{ duration: 0.6, repeat: Infinity, delay: d * 0.1 }}
                 className="h-1.5 w-1.5 rounded-full bg-text-muted" />
             ))}
           </div>
         </div>
       )}
       {phase === "done" && (
-        <motion.div initial={{ opacity: 0, scale: 0.92, y: 5 }} animate={{ opacity: 1, scale: 1, y: 0 }}
-          transition={{ duration: 0.25, ease: [0.65, 0.05, 0, 1] }}
-          className={`max-w-[82%] rounded-2xl px-3 py-2 text-[11px] leading-relaxed md:text-[12px] ${
-            msg.from === "bot" ? "bg-card text-text-muted" : "bg-lime/10 text-text"
+        <motion.div initial={{ opacity: 0, scale: 0.92, y: 4 }} animate={{ opacity: 1, scale: 1, y: 0 }}
+          transition={{ duration: 0.2, ease: [0.65, 0.05, 0, 1] }}
+          className={`max-w-[85%] rounded-2xl px-3 py-2 text-[12px] leading-[1.5] ${
+            isBot ? "bg-card text-text-muted" : "bg-lime/10 text-text"
           }`}>{msg.text}</motion.div>
       )}
     </div>
   );
 }
 
+const capabilities = [
+  { title: "Полная картина", desc: "От рекламы до клиента. Не «лид по 2 200» — а реальная цена того, кто пришёл и заплатил.", color: "lime" },
+  { title: "Эффективность кампаний", desc: "Какое объявление приносит клиентов, а какое жрёт бюджет. Данные для таргетолога.", color: "lime" },
+  { title: "Мгновенная обработка", desc: "Ответ за 3 секунды. Ночью, в выходные. Бот спрашивает имя, боль, предлагает время.", color: "warm" },
+  { title: "Квалификация по шагам", desc: "Имя → боль → презентация → встреча. Видно где уходят и почему.", color: "warm" },
+  { title: "Дожим и закрытие", desc: "Замолчал? Напомнит. Не отвечает 3 дня? Закроет. Никаких мёртвых лидов.", color: "warm" },
+  { title: "Горячий клиент → менеджеру", desc: "Не лид, а: Айгерим, чистка, первый раз, завтра 11:00. Осталось встретить.", color: "lime" },
+];
+
 export default function SolutionSection() {
   const ref = useRef(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "center center"] });
-  const phoneY = useTransform(scrollYProgress, [0, 1], [60, 0]);
+  const phoneY = useTransform(scrollYProgress, [0, 1], [40, 0]);
   const { open } = useFormModal();
 
   return (
@@ -104,7 +86,6 @@ export default function SolutionSection() {
           <div className="h-px flex-1 bg-white/[0.04]" />
         </div>
 
-        {/* Title */}
         <div className="mb-6">
           {["Почему мы", "тебе полезны"].map((word, i) => (
             <div key={i} className="overflow-hidden">
@@ -119,11 +100,11 @@ export default function SolutionSection() {
 
         <motion.p initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.3 }}
           className="mb-16 max-w-2xl font-body text-sm leading-relaxed text-text-muted md:text-base">
-          Ты наконец видишь полную систему — от момента, когда таргетолог запустил рекламу, до момента, когда клиент пришёл и заплатил. Не кусок. Не отчёт. Всю картину.
+          Полная система — от запуска рекламы до клиента. Бот обрабатывает, менеджер закрывает, ты видишь всю картину.
         </motion.p>
 
-        {/* Capabilities grid + phone */}
-        <div className="grid items-start gap-12 md:gap-16 lg:grid-cols-[1fr_auto] lg:gap-16">
+        {/* Capabilities + Phone side by side */}
+        <div className="grid items-start gap-12 md:gap-16 lg:grid-cols-[1fr_380px] lg:gap-16">
           <div>
             <div className="grid gap-3 sm:grid-cols-2 md:gap-4">
               {capabilities.map((cap, i) => (
@@ -150,32 +131,69 @@ export default function SolutionSection() {
             </motion.div>
           </div>
 
-          {/* Phone */}
-          <motion.div style={{ y: phoneY }} className="flex justify-center overflow-hidden lg:sticky lg:top-32">
-            <div className="relative w-full max-w-[260px] overflow-hidden rounded-[2rem] border border-white/[0.06] bg-surface shadow-2xl shadow-black/60 sm:max-w-[300px]">
-              <div className="flex items-center justify-center bg-surface pt-2 pb-1">
-                <div className="h-3.5 w-16 rounded-full bg-bg" />
-              </div>
-              <div className="flex items-center gap-2 border-b border-white/[0.04] bg-card px-3 py-2">
-                <div className="flex h-6 w-6 items-center justify-center rounded-full bg-lime/10">
-                  <span className="font-display text-[7px] font-700 text-lime">LP</span>
+          {/* Phone — realistic size, sticky */}
+          <motion.div style={{ y: phoneY }} className="flex flex-col items-center overflow-hidden lg:sticky lg:top-28">
+            <div className="relative w-[300px] sm:w-[340px] md:w-[360px]">
+              {/* Subtle glow */}
+              <div className="absolute -inset-8 rounded-[3.5rem] bg-lime/[0.03] blur-3xl" />
+
+              <div className="relative overflow-hidden rounded-[2.5rem] border-[2px] border-white/[0.08] bg-surface shadow-2xl shadow-black/60">
+                {/* Status bar */}
+                <div className="flex items-center justify-between bg-surface px-6 pt-3 pb-1">
+                  <span className="font-body text-[11px] font-600 text-text-muted">9:41</span>
+                  <div className="h-[22px] w-[80px] rounded-full bg-bg" />
+                  <div className="flex items-center gap-1">
+                    <div className="flex gap-[2px]">{[1,2,3,4].map(i => <div key={i} className="h-[10px] w-[3px] rounded-sm bg-text-muted" style={{height: `${6+i*2}px`}} />)}</div>
+                  </div>
                 </div>
-                <div>
-                  <p className="font-display text-[10px] font-600">LeadPipe</p>
-                  <p className="flex items-center gap-1 text-[8px] text-lime">
-                    <span className="h-1 w-1 rounded-full bg-lime" />онлайн
-                  </p>
+
+                {/* Chat header */}
+                <div className="flex items-center gap-2.5 border-b border-white/[0.04] bg-card px-4 py-2.5">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-lime/10">
+                    <span className="font-display text-[8px] font-700 text-lime">LP</span>
+                  </div>
+                  <div>
+                    <p className="font-display text-[12px] font-600">LeadPipe</p>
+                    <p className="flex items-center gap-1 text-[10px] text-lime">
+                      <span className="h-1 w-1 rounded-full bg-lime" />онлайн
+                    </p>
+                  </div>
                 </div>
-              </div>
-              <div className="max-h-[280px] space-y-1 overflow-y-auto bg-bg p-2 sm:max-h-[320px]">
-                {chatMessages.map((msg, i) => (
-                  <TypingMessage key={i} msg={msg} delay={0.2 + i * 0.65} />
-                ))}
-              </div>
-              <div className="flex items-center justify-center bg-bg py-1.5">
-                <div className="h-0.5 w-20 rounded-full bg-white/5" />
+
+                {/* Chat */}
+                <div className="space-y-1.5 overflow-y-auto bg-bg p-3" style={{ height: "420px" }}>
+                  {chatMessages.map((msg, i) => (
+                    <TypingMessage key={i} msg={msg} delay={0.2 + i * 0.55} />
+                  ))}
+                </div>
+
+                {/* Input bar */}
+                <div className="flex items-center gap-2 border-t border-white/[0.04] bg-card px-3 py-2.5">
+                  <div className="flex-1 rounded-full bg-white/[0.03] px-3 py-1.5 text-[11px] text-text-dim">Сообщение...</div>
+                  <div className="flex h-7 w-7 items-center justify-center rounded-full bg-lime/20">
+                    <span className="text-[10px] text-lime">→</span>
+                  </div>
+                </div>
+
+                {/* Home indicator */}
+                <div className="flex items-center justify-center bg-card py-2">
+                  <div className="h-1 w-28 rounded-full bg-white/10" />
+                </div>
               </div>
             </div>
+
+            {/* Caption below phone */}
+            <motion.p
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+              transition={{ delay: 1 }}
+              className="mt-6 text-center font-body text-xs leading-relaxed text-text-dim"
+            >
+              Так выглядит обработка заявки в LeadPipe.
+              <br />
+              <span className="text-text-muted">23:14 — клиент написал. 23:14 — уже записан.</span>
+            </motion.p>
           </motion.div>
         </div>
       </div>
