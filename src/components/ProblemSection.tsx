@@ -25,7 +25,7 @@ export default function ProblemSection() {
         <div className="marquee-track whitespace-nowrap">
           {[0, 1].map(j => (
             <span key={j} className="inline-block">
-              {["Стоматология", "Автосервис", "Онлайн-школа", "Салон красоты", "Фитнес", "Юристы", "Ремонт", "Недвижимость"].map((biz, i) => (
+              {["Стоматология", "Автосервис", "Онлайн-школа", "Салон красоты", "Фитнес", "Юристы", "Ремонт", "Недвижимость", "Доставка", "Клиника", "Детский центр", "Барбершоп", "Автошкола", "Мебель на заказ"].map((biz, i) => (
                 <span key={i} className="mx-4 font-display text-xl font-700 uppercase text-text-dim md:mx-8 md:text-4xl lg:text-5xl">
                   {biz}<span className="mx-4 text-lime md:mx-8">·</span>
                 </span>
@@ -34,6 +34,18 @@ export default function ProblemSection() {
           ))}
         </div>
       </div>
+
+      <motion.p
+        initial={{ opacity: 0, y: 10 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.6 }}
+        className="mb-20 text-center font-body text-sm text-text-muted md:mb-28 md:text-base"
+      >
+        Ты всё равно тратишь деньги на рекламу и обрабатываешь заявки.
+        <br />
+        <span className="text-text-dim">Допустим так.</span>
+      </motion.p>
 
       <div className="mx-auto max-w-[1400px]">
         <div className="mb-8 flex items-center gap-4">

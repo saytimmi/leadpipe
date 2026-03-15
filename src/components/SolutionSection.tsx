@@ -4,22 +4,58 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef, useState, useEffect } from "react";
 import { useFormModal } from "./FormModal";
 
-// Realistic WOW conversation — client is brief, bot is warm & human
-const chatMessages = [
-  { from: "client", text: "здрасте" },
-  { from: "bot", text: "Привет! 😊 Вы по поводу чистки зубов или другой услуги?" },
-  { from: "client", text: "чистка да, скок стоит" },
-  { from: "bot", text: "Комплексная чистка — 12 000 ₸. Включает ультразвук + полировку + фторирование. Как вас зовут?" },
-  { from: "client", text: "Айгерим" },
-  { from: "bot", text: "Айгерим, приятно! А вы раньше делали чистку или первый раз? Просто чтобы предупредить доктора 🙂" },
-  { from: "client", text: "первый раз" },
-  { from: "bot", text: "Ничего страшного, процедура безболезненная, займёт 40 минут. Когда удобно — завтра в 11:00 или послезавтра в 15:00?" },
-  { from: "client", text: "завтра" },
-  { from: "bot", text: "Записала вас на завтра, 11:00! 📍 Адрес: ул. Абая 52, 2 этаж. За 2 часа пришлю напоминание. Если будут вопросы — пишите прямо сюда. Хорошего вечера, Айгерим! ✨" },
-  { from: "client", text: "ого, спасибо! 👍 вообще не ожидала что так быстро" },
+// Realistic conversation — recommendation, silence, follow-up, booking
+type ChatItem =
+  | { type: "message"; from: "client" | "bot"; text: string; time: string }
+  | { type: "date"; label: string };
+
+const chatMessages: ChatItem[] = [
+  { type: "date", label: "14 марта" },
+  { type: "message", from: "client", text: "здрасте, хочу на чистку зубов записаться", time: "21:32" },
+  { type: "message", from: "bot", text: "Добрый вечер! Отлично что написали 😊 Как вас зовут?", time: "21:32" },
+  { type: "message", from: "client", text: "Айгерим", time: "21:33" },
+  { type: "message", from: "bot", text: "Айгерим, приятно! У нас комплексная чистка — 12 000 ₸, ультразвук + полировка + фторирование. Займёт минут 40", time: "21:33" },
+  { type: "message", from: "bot", text: "Вас будет вести доктор Алия Сериковна — она 7 месяцев проходила обучение в Финляндии именно по профгигиене. Очень аккуратная, пациенты её любят 🙂", time: "21:33" },
+  { type: "message", from: "client", text: "ого круто", time: "21:34" },
+  { type: "message", from: "bot", text: "Когда удобно? Могу предложить завтра 15:00 или субботу 11:00", time: "21:34" },
+  // клиент замолчала
+  { type: "date", label: "16 марта" },
+  { type: "message", from: "bot", text: "Айгерим, привет! Вы ещё думаете насчёт чистки? На субботу осталось одно окошко у Алии Сериковны — придержать для вас? 🙂", time: "14:20" },
+  { type: "message", from: "client", text: "ой да, закрутилась просто. давайте на субботу!", time: "18:47" },
+  { type: "message", from: "bot", text: "Записала! Суббота, 11:00, доктор Алия Сериковна 📍 ул. Абая 52, 2 этаж. За 2 часа напомню. Будут вопросы — пишите сюда!", time: "18:47" },
+  { type: "message", from: "client", text: "спасибо большое 🙏", time: "18:48" },
 ];
 
-function TypingMessage({ msg, delay }: { msg: typeof chatMessages[0]; delay: number }) {
+function ChatDateSeparator({ label, delay }: { label: string; delay: number }) {
+  const [visible, setVisible] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(([e]) => {
+      if (e.isIntersecting) {
+        setTimeout(() => setVisible(true), delay * 1000);
+        obs.disconnect();
+      }
+    }, { threshold: 0.2 });
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, [delay]);
+
+  return (
+    <div ref={ref} className="flex justify-center py-1" style={{ minHeight: "20px" }}>
+      {visible && (
+        <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }}
+          className="rounded-lg bg-white/[0.05] px-3 py-0.5">
+          <span className="font-body text-[10px] text-text-dim">{label}</span>
+        </motion.div>
+      )}
+    </div>
+  );
+}
+
+function TypingMessage({ msg, delay }: { msg: Extract<ChatItem, { type: "message" }>; delay: number }) {
   const [phase, setPhase] = useState<"hidden" | "typing" | "done">("hidden");
   const ref = useRef<HTMLDivElement>(null);
 
@@ -57,7 +93,10 @@ function TypingMessage({ msg, delay }: { msg: typeof chatMessages[0]; delay: num
           transition={{ duration: 0.2, ease: [0.65, 0.05, 0, 1] }}
           className={`max-w-[85%] rounded-2xl px-3 py-2 text-[12px] leading-[1.5] ${
             isBot ? "bg-card text-text-muted" : "bg-lime/10 text-text"
-          }`}>{msg.text}</motion.div>
+          }`}>
+          {msg.text}
+          <span className={`ml-2 text-[9px] ${isBot ? "text-text-dim" : "text-lime/40"}`}>{msg.time}</span>
+        </motion.div>
       )}
     </div>
   );
@@ -162,9 +201,15 @@ export default function SolutionSection() {
 
                 {/* Chat */}
                 <div className="space-y-1.5 overflow-y-auto bg-bg p-3" style={{ height: "420px" }}>
-                  {chatMessages.map((msg, i) => (
-                    <TypingMessage key={i} msg={msg} delay={0.2 + i * 0.55} />
-                  ))}
+                  {chatMessages.map((item, i) => {
+                    const msgIndex = chatMessages.slice(0, i + 1).filter(m => m.type === "message").length;
+                    const baseDelay = 0.2 + (msgIndex - 1) * 0.55;
+                    if (item.type === "date") {
+                      const dateDelay = i === 0 ? 0 : baseDelay;
+                      return <ChatDateSeparator key={i} label={item.label} delay={dateDelay} />;
+                    }
+                    return <TypingMessage key={i} msg={item} delay={baseDelay} />;
+                  })}
                 </div>
 
                 {/* Input bar */}
@@ -190,9 +235,9 @@ export default function SolutionSection() {
               transition={{ delay: 1 }}
               className="mt-6 text-center font-body text-xs leading-relaxed text-text-dim"
             >
-              Так выглядит обработка заявки в LeadPipe.
+              Клиент замолчал. Бот дожал. Встреча назначена.
               <br />
-              <span className="text-text-muted">23:14 — клиент написал. 23:14 — уже записан.</span>
+              <span className="text-text-muted">Без менеджера. Без потерянных лидов.</span>
             </motion.p>
           </motion.div>
         </div>
