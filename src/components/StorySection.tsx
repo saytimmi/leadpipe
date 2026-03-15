@@ -94,7 +94,7 @@ export default function StorySection() {
         {/* ALL lines rendered — smooth translateY moves them through center */}
         <motion.div
           style={{ y: textY }}
-          className="px-5 pt-[35dvh] md:px-10"
+          className="px-5 pt-[45dvh] md:px-10"
         >
           <div className="mx-auto w-full max-w-[1400px]">
             {lines.map((line, i) => {
