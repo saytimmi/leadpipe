@@ -3,48 +3,48 @@
 import { motion, useScroll, useTransform, MotionValue } from "framer-motion";
 import { useRef } from "react";
 
-// color: "lime" | "warm" | "dim" | "white" (default)
-// big: true for emphasis lines
 const lines: { text: string; color?: string; big?: boolean }[] = [
-  { text: "Пятница. Вечер." },
-  { text: "Таргетолог запустил рекламу.", color: "dim" },
+  { text: "У тебя бизнес." },
+  { text: "Стоматология, автосервис, онлайн-школа —", color: "dim" },
+  { text: "неважно.", color: "dim" },
+  { text: "" },
+  { text: "Ты нанял таргетолога." },
+  { text: "Он запустил три кампании.", color: "dim" },
   { text: "Бюджет — 237 000 ₸.", color: "lime" },
   { text: "" },
-  { text: "Суббота, 23:14." },
-  { text: "В WhatsApp бизнес-аккаунта прилетает:", color: "dim" },
-  { text: "«Здравствуйте, сколько стоит?»", color: "lime" },
+  { text: "Через неделю он пишет:", color: "dim" },
+  { text: "«107 лидов. Цена лида — 2 200 ₸. Нормально.»", color: "lime" },
+  { text: "Ты думаешь — классно.", color: "dim" },
   { text: "" },
-  { text: "Менеджер видит сообщение" },
-  { text: "в понедельник утром.", color: "warm" },
-  { text: "36 часов.", color: "warm", big: true },
-  { text: "Человек давно в сторис конкурента.", color: "dim" },
+  { text: "Но дешёвый лид", color: "warm" },
+  { text: "≠ хороший лид.", color: "warm", big: true },
   { text: "" },
-  { text: "Воскресенье, 10:00." },
-  { text: "«Хочу записаться на среду»", color: "lime" },
-  { text: "Отдел продаж отвечает в понедельник.", color: "dim" },
-  { text: "Человек забыл, куда хотел.", color: "warm" },
+  { text: "Из 107 лидов в WhatsApp пришло 93.", color: "dim" },
+  { text: "14 — потерялись между Facebook и чатом.", color: "warm" },
   { text: "" },
-  { text: "Ещё одна заявка." },
-  { text: "Менеджер ответил. Клиент спросил цену.", color: "dim" },
-  { text: "Менеджер скинул прайс.", color: "dim" },
-  { text: "«Подумаю»", color: "lime" },
-  { text: "Менеджер не написал больше.", color: "warm" },
-  { text: "Клиент — тоже.", color: "warm" },
-  { text: "Навсегда.", color: "lime", big: true },
+  { text: "Из 93 — менеджер ответил вовремя 60.", color: "dim" },
+  { text: "33 написали вечером или в выходные.", color: "warm" },
+  { text: "Им ответили через 5-10 часов.", color: "warm" },
+  { text: "Они уже нашли другого.", color: "warm" },
   { text: "" },
-  { text: "Конец месяца." },
-  { text: "Таргетолог скидывает отчёт:", color: "dim" },
-  { text: "«107 лидов, цена лида 2 219 ₸»", color: "lime" },
-  { text: "Ты смотришь в CRM.", color: "dim" },
-  { text: "Клиентов?", color: "warm" },
-  { text: "Восемь.", color: "lime", big: true },
+  { text: "Назвали имя и рассказали что нужно — 54.", color: "dim" },
+  { text: "Дослушали про услугу — 17.", color: "dim" },
+  { text: "Пришли на встречу —", color: "dim" },
+  { text: "8.", color: "lime", big: true },
   { text: "" },
-  { text: "Таргетолог отработал нормально." },
-  { text: "Реклама нормальная.", color: "dim" },
-  { text: "Продукт нужный.", color: "dim" },
-  { text: "Просто между «заявка» и «клиент» —" },
+  { text: "Цена лида — 2 200 ₸.", color: "dim" },
+  { text: "Цена клиента — 29 681 ₸.", color: "lime", big: true },
+  { text: "" },
+  { text: "Таргетолог этого не видит.", color: "warm" },
+  { text: "Менеджер этого не видит.", color: "warm" },
+  { text: "Ты — тоже.", color: "warm", big: true },
+  { text: "" },
+  { text: "Никто не видит полную картину:", color: "dim" },
+  { text: "от запуска рекламы", color: "dim" },
+  { text: "до клиента, который пришёл и заплатил." },
+  { text: "" },
+  { text: "Между «лид по 2 200» и «клиент по 29 000» —" },
   { text: "чёрная дыра.", color: "warm", big: true },
-  { text: "И никто не видит, что внутри.", color: "dim" },
 ];
 
 export default function StorySection() {
@@ -54,8 +54,12 @@ export default function StorySection() {
     offset: ["start start", "end end"],
   });
 
+  // Height based on line count — no extra padding to avoid black screen
+  const nonEmptyLines = lines.filter(l => l.text !== "").length;
+  const totalHeight = nonEmptyLines * 80 + 600;
+
   return (
-    <section ref={ref} id="story" className="relative" style={{ height: `${lines.length * 85 + 1000}px` }}>
+    <section ref={ref} id="story" className="relative" style={{ height: `${totalHeight}px` }}>
       <div className="sticky top-0 flex h-[100dvh] flex-col justify-center overflow-hidden px-6 lg:px-10">
         <div className="mx-auto w-full max-w-[1400px]">
           <div className="mb-8 flex items-center gap-4 md:mb-10">
@@ -66,20 +70,15 @@ export default function StorySection() {
 
           <div className="space-y-0.5 md:space-y-1">
             {lines.map((line, i) => {
-              if (line.text === "") return <div key={i} className="h-3 md:h-5" />;
-              const total = lines.length + 8;
+              if (line.text === "") return <div key={i} className="h-2 md:h-4" />;
+              const total = lines.length + 6;
               const start = Math.max(0, (i - 1) / total);
               const peak = (i + 0.5) / total;
               const end = Math.min(1, (i + 5) / total);
               return (
-                <StoryLine
-                  key={i}
-                  line={line.text}
-                  scrollYProgress={scrollYProgress}
+                <StoryLine key={i} line={line.text} scrollYProgress={scrollYProgress}
                   start={start} peak={peak} end={end}
-                  colorType={line.color || "white"}
-                  big={line.big || false}
-                />
+                  colorType={line.color || "white"} big={line.big || false} />
               );
             })}
           </div>
@@ -90,10 +89,7 @@ export default function StorySection() {
 }
 
 const colorMap: Record<string, string> = {
-  lime: "#CCFF00",
-  warm: "#FF6B35",
-  dim: "#888888",
-  white: "#ffffff",
+  lime: "#CCFF00", warm: "#FF6B35", dim: "#888888", white: "#ffffff",
 };
 
 function StoryLine({ line, scrollYProgress, start, peak, end, colorType, big }: {
@@ -107,15 +103,9 @@ function StoryLine({ line, scrollYProgress, start, peak, end, colorType, big }: 
   const color = useTransform(scrollYProgress, [start, peak, end], ["#1a1a1a", peakColor, "#1a1a1a"]);
 
   return (
-    <motion.p
-      style={{ opacity, y, color }}
+    <motion.p style={{ opacity, y, color }}
       className={`font-display leading-[1.4] md:leading-[1.5] ${
-        big
-          ? "text-xl font-800 md:text-4xl lg:text-5xl"
-          : "text-base font-600 md:text-2xl lg:text-[2.2rem]"
-      }`}
-    >
-      {line}
-    </motion.p>
+        big ? "text-xl font-800 md:text-4xl lg:text-5xl" : "text-base font-600 md:text-2xl lg:text-[2.2rem]"
+      }`}>{line}</motion.p>
   );
 }

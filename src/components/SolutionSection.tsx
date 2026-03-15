@@ -5,23 +5,47 @@ import { useRef, useState, useEffect } from "react";
 import { useFormModal } from "./FormModal";
 
 const chatMessages = [
-  { from: "client", text: "Здравствуйте, сколько стоит консультация?" },
-  { from: "bot", text: "Сәлеметсіз бе! Кеңес — 15 000 ₸. Атыңыз кім?" },
-  { from: "client", text: "Анна" },
-  { from: "bot", text: "Анна, расскажите, что вас интересует? Так подберём лучшего специалиста." },
-  { from: "client", text: "Хочу разобраться с налогами для ИП" },
-  { from: "bot", text: "Поняла. Когда удобно — завтра в 14:00 или 16:00?" },
-  { from: "client", text: "В 14 давайте" },
-  { from: "bot", text: "Отлично! Ссылку на встречу пришлю за час. Хорошего вечера, Анна ✅" },
+  { from: "client", text: "Здравствуйте, сколько стоит имплантация?" },
+  { from: "bot", text: "Сәлеметсіз бе! Имплантация — от 180 000 ₸. Как вас зовут?" },
+  { from: "client", text: "Марат" },
+  { from: "bot", text: "Марат, расскажите вашу ситуацию — сколько зубов, есть ли снимок?" },
+  { from: "client", text: "Один зуб, снимок есть" },
+  { from: "bot", text: "Отлично. Когда удобно на бесплатную консультацию — завтра 14:00 или 16:00?" },
+  { from: "client", text: "В 14:00" },
+  { from: "bot", text: "Записал! Адрес и напоминание пришлю за 2 часа. До встречи, Марат ✅" },
 ];
 
 const capabilities = [
-  { title: "Мгновенный ответ", desc: "Человек пишет в 23:14 — ему отвечают через 3 секунды. Не через час, не завтра. Сразу." },
-  { title: "Квалификация по шагам", desc: "Спрашивает имя → узнаёт боль → презентует продукт → предлагает время. Каждый шаг — осмысленный." },
-  { title: "Напоминания", desc: "Если человек замолчал на этапе «имя» — напишет через 2 часа. Мягко, по-человечески. Не спам." },
-  { title: "Закрытие", desc: "Если не отвечает 3 дня — закрывает. Не висит мёртвым грузом в воронке." },
-  { title: "Готовый клиент → менеджеру", desc: "Менеджер получает не строчку в табличке, а: Анна, налоги ИП, завтра 14:00." },
-  { title: "Помощь таргетологу", desc: "Видно какая реклама даёт клиентов, а какая — пустые клики. Данные для оптимизации." },
+  {
+    title: "Полная картина от рекламы до клиента",
+    desc: "Видишь всё в одном месте: бюджет → охваты → клики → лиды → квалификация → встречи → клиенты. Не «лид по 2 200» — а реальная цена того, кто пришёл и заплатил.",
+    color: "lime",
+  },
+  {
+    title: "Эффективность каждой кампании",
+    desc: "Запустил 3 объявления — сразу видно какое приносит клиентов, а какое просто жрёт бюджет. Данные для таргетолога чтобы оптимизировать, а не гадать.",
+    color: "lime",
+  },
+  {
+    title: "Мгновенная обработка заявок",
+    desc: "Клиент пишет в 23:14 — ответ через 3 секунды. Не ждёт понедельника. Бот спрашивает имя, узнаёт что нужно, предлагает время.",
+    color: "warm",
+  },
+  {
+    title: "Квалификация по шагам",
+    desc: "Каждый лид проходит воронку: имя → боль → презентация → встреча. Видно на каком этапе люди уходят и почему.",
+    color: "warm",
+  },
+  {
+    title: "Дожим и напоминания",
+    desc: "Замолчал после «подумаю»? Бот мягко напомнит через 2 часа. Не отвечает 3 дня — закроет. Никаких мёртвых лидов в воронке.",
+    color: "warm",
+  },
+  {
+    title: "Горячий клиент → менеджеру",
+    desc: "Менеджер получает не «лид из Facebook», а: Марат, имплантация 1 зуб, снимок есть, завтра 14:00. Осталось только встретить.",
+    color: "lime",
+  },
 ];
 
 function TypingMessage({ msg, delay }: { msg: typeof chatMessages[0]; delay: number }) {
@@ -81,8 +105,8 @@ export default function SolutionSection() {
         </div>
 
         {/* Title */}
-        <div className="mb-16">
-          {["Что мы", "делаем"].map((word, i) => (
+        <div className="mb-6">
+          {["Почему мы", "тебе полезны"].map((word, i) => (
             <div key={i} className="overflow-hidden">
               <motion.p initial={{ y: "100%" }} whileInView={{ y: "0%" }} viewport={{ once: true }}
                 transition={{ duration: 0.75, delay: i * 0.1, ease: [0.65, 0.05, 0, 1] }}
@@ -93,10 +117,15 @@ export default function SolutionSection() {
           ))}
         </div>
 
-        <div className="grid items-start gap-12 md:gap-16 lg:grid-cols-[1fr_auto] lg:gap-20">
-          {/* Left — capabilities grid */}
+        <motion.p initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.3 }}
+          className="mb-16 max-w-2xl font-body text-sm leading-relaxed text-text-muted md:text-base">
+          Ты наконец видишь полную систему — от момента, когда таргетолог запустил рекламу, до момента, когда клиент пришёл и заплатил. Не кусок. Не отчёт. Всю картину.
+        </motion.p>
+
+        {/* Capabilities grid + phone */}
+        <div className="grid items-start gap-12 md:gap-16 lg:grid-cols-[1fr_auto] lg:gap-16">
           <div>
-            <div className="grid gap-4 sm:grid-cols-2 md:gap-5">
+            <div className="grid gap-3 sm:grid-cols-2 md:gap-4">
               {capabilities.map((cap, i) => (
                 <motion.div key={cap.title}
                   initial={{ opacity: 0, y: 20 }}
@@ -105,8 +134,10 @@ export default function SolutionSection() {
                   transition={{ duration: 0.5, delay: i * 0.06 }}
                   className="rounded-xl border border-white/[0.04] bg-white/[0.01] p-4 md:p-5"
                 >
-                  <h4 className="font-display text-xs font-700 uppercase tracking-wider text-lime">{cap.title}</h4>
-                  <p className="mt-2 font-body text-xs leading-relaxed text-text-muted">{cap.desc}</p>
+                  <h4 className={`font-display text-[10px] font-700 uppercase tracking-wider md:text-xs ${
+                    cap.color === "lime" ? "text-lime" : "text-warm"
+                  }`}>{cap.title}</h4>
+                  <p className="mt-2 font-body text-[11px] leading-relaxed text-text-muted md:text-xs">{cap.desc}</p>
                 </motion.div>
               ))}
             </div>
@@ -114,12 +145,12 @@ export default function SolutionSection() {
             <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.4 }} className="mt-8">
               <button onClick={open}
                 className="cursor-pointer rounded-full bg-lime px-6 py-3 font-display text-[10px] font-700 uppercase tracking-[0.15em] text-bg transition-shadow active:shadow-[0_0_30px_rgba(204,255,0,0.2)] md:px-8 md:py-4 md:text-xs">
-                Разобраться
+                Хочу так же
               </button>
             </motion.div>
           </div>
 
-          {/* Right — phone */}
+          {/* Phone */}
           <motion.div style={{ y: phoneY }} className="flex justify-center overflow-hidden lg:sticky lg:top-32">
             <div className="relative w-full max-w-[260px] overflow-hidden rounded-[2rem] border border-white/[0.06] bg-surface shadow-2xl shadow-black/60 sm:max-w-[300px]">
               <div className="flex items-center justify-center bg-surface pt-2 pb-1">
