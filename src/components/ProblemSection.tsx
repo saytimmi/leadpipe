@@ -3,12 +3,16 @@
 import { motion } from "framer-motion";
 import { useFormModal } from "./FormModal";
 
-const stages = [
-  { label: "Написали", count: "100" },
-  { label: "Получили ответ", count: "60" },
-  { label: "Узнали что нужно", count: "30" },
-  { label: "Дошли до конца", count: "10" },
-  { label: "Стали клиентами", count: "3" },
+const funnel = [
+  { label: "Потрачено на рекламу", value: "237 450 ₸", sub: null, dimValue: true },
+  { label: "Охваты", value: "19 567", sub: null },
+  { label: "Клики по рекламе", value: "3 718", sub: "CTR 19%", color: "text-text" },
+  { label: "Лиды (Facebook)", value: "107", sub: "цена лида: 2 219 ₸", color: "text-text" },
+  { label: "Реально написали в WhatsApp", value: "93", sub: "14 потерялись между FB и чатом", color: "text-text" },
+  { label: "Назвали имя, ответили на вопросы", value: "54", sub: "39 просто написали и замолчали", color: "text-lime" },
+  { label: "Рассказали что нужно, какая боль", value: "34", sub: null, color: "text-lime" },
+  { label: "Дослушали презентацию", value: "17", sub: null, color: "text-lime" },
+  { label: "Пришли на встречу / целевое действие", value: "8", sub: null, color: "text-lime", big: true },
 ];
 
 export default function ProblemSection() {
@@ -17,7 +21,7 @@ export default function ProblemSection() {
   return (
     <section id="problem" className="relative px-6 py-28 md:py-40 lg:px-10">
       {/* Marquee */}
-      <div className="mb-24 overflow-hidden border-y border-white/[0.04] py-5 md:mb-32 md:py-6">
+      <div className="mb-20 overflow-hidden border-y border-white/[0.04] py-5 md:mb-28 md:py-6">
         <div className="marquee-track whitespace-nowrap">
           {[0, 1].map(j => (
             <span key={j} className="inline-block">
@@ -32,22 +36,22 @@ export default function ProblemSection() {
       </div>
 
       <div className="mx-auto max-w-[1400px]">
-        <div className="grid gap-12 md:gap-16 lg:grid-cols-2 lg:gap-20">
+        <div className="mb-8 flex items-center gap-4">
+          <span className="font-display text-[10px] font-700 uppercase tracking-[0.3em] text-lime">02</span>
+          <div className="h-px w-12 bg-white/[0.04]" />
+        </div>
+
+        <div className="grid gap-12 md:gap-16 lg:grid-cols-[1fr_1.2fr] lg:gap-20">
           {/* Left */}
           <div>
-            <div className="mb-8 flex items-center gap-4">
-              <span className="font-display text-[10px] font-700 uppercase tracking-[0.3em] text-lime">02</span>
-              <div className="h-px w-12 bg-white/[0.04]" />
-            </div>
-
-            {["Вот", "в чём", "проблема"].map((word, i) => (
+            {["Вот куда", "уходят", "деньги"].map((word, i) => (
               <div key={i} className="overflow-hidden">
                 <motion.p
                   initial={{ y: "100%" }}
                   whileInView={{ y: "0%" }}
                   viewport={{ once: true, margin: "-80px" }}
                   transition={{ duration: 0.75, delay: i * 0.1, ease: [0.65, 0.05, 0, 1] }}
-                  className={`font-display text-4xl font-800 uppercase leading-[0.95] tracking-tight sm:text-5xl md:text-6xl lg:text-8xl ${
+                  className={`font-display text-4xl font-800 uppercase leading-[0.95] tracking-tight sm:text-5xl md:text-6xl lg:text-7xl ${
                     i === 2 ? "text-text-muted" : ""
                   }`}
                 >
@@ -63,56 +67,87 @@ export default function ProblemSection() {
               transition={{ duration: 0.6, delay: 0.3 }}
               className="mt-8 max-w-md font-body text-sm leading-relaxed text-text-muted md:text-base"
             >
-              Заявки были нормальные. Люди реально интересовались. Просто им не ответили вовремя. Или ответили, но не довели. И ты этого даже не видишь.
+              Вот реальная воронка типичного малого бизнеса за месяц. Посмотри, на каком этапе исчезают люди — и сколько на самом деле стоит один клиент.
             </motion.p>
 
-            <motion.div
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.5 }}
-              className="mt-8"
-            >
+            <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.5 }} className="mt-8">
               <button onClick={open}
-                className="cursor-pointer rounded-full border border-lime/20 px-6 py-3 font-display text-[10px] font-700 uppercase tracking-[0.15em] text-lime transition-all active:bg-lime/5 hover:bg-lime/5 hover:shadow-[0_0_30px_rgba(204,255,0,0.1)] md:px-8 md:py-4 md:text-xs">
+                className="cursor-pointer rounded-full border border-lime/20 px-6 py-3 font-display text-[10px] font-700 uppercase tracking-[0.15em] text-lime transition-all active:bg-lime/5 hover:bg-lime/5 md:px-8 md:py-4 md:text-xs">
                 Разобраться
               </button>
             </motion.div>
           </div>
 
-          {/* Right — funnel */}
+          {/* Right — detailed funnel */}
           <motion.div
             initial={{ opacity: 0, x: 40 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8, ease: [0.65, 0.05, 0, 1] }}
-            className="flex flex-col justify-center"
+            className="rounded-2xl border border-white/[0.04] bg-surface p-5 md:p-8"
           >
-            <div className="space-y-4 md:space-y-6">
-              {stages.map((s, i) => {
-                const isLast = i === stages.length - 1;
-                return (
-                  <motion.div key={s.label}
-                    initial={{ opacity: 0, x: 30 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.5, delay: i * 0.08 }}
-                    className="flex items-baseline gap-4 md:gap-6"
-                  >
-                    <span className={`font-display font-900 tabular-nums ${
-                      isLast ? "text-5xl text-lime sm:text-6xl md:text-7xl lg:text-9xl" : "text-3xl text-text-dim sm:text-4xl md:text-5xl lg:text-6xl"
-                    }`}>
-                      {s.count}
-                    </span>
-                    <span className={`font-body text-xs md:text-sm ${isLast ? "text-lime" : "text-text-dim"}`}>{s.label}</span>
-                  </motion.div>
-                );
-              })}
+            <p className="mb-6 font-display text-[10px] font-500 uppercase tracking-[0.2em] text-text-muted">
+              Реальная воронка за 1 месяц
+            </p>
+
+            <div className="space-y-1">
+              {funnel.map((item, i) => (
+                <motion.div
+                  key={item.label}
+                  initial={{ opacity: 0, x: 20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.4, delay: i * 0.06 }}
+                >
+                  {/* Bar */}
+                  <div className="relative overflow-hidden rounded-lg bg-white/[0.02] py-3 pl-4 pr-4 md:py-3.5">
+                    {/* Fill width proportional to value */}
+                    <motion.div
+                      initial={{ width: 0 }}
+                      whileInView={{ width: `${
+                        i === 0 ? 100 : i === 1 ? 85 : i === 2 ? 65 : i === 3 ? 28 :
+                        i === 4 ? 24 : i === 5 ? 14 : i === 6 ? 9 : i === 7 ? 4.5 : 2
+                      }%` }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.7, delay: 0.2 + i * 0.08, ease: [0.65, 0.05, 0, 1] }}
+                      className={`absolute inset-y-0 left-0 ${
+                        i <= 2 ? "bg-white/[0.02]" : i <= 4 ? "bg-white/[0.03]" : "bg-lime/[0.06]"
+                      }`}
+                    />
+
+                    <div className="relative flex items-baseline justify-between gap-3">
+                      <span className="font-body text-[11px] text-text-muted md:text-xs">{item.label}</span>
+                      <div className="flex items-baseline gap-2 shrink-0">
+                        <span className={`font-display text-sm font-800 md:text-base ${
+                          (item as { big?: boolean }).big ? "text-xl text-lime md:text-2xl" :
+                          item.dimValue ? "text-text-dim" :
+                          item.color || "text-text-muted"
+                        }`}>
+                          {item.value}
+                        </span>
+                      </div>
+                    </div>
+                    {item.sub && (
+                      <p className="relative mt-1 font-body text-[10px] text-text-dim">{item.sub}</p>
+                    )}
+                  </div>
+                </motion.div>
+              ))}
             </div>
 
-            <p className="mt-10 border-t border-white/[0.04] pt-5 font-body text-xs text-text-muted md:text-sm">
-              Остальные 97 — не плохие заявки.
-              <br /><span className="text-text">Им просто никто нормально не ответил.</span>
+            {/* Bottom line */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.8 }}
+              className="mt-6 flex items-baseline justify-between border-t border-white/[0.04] pt-5"
+            >
+              <span className="font-body text-xs text-text-muted">Цена одного клиента:</span>
+              <span className="font-display text-2xl font-900 text-lime md:text-3xl">29 681 ₸</span>
+            </motion.div>
+            <p className="mt-2 font-body text-[10px] text-text-dim">
+              При бюджете 237 450 ₸ и 8 клиентах. А могло быть 20+.
             </p>
           </motion.div>
         </div>
