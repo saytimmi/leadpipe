@@ -1,107 +1,122 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
+import { useRef } from "react";
 
 const stages = [
-  { label: "Написали", count: 100, w: 100 },
-  { label: "Получили ответ", count: 60, w: 60 },
-  { label: "Узнали что нужно", count: 30, w: 30 },
-  { label: "Дошли до конца", count: 10, w: 10 },
-  { label: "Стали клиентами", count: 3, w: 3 },
+  { label: "Написали", count: "100" },
+  { label: "Получили ответ", count: "60" },
+  { label: "Узнали что нужно", count: "30" },
+  { label: "Дошли до конца", count: "10" },
+  { label: "Стали клиентами", count: "3" },
 ];
 
 export default function ProblemSection() {
+  const ref = useRef(null);
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
+
   return (
-    <section id="problem" className="px-6 py-32 md:py-44">
-      <div className="mx-auto max-w-3xl">
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          className="mb-20"
-        >
-          <span className="font-display text-xs font-500 uppercase tracking-[0.3em] text-lime">
-            02
-          </span>
-          <h2 className="mt-4 font-display text-4xl font-800 tracking-tight md:text-6xl lg:text-7xl">
-            Вот в чём{" "}
-            <span className="text-text-muted">проблема</span>
-          </h2>
-        </motion.div>
-
-        <div className="space-y-8">
-          {["Заявки были нормальные. Люди реально интересовались.",
-            "Просто им не ответили вовремя. Или ответили, но не довели. Или довели, но потом забыли напомнить.",
-            "И ты этого даже не видишь. Ты не знаешь, на каком этапе они уходят. Ты не знаешь, сколько на самом деле стоит клиент, а не просто заявка.",
-          ].map((text, i) => (
-            <motion.p
-              key={i}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-60px" }}
-              transition={{ duration: 0.75, ease: [0.65, 0.05, 0, 1] }}
-              className="font-body text-xl leading-[1.8] text-text-muted md:text-2xl"
-            >
-              {text}
-            </motion.p>
-          ))}
-        </div>
-
-        {/* Funnel */}
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
-          className="mt-20 rounded-2xl border border-white/[0.04] bg-surface p-8 md:p-12"
-        >
-          <p className="mb-8 font-display text-xs font-500 uppercase tracking-[0.2em] text-text-muted">
-            Куда уходят заявки
-          </p>
-          <div className="space-y-3">
-            {stages.map((s, i) => (
-              <div key={s.label} className="flex items-center gap-4">
-                <span className={`w-12 shrink-0 text-right font-display text-2xl font-800 ${
-                  i === stages.length - 1 ? "text-lime" : "text-text"
-                }`}>
-                  {s.count}
+    <section ref={ref} id="problem" className="relative px-6 py-40 lg:px-10">
+      {/* Marquee — бегущая строка как у Lando (partners section) */}
+      <div className="mb-32 overflow-hidden border-y border-white/[0.04] py-6">
+        <div className="marquee-track whitespace-nowrap">
+          {[...Array(2)].map((_, j) => (
+            <span key={j} className="inline-block">
+              {["Стоматология", "Автосервис", "Онлайн-школа", "Салон красоты", "Фитнес", "Юристы", "Ремонт", "Недвижимость", "Доставка", "Клиника"].map((biz, i) => (
+                <span key={i} className="mx-8 font-display text-3xl font-700 uppercase text-text-dim md:text-5xl">
+                  {biz}
+                  <span className="mx-8 text-lime">·</span>
                 </span>
-                <div className="relative h-10 flex-1 overflow-hidden rounded-lg bg-white/[0.02]">
-                  <motion.div
-                    initial={{ width: 0 }}
-                    whileInView={{ width: `${s.w}%` }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.8, delay: 0.2 + i * 0.1, ease: [0.65, 0.05, 0, 1] }}
-                    className={`absolute inset-y-0 left-0 rounded-lg ${
-                      i === stages.length - 1 ? "bg-lime/15" : "bg-white/[0.04]"
-                    }`}
-                  />
-                  <span className="relative flex h-full items-center px-4 font-display text-sm font-400 text-text-muted">
-                    {s.label}
-                  </span>
-                </div>
-              </div>
-            ))}
-          </div>
-          <p className="mt-8 border-t border-white/[0.04] pt-6 text-center font-body text-lg text-text-muted">
-            Остальные 97 — не плохие заявки.
-            <br />
-            <span className="text-text">Им просто никто нормально не ответил.</span>
-          </p>
-        </motion.div>
-
-        {/* CTA */}
-        <div className="mt-14 text-center">
-          <button
-            onClick={() => document.getElementById("form")?.scrollIntoView({ behavior: "smooth" })}
-            className="cursor-pointer rounded-full border border-lime/20 px-8 py-4 font-display text-sm font-500 text-lime transition-all hover:bg-lime/5 hover:shadow-[0_0_30px_rgba(204,255,0,0.1)]"
-          >
-            Разобраться
-          </button>
+              ))}
+            </span>
+          ))}
         </div>
       </div>
 
-      <div className="divider mx-auto mt-32 max-w-7xl" />
+      <div className="mx-auto max-w-[1400px]">
+        <div className="grid gap-20 lg:grid-cols-2">
+          {/* Left — big statement */}
+          <div>
+            <div className="mb-8 flex items-center gap-4">
+              <span className="font-display text-[10px] font-700 uppercase tracking-[0.3em] text-lime">02</span>
+              <div className="h-px w-16 bg-white/[0.04]" />
+            </div>
+
+            <div className="space-y-2">
+              {["Вот", "в чём", "проблема"].map((word, i) => (
+                <div key={i} className="overflow-hidden">
+                  <motion.p
+                    initial={{ y: "100%" }}
+                    whileInView={{ y: "0%" }}
+                    viewport={{ once: true, margin: "-100px" }}
+                    transition={{ duration: 0.75, delay: i * 0.1, ease: [0.65, 0.05, 0, 1] }}
+                    className={`font-display text-6xl font-800 uppercase leading-[0.95] tracking-tight md:text-8xl ${
+                      i === 2 ? "text-text-muted" : ""
+                    }`}
+                  >
+                    {word}
+                  </motion.p>
+                </div>
+              ))}
+            </div>
+
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.4 }}
+              className="mt-10 max-w-md font-body text-base leading-relaxed text-text-muted"
+            >
+              Заявки были нормальные. Люди реально интересовались. Просто им не ответили вовремя. Или ответили, но не довели. И ты этого даже не видишь.
+            </motion.p>
+          </div>
+
+          {/* Right — funnel with dramatic scale contrast */}
+          <motion.div
+            initial={{ opacity: 0, x: 60 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8, ease: [0.65, 0.05, 0, 1] }}
+            className="flex flex-col justify-center"
+          >
+            <div className="space-y-6">
+              {stages.map((s, i) => {
+                const isLast = i === stages.length - 1;
+                return (
+                  <motion.div
+                    key={s.label}
+                    initial={{ opacity: 0, x: 40 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.5, delay: i * 0.1 }}
+                    className="flex items-baseline gap-6"
+                  >
+                    <span className={`font-display font-900 tabular-nums ${
+                      isLast ? "text-7xl text-lime md:text-9xl" : "text-4xl text-text-dim md:text-6xl"
+                    }`}>
+                      {s.count}
+                    </span>
+                    <span className={`font-body text-sm ${isLast ? "text-lime" : "text-text-dim"}`}>
+                      {s.label}
+                    </span>
+                  </motion.div>
+                );
+              })}
+            </div>
+
+            <motion.p
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.6 }}
+              className="mt-12 border-t border-white/[0.04] pt-6 font-body text-sm text-text-muted"
+            >
+              Остальные 97 — не плохие заявки.
+              <br /><span className="text-text">Им просто никто нормально не ответил.</span>
+            </motion.p>
+          </motion.div>
+        </div>
+      </div>
     </section>
   );
 }
