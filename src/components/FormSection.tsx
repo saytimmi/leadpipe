@@ -80,12 +80,13 @@ export default function FormSection() {
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             transition={{ type: "spring", delay: 0.2 }}
-            className="mx-auto mb-8 flex h-24 w-24 items-center justify-center rounded-full bg-accent"
+            className="mx-auto mb-8 flex h-24 w-24 items-center justify-center rounded-full glow-neon"
+            style={{ background: "linear-gradient(135deg, var(--color-accent), var(--color-neon))" }}
           >
             <span className="text-4xl text-white">&#10003;</span>
           </motion.div>
-          <h2 className="font-display text-4xl font-800 text-dark md:text-6xl">Готово!</h2>
-          <p className="mt-4 font-body text-xl text-muted">
+          <h2 className="font-display text-4xl font-800 text-text md:text-6xl">Готово!</h2>
+          <p className="mt-4 font-body text-xl text-text-secondary">
             Посмотрим твою ситуацию и расскажем, что можно сделать.
           </p>
         </motion.div>
@@ -95,41 +96,44 @@ export default function FormSection() {
 
   return (
     <section id="form" className="relative flex min-h-screen flex-col items-center justify-center px-6 py-32">
-      <div className="mx-auto w-full max-w-lg">
+      {/* Background glow */}
+      <div className="absolute left-1/2 top-1/2 h-[500px] w-[500px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-accent/5 blur-[120px]" />
+
+      <div className="relative z-10 mx-auto w-full max-w-lg">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           className="mb-12"
         >
-          <span className="font-display text-xs font-600 uppercase tracking-[0.3em] text-accent">
-            05 — Анкета
+          <span className="font-display text-xs font-500 uppercase tracking-[0.3em] text-accent">
+            05 — Последний шаг
           </span>
-          <h2 className="mt-4 font-display text-4xl font-800 tracking-tight text-dark md:text-6xl">
-            Давай
+          <h2 className="mt-5 font-display text-3xl font-800 tracking-tight text-text md:text-5xl">
+            Хочешь увидеть,
             <br />
-            разберёмся
+            <span className="text-gradient">как это работает у тебя?</span>
           </h2>
-          <p className="mt-3 font-body text-lg text-muted">
-            Ответь на пару вопросов — это займёт минуту
+          <p className="mt-4 font-body text-lg text-text-secondary">
+            Ответь на пару вопросов — это займёт 40 секунд
           </p>
         </motion.div>
 
         {/* Progress */}
-        <div className="mb-3 flex justify-between font-display text-xs font-500 text-muted">
+        <div className="mb-3 flex justify-between font-display text-xs font-400 text-text-dim">
           <span>{step + 1} / {steps.length}</span>
           <span>{Math.round(progress)}%</span>
         </div>
-        <div className="mb-10 h-1 w-full overflow-hidden rounded-full bg-dark/5">
+        <div className="mb-10 h-1 w-full overflow-hidden rounded-full bg-white/[0.04]">
           <motion.div
-            className="h-full rounded-full bg-accent"
+            className="h-full rounded-full gradient-line"
             animate={{ width: `${progress}%` }}
             transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
           />
         </div>
 
         {/* Form card */}
-        <div className="rounded-2xl border border-dark/5 bg-white p-8 shadow-xl shadow-dark/5 md:p-10">
+        <div className="glass-card rounded-3xl p-8 md:p-10">
           <AnimatePresence mode="wait">
             <motion.div
               key={step}
@@ -138,7 +142,7 @@ export default function FormSection() {
               exit={{ opacity: 0, x: -40 }}
               transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
             >
-              <p className="mb-8 font-display text-2xl font-700 text-dark">
+              <p className="mb-8 font-display text-xl font-700 text-text md:text-2xl">
                 {current.question}
               </p>
 
@@ -150,7 +154,7 @@ export default function FormSection() {
                   onKeyDown={handleKeyDown}
                   placeholder={current.placeholder}
                   autoFocus
-                  className="w-full border-b-2 border-dark/10 bg-transparent pb-4 font-body text-xl text-dark outline-none transition-colors placeholder:text-dark/20 focus:border-accent"
+                  className="w-full border-b-2 border-white/10 bg-transparent pb-4 font-body text-xl text-text outline-none transition-colors placeholder:text-text-dim focus:border-accent"
                 />
               ) : (
                 <div className="flex flex-col gap-3">
@@ -165,10 +169,10 @@ export default function FormSection() {
                           if (step < steps.length - 1) setStep(step + 1);
                         }, 250);
                       }}
-                      className={`cursor-pointer rounded-xl border-2 px-6 py-4 text-left font-display text-lg font-500 transition-all ${
+                      className={`cursor-pointer rounded-xl border px-6 py-4 text-left font-display text-base font-500 transition-all ${
                         data[current.key] === opt
-                          ? "border-accent bg-accent/5 text-accent"
-                          : "border-dark/5 text-dark hover:border-dark/20"
+                          ? "border-accent/30 bg-accent/10 text-accent"
+                          : "border-white/[0.06] text-text-secondary hover:border-white/10 hover:bg-white/[0.02]"
                       }`}
                     >
                       {opt}
@@ -183,19 +187,20 @@ export default function FormSection() {
             <motion.button
               onClick={handleNext}
               disabled={!canProceed || loading}
-              className="mt-8 w-full cursor-pointer rounded-xl bg-dark px-8 py-4 font-display text-lg font-600 text-white transition-all hover:bg-accent disabled:opacity-30"
+              whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
+              className="mt-8 w-full cursor-pointer rounded-xl bg-accent py-4 font-display text-base font-600 text-white transition-all hover:shadow-lg hover:shadow-accent/25 disabled:opacity-30 disabled:hover:shadow-none"
             >
-              {loading ? "Отправляем..." : step === steps.length - 1 ? "Отправить" : "Дальше \u2192"}
+              {loading ? "Отправляем..." : step === steps.length - 1 ? "Отправить" : "Дальше →"}
             </motion.button>
           )}
 
           {step > 0 && (
             <button
               onClick={() => setStep(step - 1)}
-              className="mt-4 w-full cursor-pointer text-center font-display text-sm font-500 text-muted transition-colors hover:text-dark"
+              className="mt-4 w-full cursor-pointer text-center font-display text-sm font-400 text-text-dim transition-colors hover:text-text-secondary"
             >
-              \u2190 Назад
+              ← Назад
             </button>
           )}
         </div>

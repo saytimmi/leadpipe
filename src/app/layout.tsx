@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "LeadPipe — Ты тратишь на рекламу. А дальше?",
+  title: "LeadPipe — Перестань терять клиентов",
   description:
-    "Система, которая отвечает каждому клиенту, ведёт до конца и показывает реальные цифры твоего бизнеса.",
+    "Система, которая мгновенно отвечает каждому клиенту, ведёт до записи и показывает реальные цифры твоего бизнеса. Для малого и среднего бизнеса.",
 };
 
 export default function RootLayout({

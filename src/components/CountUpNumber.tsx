@@ -14,7 +14,7 @@ export default function CountUpNumber({
   target,
   suffix = "",
   prefix = "",
-  duration = 1.5,
+  duration = 1.8,
 }: CountUpNumberProps) {
   const ref = useRef<HTMLSpanElement>(null);
   const isInView = useInView(ref, { once: true });
