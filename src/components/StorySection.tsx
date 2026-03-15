@@ -76,7 +76,7 @@ export default function StorySection() {
   const textY = useTransform(scrollYProgress, [0, 1], ["0%", "-75%"]);
 
   return (
-    <section ref={ref} id="story" className="relative" style={{ height: "340vh" }}>
+    <section ref={ref} id="story" className="relative" style={{ height: "280vh" }}>
       <div className="sticky top-0 h-[100dvh] overflow-hidden">
         {/* Gradient masks — 15% top, 15% bottom */}
         <div className="pointer-events-none absolute inset-x-0 top-0 z-10 h-[18dvh] bg-gradient-to-b from-bg via-bg/90 to-transparent" />
@@ -121,7 +121,7 @@ export default function StorySection() {
               );
             })}
             {/* Extra space at end so last lines can reach center */}
-            <div className="h-[25dvh]" />
+            <div className="h-[10dvh]" />
           </div>
         </motion.div>
       </div>
