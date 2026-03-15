@@ -43,6 +43,10 @@ const lines: { text: string; color?: string; big?: boolean }[] = [
   { text: "чёрная дыра.", color: "warm", big: true },
 ];
 
+const colorMap: Record<string, string> = {
+  lime: "#CCFF00", warm: "#FF6B35", dim: "#999999", white: "#ffffff",
+};
+
 export default function StorySection() {
   const ref = useRef(null);
   const { scrollYProgress } = useScroll({
@@ -50,31 +54,39 @@ export default function StorySection() {
     offset: ["start start", "end end"],
   });
 
-  const contentLines = lines.filter(l => l.text !== "").length;
-  // More scroll room per line for smoother reading
-  const totalHeight = contentLines * 110 + 800;
+  // Text block scrolls UP through the center of the viewport
+  // At 0% scroll → text starts below center, first lines visible
+  // At 100% scroll → text scrolled up, last lines visible
+  const textY = useTransform(scrollYProgress, [0, 1], ["5%", "-85%"]);
 
   return (
-    <section ref={ref} id="story" className="relative" style={{ height: `${totalHeight}px` }}>
-      {/* sticky container: items-center centers vertically, pt accounts for header */}
-      <div className="sticky top-0 flex h-[100dvh] items-center overflow-hidden px-5 pt-16 md:px-10">
-        <div className="mx-auto w-full max-w-[1400px]">
-          {/* Section label */}
-          <div className="mb-6 flex items-center gap-4 md:mb-8">
+    <section ref={ref} id="story" className="relative" style={{ height: "350vh" }}>
+      <div className="sticky top-0 h-[100dvh] overflow-hidden">
+        {/* Fade masks: top and bottom edges fade to black */}
+        <div className="pointer-events-none absolute inset-x-0 top-0 z-10 h-32 bg-gradient-to-b from-bg to-transparent" />
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-32 bg-gradient-to-t from-bg to-transparent" />
+
+        {/* Section label — fixed at top */}
+        <div className="absolute inset-x-0 top-0 z-20 px-5 pt-20 md:px-10">
+          <div className="mx-auto flex max-w-[1400px] items-center gap-4">
             <span className="font-display text-[10px] font-700 uppercase tracking-[0.3em] text-lime">01</span>
             <div className="h-px flex-1 bg-white/[0.04]" />
             <span className="font-display text-[10px] font-500 uppercase tracking-[0.3em] text-text-muted">Знакомо?</span>
           </div>
+        </div>
 
-          {/* Lines — more spacing on mobile */}
-          <div className="space-y-1.5 md:space-y-1">
+        {/* Scrolling text block */}
+        <motion.div
+          style={{ y: textY }}
+          className="flex h-full flex-col justify-center px-5 md:px-10"
+        >
+          <div className="mx-auto w-full max-w-[1400px] space-y-2 py-[40vh] md:space-y-2.5">
             {lines.map((line, i) => {
-              if (line.text === "") return <div key={i} className="h-3 md:h-4" />;
-              const total = lines.length + 4;
-              // Wider visible window: lines stay lit longer
-              const start = Math.max(0, (i - 2) / total);
-              const peak = (i + 0.5) / total;
-              const end = Math.min(1, (i + 8) / total);
+              if (line.text === "") return <div key={i} className="h-4 md:h-6" />;
+              const total = lines.length + 2;
+              const start = Math.max(0, (i - 3) / total);
+              const peak = i / total;
+              const end = Math.min(1, (i + 6) / total);
               return (
                 <StoryLine key={i} line={line.text} scrollYProgress={scrollYProgress}
                   start={start} peak={peak} end={end}
@@ -82,33 +94,27 @@ export default function StorySection() {
               );
             })}
           </div>
-        </div>
+        </motion.div>
       </div>
     </section>
   );
 }
-
-const colorMap: Record<string, string> = {
-  lime: "#CCFF00", warm: "#FF6B35", dim: "#999999", white: "#ffffff",
-};
 
 function StoryLine({ line, scrollYProgress, start, peak, end, colorType, big }: {
   line: string; scrollYProgress: MotionValue<number>;
   start: number; peak: number; end: number;
   colorType: string; big: boolean;
 }) {
-  // Higher base opacity so more lines are visible at once
-  const opacity = useTransform(scrollYProgress, [start, peak, end], [0.08, 1, 0.15]);
-  const y = useTransform(scrollYProgress, [start, peak], [4, 0]);
+  const opacity = useTransform(scrollYProgress, [start, peak, end], [0.1, 1, 0.2]);
   const peakColor = colorMap[colorType] || "#ffffff";
-  const color = useTransform(scrollYProgress, [start, peak, end], ["#1a1a1a", peakColor, "#262626"]);
+  const color = useTransform(scrollYProgress, [start, peak, end], ["#1a1a1a", peakColor, "#2a2a2a"]);
 
   return (
-    <motion.p style={{ opacity, y, color }}
-      className={`font-display leading-[1.5] md:leading-[1.5] ${
+    <motion.p style={{ opacity, color }}
+      className={`font-display ${
         big
-          ? "text-2xl font-800 md:text-4xl lg:text-5xl"
-          : "text-lg font-600 md:text-2xl lg:text-[2.2rem]"
+          ? "text-2xl font-800 leading-[1.3] md:text-4xl lg:text-5xl"
+          : "text-[17px] font-600 leading-[1.6] md:text-2xl lg:text-[2.2rem]"
       }`}
     >
       {line}
