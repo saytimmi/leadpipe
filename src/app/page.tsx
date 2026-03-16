@@ -1,6 +1,7 @@
 import Header from "@/components/Header";
 import HeroSection from "@/components/HeroSection";
 import StorySection from "@/components/StorySection";
+import TransitionArrow from "@/components/TransitionArrow";
 import ProblemSection from "@/components/ProblemSection";
 import VisibilitySection from "@/components/VisibilitySection";
 import SolutionSection from "@/components/SolutionSection";
@@ -15,6 +16,7 @@ export default function Home() {
       <main>
         <HeroSection />
         <StorySection />
+        <TransitionArrow />
         <ProblemSection />
         <VisibilitySection />
         <SolutionSection />
