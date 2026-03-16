@@ -72,13 +72,16 @@ export default function StorySection() {
     offset: ["start start", "end end"],
   });
 
-  // Smooth translateY: scrolls entire text block through the viewport center
-  const textY = useTransform(scrollYProgress, [0, 1], ["0%", "-90%"]);
+  // Text starts at 40% from top (slightly above center)
+  // Moves up so that the LAST line ends at 40% from top too
+  // -80% translateY on a block that's ~45dvh padding + content + 45dvh bottom padding
+  // ensures text scrolls through the center zone with no black gap at bottom
+  const textY = useTransform(scrollYProgress, [0, 1], ["0%", "-50%"]);
 
   return (
-    <section ref={ref} id="story" className="relative" style={{ height: "160vh" }}>
+    <section ref={ref} id="story" className="relative" style={{ height: "200vh" }}>
       <div className="sticky top-0 h-[100dvh] overflow-hidden">
-        {/* Gradient masks — small, just softens edges */}
+        {/* Gradient masks */}
         <div className="pointer-events-none absolute inset-x-0 top-0 z-10 h-[8dvh] bg-gradient-to-b from-bg to-transparent" />
         <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-[8dvh] bg-gradient-to-t from-bg to-transparent" />
 
@@ -91,11 +94,13 @@ export default function StorySection() {
           </div>
         </div>
 
-        {/* ALL lines rendered — smooth translateY moves them through center */}
+        {/* Text block: padded top AND bottom so text always in center zone */}
         <motion.div
           style={{ y: textY }}
-          className="px-5 pt-[30dvh] md:px-10"
+          className="px-5 md:px-10"
         >
+          {/* Top spacer pushes first line to ~40% from top */}
+          <div className="h-[38dvh]" />
           <div className="mx-auto w-full max-w-[1400px]">
             {lines.map((line, i) => {
               if (line.text === "") {
@@ -120,9 +125,9 @@ export default function StorySection() {
                 />
               );
             })}
-            {/* Extra space at end so last lines can reach center */}
-            <div className="h-[2dvh]" />
           </div>
+          {/* Bottom spacer: ensures last line can reach center without black gap below */}
+          <div className="h-[55dvh]" />
         </motion.div>
       </div>
     </section>
