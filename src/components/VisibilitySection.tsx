@@ -80,7 +80,7 @@ export default function VisibilitySection() {
                 ))}
               </div>
               <button onClick={open}
-                className="mt-8 cursor-pointer rounded-full border border-lime/20 px-6 py-3 font-display text-[10px] font-700 uppercase tracking-[0.15em] text-lime transition-all active:bg-lime/5 hover:bg-lime/5 md:px-8 md:py-4 md:text-xs">
+                className="mt-8 cursor-pointer rounded-full border border-lime/20 px-6 py-3.5 font-display text-xs font-700 uppercase tracking-[0.15em] text-lime transition-all active:bg-lime/5 hover:bg-lime/5 md:px-8 md:py-4">
                 Разобраться
               </button>
             </motion.div>

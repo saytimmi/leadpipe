@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useState, useCallback } from "react";
+import { createContext, useContext, useState, useCallback, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface FormData {
@@ -127,7 +127,15 @@ export function FormModalProvider({ children }: { children: React.ReactNode }) {
     setShowStepMsg(false);
   }, []);
 
-  const close = () => setIsOpen(false);
+  const close = useCallback(() => setIsOpen(false), []);
+
+  // ESC key closes modal
+  useEffect(() => {
+    if (!isOpen) return;
+    const handler = (e: KeyboardEvent) => { if (e.key === "Escape") close(); };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, [isOpen, close]);
 
   const cur = steps[step];
   const val = data[cur.key];
@@ -209,7 +217,7 @@ export function FormModalProvider({ children }: { children: React.ReactNode }) {
               onClick={e => e.stopPropagation()}
               className="relative w-full max-w-md overflow-hidden rounded-2xl border border-white/[0.06] bg-surface"
             >
-              <button onClick={close} className="absolute right-4 top-4 z-10 cursor-pointer p-1 text-text-dim transition-colors hover:text-text-muted">
+              <button onClick={close} aria-label="Закрыть форму" className="absolute right-3 top-3 z-10 cursor-pointer p-2 text-text-muted transition-colors hover:text-text">
                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M15 5L5 15M5 5l10 10" stroke="currentColor" strokeWidth="1.5" /></svg>
               </button>
 
@@ -222,7 +230,13 @@ export function FormModalProvider({ children }: { children: React.ReactNode }) {
                     </div>
                     <h3 className="font-display text-lg font-700">Пока не подходит</h3>
                     <p className="mt-3 font-body text-sm leading-relaxed text-text-muted">{disqualified}</p>
-                    <button onClick={close} className="mt-6 cursor-pointer rounded-full border border-white/[0.06] px-6 py-2.5 font-display text-xs font-500 text-text-muted transition-colors hover:text-text">Понятно</button>
+                    <div className="mt-6 flex flex-col items-center gap-3">
+                      <button onClick={() => { setDisqualified(null); setStep(s => Math.max(0, s - 1)); }}
+                        className="cursor-pointer rounded-full bg-lime/10 px-6 py-3 font-display text-xs font-600 text-lime transition-colors hover:bg-lime/20">
+                        ← Попробовать ещё раз
+                      </button>
+                      <button onClick={close} className="cursor-pointer font-display text-xs text-text-dim transition-colors hover:text-text-muted">Закрыть</button>
+                    </div>
                   </motion.div>
                 ) : submitted ? (
                   /* SUCCESS */
@@ -238,7 +252,7 @@ export function FormModalProvider({ children }: { children: React.ReactNode }) {
                     <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
                       <h3 className="font-display text-2xl font-800">Заявка принята! 🎉</h3>
                       <p className="mt-3 font-body text-sm text-text-muted">Изучим твою ситуацию и напишем с конкретным планом.</p>
-                      <p className="mt-1 font-display text-xs text-text-dim">Обычно — в течение часа</p>
+                      <p className="mt-1 font-display text-xs text-text-muted/60">Обычно — в течение часа</p>
                     </motion.div>
                     <button onClick={close} className="mt-6 cursor-pointer font-display text-xs text-text-dim hover:text-text-muted transition-colors">Закрыть</button>
                   </motion.div>
@@ -247,19 +261,19 @@ export function FormModalProvider({ children }: { children: React.ReactNode }) {
                   <>
                     {/* Progress bar with step dots */}
                     <div className="mb-2 flex items-center justify-between">
-                      <div className="flex gap-1">
+                      <div className="flex gap-1.5">
                         {steps.map((_, i) => (
                           <motion.div
                             key={i}
-                            className={`h-1 rounded-full ${
-                              i < step ? "bg-lime" : i === step ? "bg-lime" : "bg-white/[0.06]"
+                            className={`h-1.5 rounded-full ${
+                              i < step ? "bg-lime" : i === step ? "bg-lime" : "bg-white/[0.08]"
                             }`}
-                            animate={{ width: i === step ? 20 : 8 }}
+                            animate={{ width: i === step ? 24 : 10 }}
                             transition={{ duration: 0.3 }}
                           />
                         ))}
                       </div>
-                      <span className="font-display text-[10px] text-text-dim">{Math.round(progress)}%</span>
+                      <span className="font-display text-[10px] text-text-muted">{Math.round(progress)}%</span>
                     </div>
 
                     <div className="mb-6 h-px w-full bg-white/[0.04]" />
@@ -285,14 +299,15 @@ export function FormModalProvider({ children }: { children: React.ReactNode }) {
                         {cur.type === "text" ? (
                           <input type="text" value={val} onChange={e => setData({ ...data, [cur.key]: e.target.value })}
                             onKeyDown={e => e.key === "Enter" && canNext && goNext()} placeholder={cur.ph}
-                            className="w-full border-b border-white/10 bg-transparent pb-3 font-body text-lg outline-none placeholder:text-text-dim focus:border-lime transition-colors" />
+                            autoFocus
+                            className="w-full border-b-2 border-white/15 bg-transparent pb-3 font-body text-lg outline-none placeholder:text-text-dim focus:border-lime transition-colors" />
                         ) : (
                           <div className="flex flex-col gap-2">
                             {cur.opts?.map(opt => (
                               <motion.button key={opt.label} whileTap={{ scale: 0.97 }}
                                 onClick={() => handleSelect(opt.label)}
-                                className={`cursor-pointer rounded-xl border px-4 py-3 text-left font-display text-sm font-500 transition-all active:bg-lime/5 ${
-                                  val === opt.label ? "border-lime/30 bg-lime/5 text-lime" : "border-white/[0.04] text-text-muted"
+                                className={`cursor-pointer rounded-xl border px-4 py-3.5 text-left font-display text-sm font-500 transition-all active:bg-lime/5 focus-visible:ring-2 focus-visible:ring-lime focus-visible:outline-none ${
+                                  val === opt.label ? "border-lime/30 bg-lime/5 text-lime" : "border-white/[0.06] text-text-muted hover:border-white/10"
                                 }`}>
                                 <span className="mr-2">{opt.emoji}</span>
                                 {opt.label}
@@ -310,7 +325,7 @@ export function FormModalProvider({ children }: { children: React.ReactNode }) {
                       </motion.button>
                     )}
                     {step > 0 && (
-                      <button onClick={() => setStep(s => s - 1)} className="mt-3 w-full cursor-pointer text-center font-display text-xs text-text-dim hover:text-text-muted transition-colors">← Назад</button>
+                      <button onClick={() => setStep(s => s - 1)} className="mt-3 w-full cursor-pointer py-2 text-center font-display text-xs text-text-muted/60 hover:text-text-muted transition-colors">← Назад</button>
                     )}
                   </>
                 )}

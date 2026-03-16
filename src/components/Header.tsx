@@ -24,7 +24,7 @@ export default function Header() {
         <motion.button
           whileTap={{ scale: 0.92 }}
           onClick={open}
-          className="cursor-pointer rounded-full bg-lime px-5 py-2.5 font-display text-[10px] font-700 uppercase tracking-[0.15em] text-bg transition-shadow active:shadow-[0_0_30px_rgba(204,255,0,0.2)] md:px-6"
+          className="cursor-pointer rounded-full bg-lime px-5 py-3 font-display text-xs font-700 uppercase tracking-[0.15em] text-bg transition-shadow active:shadow-[0_0_30px_rgba(204,255,0,0.2)] md:px-6 md:py-3.5"
         >
           Оставить заявку
         </motion.button>

@@ -13,11 +13,11 @@ export default function Footer() {
         <p className="max-w-sm font-body text-xs leading-relaxed text-text-muted">
           Система, которая отвечает каждому клиенту, ведёт до конца и показывает реальные цифры твоего бизнеса.
         </p>
-        <a href="https://t.me/" target="_blank" rel="noopener noreferrer"
-          className="rounded-full border border-white/[0.04] px-5 py-2 font-display text-[10px] font-500 uppercase tracking-wider text-text-muted transition-all active:text-lime hover:border-lime/20 hover:text-lime">
+        <a href="https://t.me/callttyy" target="_blank" rel="noopener noreferrer"
+          className="rounded-full border border-white/[0.04] px-5 py-3 font-display text-xs font-500 uppercase tracking-wider text-text-muted transition-all active:text-lime hover:border-lime/20 hover:text-lime">
           Telegram
         </a>
-        <p className="font-display text-[10px] text-text-dim">&copy; {new Date().getFullYear()} LeadPipe</p>
+        <p className="font-display text-[10px] text-text-muted">&copy; {new Date().getFullYear()} LeadPipe</p>
       </div>
     </footer>
   );

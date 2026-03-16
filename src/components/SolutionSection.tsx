@@ -164,7 +164,7 @@ export default function SolutionSection() {
 
             <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.4 }} className="mt-8">
               <button onClick={open}
-                className="cursor-pointer rounded-full bg-lime px-6 py-3 font-display text-[10px] font-700 uppercase tracking-[0.15em] text-bg transition-shadow active:shadow-[0_0_30px_rgba(204,255,0,0.2)] md:px-8 md:py-4 md:text-xs">
+                className="cursor-pointer rounded-full bg-lime px-6 py-3.5 font-display text-xs font-700 uppercase tracking-[0.15em] text-bg transition-shadow active:shadow-[0_0_30px_rgba(204,255,0,0.2)] md:px-8 md:py-4">
                 Хочу так же
               </button>
             </motion.div>
@@ -200,7 +200,7 @@ export default function SolutionSection() {
                 </div>
 
                 {/* Chat */}
-                <div className="space-y-1.5 overflow-y-auto bg-bg p-3" style={{ height: "420px" }}>
+                <div className="space-y-1.5 overflow-y-auto bg-bg p-3 h-80 md:h-[420px]">
                   {chatMessages.map((item, i) => {
                     const msgIndex = chatMessages.slice(0, i + 1).filter(m => m.type === "message").length;
                     const baseDelay = 0.2 + (msgIndex - 1) * 0.55;

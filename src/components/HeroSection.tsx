@@ -51,7 +51,7 @@ export default function HeroSection() {
           <motion.p
             animate={{ y: [0, 5, 0] }}
             transition={{ duration: 2, repeat: Infinity }}
-            className="font-display text-[10px] font-500 uppercase tracking-[0.2em] text-text-dim"
+            className="font-display text-[10px] font-500 uppercase tracking-[0.2em] text-text-muted/50"
             style={{ writingMode: "vertical-lr" }}
           >
             Scroll
