@@ -23,10 +23,20 @@ const steps: {
     key: "name", q: "Как тебя зовут?", type: "text", ph: "Имя",
   },
   {
-    key: "business", q: "Чем занимается твой бизнес?", type: "text", ph: "Стоматология, автосервис...",
+    key: "business", q: "Какой у тебя бизнес?", type: "select",
+    opts: [
+      { label: "Стоматология", emoji: "🦷" },
+      { label: "Салон красоты", emoji: "💇" },
+      { label: "Автосервис", emoji: "🔧" },
+      { label: "Онлайн-школа", emoji: "🎓" },
+      { label: "Клининг", emoji: "🧹" },
+      { label: "Недвижимость", emoji: "🏠" },
+      { label: "Фитнес", emoji: "💪" },
+      { label: "Другое", emoji: "📦" },
+    ],
   },
   {
-    key: "hasTraffic", q: "Закупаешь трафик?", type: "select",
+    key: "hasTraffic", q: "Покупаешь рекламу?", type: "select",
     opts: [
       { label: "Да, активно", emoji: "🚀" },
       { label: "Немного, тестирую", emoji: "🧪" },
@@ -40,14 +50,14 @@ const steps: {
   {
     key: "budget", q: "Сколько тратишь на рекламу в месяц?", type: "select",
     opts: [
-      { label: "До 100 000 ₸", emoji: "💰" },
-      { label: "100 000 — 500 000 ₸", emoji: "💰💰" },
-      { label: "500 000 — 2 000 000 ₸", emoji: "💰💰💰" },
-      { label: "2 000 000 — 5 000 000 ₸", emoji: "🔥" },
-      { label: "Свыше 5 000 000 ₸", emoji: "🚀" },
+      { label: "До $200", emoji: "💰" },
+      { label: "$200 — $1 000", emoji: "💰💰" },
+      { label: "$1 000 — $3 000", emoji: "💰💰💰" },
+      { label: "$3 000 — $10 000", emoji: "🔥" },
+      { label: "Свыше $10 000", emoji: "🚀" },
     ],
-    disqualify: (val) => val === "До 100 000 ₸"
-      ? "При бюджете до 100 000 ₸ LeadPipe пока не окупится. Рекомендуем начать с бюджета от 100 000 ₸ — тогда возвращайся, поможем!"
+    disqualify: (val) => val === "До $200"
+      ? "При бюджете до $200 LeadPipe пока не окупится. Рекомендуем начать с бюджета от $200 — тогда возвращайся, поможем!"
       : null,
   },
   {
@@ -56,7 +66,8 @@ const steps: {
       { label: "1–3", emoji: "📩" },
       { label: "3–10", emoji: "📬" },
       { label: "10–30", emoji: "📮" },
-      { label: "30+", emoji: "🏔️" },
+      { label: "30–100", emoji: "📦" },
+      { label: "100+", emoji: "🏔️" },
     ],
   },
   {

@@ -19,15 +19,15 @@ export default function ProblemSection() {
   const { open } = useFormModal();
 
   return (
-    <section id="problem" className="relative px-6 py-28 md:py-40 lg:px-10">
+    <section id="problem" className="relative px-6 pt-10 pb-28 md:pt-16 md:pb-40 lg:px-10">
       {/* Marquee */}
-      <div className="mb-20 overflow-hidden border-y border-white/[0.04] py-5 md:mb-28 md:py-6">
+      <div className="mb-10 overflow-hidden border-y border-white/[0.04] py-4 md:mb-14 md:py-5">
         <div className="marquee-track whitespace-nowrap">
           {[0, 1].map(j => (
             <span key={j} className="inline-block">
-              {["Стоматология", "Автосервис", "Онлайн-школа", "Салон красоты", "Фитнес", "Юристы", "Ремонт", "Недвижимость", "Доставка", "Клиника", "Детский центр", "Барбершоп", "Автошкола", "Мебель на заказ"].map((biz, i) => (
-                <span key={i} className="mx-4 font-display text-xl font-700 uppercase text-text-dim md:mx-8 md:text-4xl lg:text-5xl">
-                  {biz}<span className="mx-4 text-lime md:mx-8">·</span>
+              {["Стоматология", "Автосервис", "Онлайн-школа", "Салон красоты", "Клининг", "Агентство недвижимости", "Фитнес", "Юристы", "Ремонт квартир", "Доставка еды", "Клиника", "Детский центр", "Барбершоп", "Автошкола", "Мебель на заказ", "Фотостудия", "Ветеринарка", "Репетиторы", "Массаж", "Автомойка", "Цветы", "Кондитерская", "Шиномонтаж", "Пекарня"].map((biz, i) => (
+                <span key={i} className="mx-3 font-display text-lg font-700 uppercase text-text-dim md:mx-5 md:text-3xl lg:text-4xl">
+                  {biz}<span className="mx-3 text-lime md:mx-5">·</span>
                 </span>
               ))}
             </span>
@@ -40,7 +40,7 @@ export default function ProblemSection() {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.6 }}
-        className="mb-20 text-center font-body text-sm text-text-muted md:mb-28 md:text-base"
+        className="mb-10 text-center font-body text-sm text-text-muted md:mb-14 md:text-base"
       >
         Ты всё равно тратишь деньги на рекламу и обрабатываешь заявки.
         <br />
