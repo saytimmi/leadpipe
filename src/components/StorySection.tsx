@@ -11,7 +11,7 @@ const lines: { text: string; color?: string; big?: boolean }[] = [
 
   { text: "" },
 
-  { text: "Ты нанял таргетолога." },
+  { text: "Ты нанял таргетолога.", color: "dim" },
   { text: "Он запустил три кампании.", color: "dim" },
   { text: "Бюджет — $2 560.", color: "lime" },
 
@@ -19,48 +19,48 @@ const lines: { text: string; color?: string; big?: boolean }[] = [
 
   { text: "Через неделю он пишет:", color: "dim" },
   { text: "«1 280 лидов. Лид — $2.»", color: "lime" },
-  { text: "Ты думаешь — классно.", color: "dim" },
+  { text: "Ты думаешь — классно." },
 
   { text: "" },
 
-  { text: "Но дешёвый лид", color: "warm" },
+  { text: "Но дешёвый лид" },
   { text: "≠ хороший лид.", color: "warm", big: true },
 
   { text: "" },
 
-  { text: "В WhatsApp написали 890.", color: "dim" },
+  { text: "В WhatsApp написали 890." },
   { text: "390 — потерялись между формой и чатом.", color: "warm" },
 
   { text: "" },
 
-  { text: "Вовремя ответили — 400.", color: "dim" },
+  { text: "Вовремя ответили — 400." },
   { text: "490 написали вечером или в выходные.", color: "warm" },
   { text: "Ответ через 5-10 часов.", color: "warm" },
-  { text: "Они ушли.", color: "warm" },
+  { text: "Они ушли.", color: "warm", big: true },
 
   { text: "" },
 
-  { text: "Имя назвали — 310.", color: "dim" },
-  { text: "Дослушали — 58.", color: "dim" },
+  { text: "Имя назвали — 310." },
+  { text: "Дослушали — 58." },
   { text: "На встречу пришли —" },
-  { text: "16.", color: "lime", big: true },
+  { text: "16.", color: "warm", big: true },
 
   { text: "" },
 
-  { text: "Лид — $2.", color: "dim" },
-  { text: "Клиент — $160.", color: "lime", big: true },
+  { text: "Лид — $2.", color: "lime" },
+  { text: "Клиент — $160.", color: "warm", big: true },
 
   { text: "" },
 
-  { text: "1 280 лидов написали.", color: "dim" },
-  { text: "Но сколько из них реально готовы купить?", color: "warm" },
+  { text: "1 280 лидов написали." },
+  { text: "Но сколько из них реально готовы купить?" },
   { text: "А сколько просто спросили цену и ушли?", color: "warm" },
   { text: "Ты не знаешь.", color: "warm", big: true },
 
   { text: "" },
 
-  { text: "Таргетолог не видит.", color: "warm" },
-  { text: "Менеджер не видит.", color: "warm" },
+  { text: "Таргетолог не видит." },
+  { text: "Менеджер не видит." },
   { text: "Ты — тоже.", color: "warm", big: true },
 
   { text: "" },
