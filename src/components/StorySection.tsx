@@ -76,11 +76,11 @@ export default function StorySection() {
   const textY = useTransform(scrollYProgress, [0, 1], ["0%", "-75%"]);
 
   return (
-    <section ref={ref} id="story" className="relative" style={{ height: "280vh" }}>
+    <section ref={ref} id="story" className="relative" style={{ height: "250vh" }}>
       <div className="sticky top-0 h-[100dvh] overflow-hidden">
-        {/* Gradient masks — 15% top, 15% bottom */}
-        <div className="pointer-events-none absolute inset-x-0 top-0 z-10 h-[18dvh] bg-gradient-to-b from-bg via-bg/90 to-transparent" />
-        <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-[18dvh] bg-gradient-to-t from-bg via-bg/90 to-transparent" />
+        {/* Gradient masks — small, just softens edges */}
+        <div className="pointer-events-none absolute inset-x-0 top-0 z-10 h-[8dvh] bg-gradient-to-b from-bg to-transparent" />
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-[8dvh] bg-gradient-to-t from-bg to-transparent" />
 
         {/* Section label */}
         <div className="absolute inset-x-0 top-0 z-20 px-5 pt-[4dvh] md:px-10">
@@ -94,7 +94,7 @@ export default function StorySection() {
         {/* ALL lines rendered — smooth translateY moves them through center */}
         <motion.div
           style={{ y: textY }}
-          className="px-5 pt-[55dvh] md:px-10"
+          className="px-5 pt-[40dvh] md:px-10"
         >
           <div className="mx-auto w-full max-w-[1400px]">
             {lines.map((line, i) => {
@@ -104,8 +104,8 @@ export default function StorySection() {
 
               const total = lines.length;
               const linePos = i / total;
-              const before = Math.max(0, linePos - 0.1);
-              const after = Math.min(1, linePos + 0.2);
+              const before = Math.max(0, linePos - 0.15);
+              const after = Math.min(1, linePos + 0.35);
 
               return (
                 <StoryLine
@@ -138,9 +138,9 @@ function StoryLine({ line, scrollYProgress, before, linePos, after, colorType, b
   colorType: string;
   big: boolean;
 }) {
-  const opacity = useTransform(scrollYProgress, [before, linePos, after], [0.08, 1, 0.15]);
+  const opacity = useTransform(scrollYProgress, [before, linePos, after], [0.12, 1, 0.25]);
   const peakColor = colorMap[colorType] || "#ffffff";
-  const color = useTransform(scrollYProgress, [before, linePos, after], ["#1a1a1a", peakColor, "#282828"]);
+  const color = useTransform(scrollYProgress, [before, linePos, after], ["#222222", peakColor, "#333333"]);
 
   return (
     <motion.p
