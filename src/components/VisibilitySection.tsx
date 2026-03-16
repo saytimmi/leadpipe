@@ -7,25 +7,25 @@ import CountUpNumber from "./CountUpNumber";
 
 const metrics = [
   { label: "Бюджет", value: 2560, suffix: " $" },
-  { label: "Охваты", value: 19567, suffix: "" },
-  { label: "Клики", value: 3718, suffix: "" },
-  { label: "Лиды", value: 93, suffix: "", accent: true },
-  { label: "Квалифицированы", value: 54, suffix: "", accent: true },
-  { label: "Клиенты", value: 8, suffix: "", accent: true },
-  { label: "Цена лида", value: 24, suffix: " $" },
-  { label: "Цена клиента", value: 320, suffix: " $", accent: true },
+  { label: "Охваты", value: 320000, suffix: "" },
+  { label: "Клики", value: 12800, suffix: "" },
+  { label: "Лиды", value: 1280, suffix: "", accent: true },
+  { label: "Квалифицированы", value: 310, suffix: "", accent: true },
+  { label: "Клиенты", value: 16, suffix: "", accent: true },
+  { label: "Цена лида", value: 2, suffix: " $" },
+  { label: "Цена клиента", value: 160, suffix: " $", accent: true },
 ];
 
 const qualStages = [
-  { name: "Показы", count: 256000, isCurrency: false, loss: null, hint: "CPM $10 — в норме → обсудить частоту с таргетологом" },
-  { name: "Охваты", count: 168000, loss: null, hint: "168к уникальных → обсудить сегменты с таргетологом" },
-  { name: "Клики", count: 3840, loss: null, hint: "CTR 1.5% · CPC $0.67 → креативщик молодец" },
-  { name: "Лиды", count: 134, loss: "−3706", hint: "Конверсия 3.5% · CPL $19 → обсудить оффер с маркетологом" },
-  { name: "Написали", count: 115, loss: "−19", hint: "19 потерялись между формой и чатом → автоответ нужен" },
-  { name: "Имя", count: 68, loss: "−47", hint: "Менеджер не отвечает вовремя → обсудить с РОПом" },
-  { name: "Боль", count: 42, loss: "−26", hint: "Скрипт не раскрывает потребность → обсудить с маркетологом" },
-  { name: "Презентация", count: 21, loss: "−21", hint: "Продукт не доносится → обсудить с РОПом" },
-  { name: "Встреча", count: 8, loss: "−13", hint: "Нет дожима → обсудить с менеджером" },
+  { name: "Показы", count: 580000, isCurrency: false, loss: null, hint: "CPM $4.4 — дешёвый трафик → обсудить качество с таргетологом" },
+  { name: "Охваты", count: 320000, loss: null, hint: "320к уникальных → обсудить сегменты с таргетологом" },
+  { name: "Клики", count: 12800, loss: null, hint: "CTR 2.2% · CPC $0.20 → креативщик молодец" },
+  { name: "Лиды", count: 1280, loss: "−11520", hint: "Конверсия 10% · CPL $2 → обсудить качество лидов" },
+  { name: "Написали", count: 890, loss: "−390", hint: "390 потерялись между формой и чатом → автоответ нужен" },
+  { name: "Имя", count: 310, loss: "−580", hint: "Менеджер не отвечает вовремя → обсудить с РОПом" },
+  { name: "Боль", count: 145, loss: "−165", hint: "Скрипт не раскрывает потребность → обсудить с маркетологом" },
+  { name: "Презентация", count: 58, loss: "−87", hint: "Продукт не доносится → обсудить с РОПом" },
+  { name: "Встреча", count: 16, loss: "−42", hint: "Нет дожима → обсудить с менеджером" },
 ];
 
 const features = [

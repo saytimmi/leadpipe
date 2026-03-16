@@ -4,16 +4,16 @@ import { motion } from "framer-motion";
 import { useFormModal } from "./FormModal";
 
 const funnel = [
-  { label: "Потрачено на рекламу", value: "$2 560", sub: "CPM ~$10", dimValue: true },
-  { label: "Показы", value: "256 000", sub: null },
-  { label: "Охваты", value: "168 000", sub: "частота 1.5" },
-  { label: "Клики по рекламе", value: "3 840", sub: "CTR 1.5% · CPC $0.67", color: "text-text" },
-  { label: "Оставили заявку (лиды)", value: "134", sub: "конверсия 3.5% · CPL $19", color: "text-text" },
-  { label: "Реально написали в WhatsApp", value: "115", sub: "19 потерялись между формой и чатом", color: "text-text" },
-  { label: "Назвали имя, ответили на вопросы", value: "68", sub: "47 просто написали и замолчали", color: "text-lime" },
-  { label: "Рассказали боль, услышали оффер", value: "42", sub: null, color: "text-lime" },
-  { label: "Дослушали презентацию", value: "21", sub: null, color: "text-lime" },
-  { label: "Пришли на встречу", value: "8", sub: null, color: "text-lime", big: true },
+  { label: "Потрачено на рекламу", value: "$2 560", sub: null, dimValue: true },
+  { label: "Показы", value: "580 000", sub: "CPM ~$4.4" },
+  { label: "Охваты", value: "320 000", sub: "частота 1.8" },
+  { label: "Клики по рекламе", value: "12 800", sub: "CTR 2.2% · CPC $0.20", color: "text-text" },
+  { label: "Оставили заявку (лиды)", value: "1 280", sub: "конверсия 10% · CPL $2", color: "text-text" },
+  { label: "Реально написали в WhatsApp", value: "890", sub: "390 потерялись между формой и чатом", color: "text-text" },
+  { label: "Назвали имя, ответили на вопросы", value: "310", sub: "580 написали и замолчали", color: "text-lime" },
+  { label: "Рассказали боль, услышали оффер", value: "145", sub: null, color: "text-lime" },
+  { label: "Дослушали презентацию", value: "58", sub: null, color: "text-lime" },
+  { label: "Пришли на встречу", value: "16", sub: null, color: "text-lime", big: true },
 ];
 
 export default function ProblemSection() {
@@ -157,10 +157,10 @@ export default function ProblemSection() {
               className="mt-6 flex items-baseline justify-between border-t border-white/[0.04] pt-5"
             >
               <span className="font-body text-xs text-text-muted">Цена одного клиента:</span>
-              <span className="font-display text-2xl font-900 text-lime md:text-3xl">$320</span>
+              <span className="font-display text-2xl font-900 text-lime md:text-3xl">$160</span>
             </motion.div>
-            <p className="mt-2 font-body text-[10px] text-text-dim">
-              134 лида → 8 клиентов. Конверсия 6%. А могло быть 20+.
+            <p className="mt-2 font-body text-[10px] text-text-muted/60">
+              1 280 лидов → 16 клиентов. Конверсия 1.25%. А могло быть 60+.
             </p>
           </motion.div>
         </div>

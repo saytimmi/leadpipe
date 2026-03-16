@@ -18,7 +18,7 @@ const lines: { text: string; color?: string; big?: boolean }[] = [
   { text: "" },
 
   { text: "Через неделю он пишет:", color: "dim" },
-  { text: "«134 лида. Лид — $19.»", color: "lime" },
+  { text: "«1 280 лидов. Лид — $2.»", color: "lime" },
   { text: "Ты думаешь — классно.", color: "dim" },
 
   { text: "" },
@@ -28,31 +28,31 @@ const lines: { text: string; color?: string; big?: boolean }[] = [
 
   { text: "" },
 
-  { text: "В WhatsApp пришло 115.", color: "dim" },
-  { text: "19 — потерялись между формой и чатом.", color: "warm" },
+  { text: "В WhatsApp написали 890.", color: "dim" },
+  { text: "390 — потерялись между формой и чатом.", color: "warm" },
 
   { text: "" },
 
-  { text: "Вовремя ответили — 70.", color: "dim" },
-  { text: "45 написали вечером.", color: "warm" },
+  { text: "Вовремя ответили — 400.", color: "dim" },
+  { text: "490 написали вечером или в выходные.", color: "warm" },
   { text: "Ответ через 5-10 часов.", color: "warm" },
   { text: "Они ушли.", color: "warm" },
 
   { text: "" },
 
-  { text: "Имя назвали — 68.", color: "dim" },
-  { text: "Дослушали — 21.", color: "dim" },
+  { text: "Имя назвали — 310.", color: "dim" },
+  { text: "Дослушали — 58.", color: "dim" },
   { text: "На встречу пришли —" },
-  { text: "8.", color: "lime", big: true },
+  { text: "16.", color: "lime", big: true },
 
   { text: "" },
 
-  { text: "Лид — $19.", color: "dim" },
-  { text: "Клиент — $320.", color: "lime", big: true },
+  { text: "Лид — $2.", color: "dim" },
+  { text: "Клиент — $160.", color: "lime", big: true },
 
   { text: "" },
 
-  { text: "134 лида написали.", color: "dim" },
+  { text: "1 280 лидов написали.", color: "dim" },
   { text: "Но сколько из них реально готовы купить?", color: "warm" },
   { text: "А сколько просто спросили цену и ушли?", color: "warm" },
   { text: "Ты не знаешь.", color: "warm", big: true },
