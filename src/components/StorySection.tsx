@@ -6,18 +6,19 @@ import { useRef } from "react";
 // Each group = one thought. Empty string = spacer between thoughts.
 const lines: { text: string; color?: string; big?: boolean }[] = [
   { text: "У тебя бизнес." },
-  { text: "Стоматология, автосервис — неважно.", color: "dim" },
+  { text: "Стоматология, салон красоты, автосервис,", color: "dim" },
+  { text: "клининг, онлайн-школа, фитнес — неважно.", color: "dim" },
 
   { text: "" },
 
   { text: "Ты нанял таргетолога." },
   { text: "Он запустил три кампании.", color: "dim" },
-  { text: "Бюджет — 237 000 ₸.", color: "lime" },
+  { text: "Бюджет — $2 560.", color: "lime" },
 
   { text: "" },
 
   { text: "Через неделю он пишет:", color: "dim" },
-  { text: "«107 лидов. Лид — 2 200 ₸.»", color: "lime" },
+  { text: "«134 лида. Лид — $19.»", color: "lime" },
   { text: "Ты думаешь — классно.", color: "dim" },
 
   { text: "" },
@@ -27,27 +28,34 @@ const lines: { text: string; color?: string; big?: boolean }[] = [
 
   { text: "" },
 
-  { text: "В WhatsApp пришло 93.", color: "dim" },
-  { text: "14 — потерялись.", color: "warm" },
+  { text: "В WhatsApp пришло 115.", color: "dim" },
+  { text: "19 — потерялись между формой и чатом.", color: "warm" },
 
   { text: "" },
 
-  { text: "Вовремя ответили — 60.", color: "dim" },
-  { text: "33 написали вечером.", color: "warm" },
+  { text: "Вовремя ответили — 70.", color: "dim" },
+  { text: "45 написали вечером.", color: "warm" },
   { text: "Ответ через 5-10 часов.", color: "warm" },
   { text: "Они ушли.", color: "warm" },
 
   { text: "" },
 
-  { text: "Имя назвали — 54.", color: "dim" },
-  { text: "Дослушали — 17.", color: "dim" },
+  { text: "Имя назвали — 68.", color: "dim" },
+  { text: "Дослушали — 21.", color: "dim" },
   { text: "На встречу пришли —" },
   { text: "8.", color: "lime", big: true },
 
   { text: "" },
 
-  { text: "Лид — 2 200 ₸.", color: "dim" },
-  { text: "Клиент — 29 681 ₸.", color: "lime", big: true },
+  { text: "Лид — $19.", color: "dim" },
+  { text: "Клиент — $320.", color: "lime", big: true },
+
+  { text: "" },
+
+  { text: "134 лида написали.", color: "dim" },
+  { text: "Но сколько из них реально готовы купить?", color: "warm" },
+  { text: "А сколько просто спросили цену и ушли?", color: "warm" },
+  { text: "Ты не знаешь.", color: "warm", big: true },
 
   { text: "" },
 

@@ -4,15 +4,16 @@ import { motion } from "framer-motion";
 import { useFormModal } from "./FormModal";
 
 const funnel = [
-  { label: "Потрачено на рекламу", value: "237 450 ₸", sub: null, dimValue: true },
-  { label: "Охваты", value: "19 567", sub: null },
-  { label: "Клики по рекламе", value: "3 718", sub: "CTR 19%", color: "text-text" },
-  { label: "Лиды (Facebook)", value: "107", sub: "цена лида: 2 219 ₸", color: "text-text" },
-  { label: "Реально написали в WhatsApp", value: "93", sub: "14 потерялись между FB и чатом", color: "text-text" },
-  { label: "Назвали имя, ответили на вопросы", value: "54", sub: "39 просто написали и замолчали", color: "text-lime" },
-  { label: "Рассказали что нужно, какая боль", value: "34", sub: null, color: "text-lime" },
-  { label: "Дослушали презентацию", value: "17", sub: null, color: "text-lime" },
-  { label: "Пришли на встречу / целевое действие", value: "8", sub: null, color: "text-lime", big: true },
+  { label: "Потрачено на рекламу", value: "$2 560", sub: "CPM ~$10", dimValue: true },
+  { label: "Показы", value: "256 000", sub: null },
+  { label: "Охваты", value: "168 000", sub: "частота 1.5" },
+  { label: "Клики по рекламе", value: "3 840", sub: "CTR 1.5% · CPC $0.67", color: "text-text" },
+  { label: "Оставили заявку (лиды)", value: "134", sub: "конверсия 3.5% · CPL $19", color: "text-text" },
+  { label: "Реально написали в WhatsApp", value: "115", sub: "19 потерялись между формой и чатом", color: "text-text" },
+  { label: "Назвали имя, ответили на вопросы", value: "68", sub: "47 просто написали и замолчали", color: "text-lime" },
+  { label: "Рассказали боль, услышали оффер", value: "42", sub: null, color: "text-lime" },
+  { label: "Дослушали презентацию", value: "21", sub: null, color: "text-lime" },
+  { label: "Пришли на встречу", value: "8", sub: null, color: "text-lime", big: true },
 ];
 
 export default function ProblemSection() {
@@ -156,10 +157,10 @@ export default function ProblemSection() {
               className="mt-6 flex items-baseline justify-between border-t border-white/[0.04] pt-5"
             >
               <span className="font-body text-xs text-text-muted">Цена одного клиента:</span>
-              <span className="font-display text-2xl font-900 text-lime md:text-3xl">29 681 ₸</span>
+              <span className="font-display text-2xl font-900 text-lime md:text-3xl">$320</span>
             </motion.div>
             <p className="mt-2 font-body text-[10px] text-text-dim">
-              При бюджете 237 450 ₸ и 8 клиентах. А могло быть 20+.
+              134 лида → 8 клиентов. Конверсия 6%. А могло быть 20+.
             </p>
           </motion.div>
         </div>

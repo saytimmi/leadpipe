@@ -6,25 +6,26 @@ import { useFormModal } from "./FormModal";
 import CountUpNumber from "./CountUpNumber";
 
 const metrics = [
-  { label: "Бюджет", value: 237450, suffix: " ₸" },
+  { label: "Бюджет", value: 2560, suffix: " $" },
   { label: "Охваты", value: 19567, suffix: "" },
   { label: "Клики", value: 3718, suffix: "" },
   { label: "Лиды", value: 93, suffix: "", accent: true },
   { label: "Квалифицированы", value: 54, suffix: "", accent: true },
   { label: "Клиенты", value: 8, suffix: "", accent: true },
-  { label: "Цена лида", value: 2553, suffix: " ₸" },
-  { label: "Цена клиента", value: 29681, suffix: " ₸", accent: true },
+  { label: "Цена лида", value: 24, suffix: " $" },
+  { label: "Цена клиента", value: 320, suffix: " $", accent: true },
 ];
 
 const qualStages = [
-  { name: "Показы", count: 237450, isCurrency: false, loss: null, hint: "Охват в норме → обсудить частоту с таргетологом" },
-  { name: "Охваты", count: 19567, loss: null, hint: "Креативы видят 19.5к людей → обсудить сегменты с таргетологом" },
-  { name: "Клики", count: 3718, loss: null, hint: "CTR 19% — выше среднего → креативщик молодец" },
-  { name: "Лиды", count: 93, loss: "−3625", hint: "Конверсия в лид 2.5% → обсудить оффер с маркетологом" },
-  { name: "Имя", count: 54, loss: "−39", hint: "Менеджер не отвечает вовремя → обсудить с РОПом" },
-  { name: "Боль", count: 34, loss: "−20", hint: "Скрипт не раскрывает потребность → обсудить с маркетологом" },
-  { name: "Презентация", count: 17, loss: "−17", hint: "Продукт не доносится → обсудить с РОПом и маркетологом" },
-  { name: "Встреча", count: 8, loss: "−9", hint: "Нет дожима после презентации → обсудить с менеджером" },
+  { name: "Показы", count: 256000, isCurrency: false, loss: null, hint: "CPM $10 — в норме → обсудить частоту с таргетологом" },
+  { name: "Охваты", count: 168000, loss: null, hint: "168к уникальных → обсудить сегменты с таргетологом" },
+  { name: "Клики", count: 3840, loss: null, hint: "CTR 1.5% · CPC $0.67 → креативщик молодец" },
+  { name: "Лиды", count: 134, loss: "−3706", hint: "Конверсия 3.5% · CPL $19 → обсудить оффер с маркетологом" },
+  { name: "Написали", count: 115, loss: "−19", hint: "19 потерялись между формой и чатом → автоответ нужен" },
+  { name: "Имя", count: 68, loss: "−47", hint: "Менеджер не отвечает вовремя → обсудить с РОПом" },
+  { name: "Боль", count: 42, loss: "−26", hint: "Скрипт не раскрывает потребность → обсудить с маркетологом" },
+  { name: "Презентация", count: 21, loss: "−21", hint: "Продукт не доносится → обсудить с РОПом" },
+  { name: "Встреча", count: 8, loss: "−13", hint: "Нет дожима → обсудить с менеджером" },
 ];
 
 const features = [
