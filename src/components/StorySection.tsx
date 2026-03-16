@@ -5,7 +5,10 @@ import { useRef } from "react";
 
 // Each group = one thought. Empty string = spacer between thoughts.
 const lines: { text: string; color?: string; big?: boolean }[] = [
-  { text: "У тебя бизнес." },
+  { text: "У ТЕБЯ БИЗНЕС.", color: "lime", big: true },
+
+  { text: "" },
+
   { text: "Стоматология, салон красоты, автосервис,", color: "dim" },
   { text: "клининг, онлайн-школа, фитнес — неважно.", color: "dim" },
 
