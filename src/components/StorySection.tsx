@@ -73,10 +73,10 @@ export default function StorySection() {
   });
 
   // Smooth translateY: scrolls entire text block through the viewport center
-  const textY = useTransform(scrollYProgress, [0, 1], ["0%", "-75%"]);
+  const textY = useTransform(scrollYProgress, [0, 1], ["0%", "-90%"]);
 
   return (
-    <section ref={ref} id="story" className="relative" style={{ height: "220vh" }}>
+    <section ref={ref} id="story" className="relative" style={{ height: "160vh" }}>
       <div className="sticky top-0 h-[100dvh] overflow-hidden">
         {/* Gradient masks — small, just softens edges */}
         <div className="pointer-events-none absolute inset-x-0 top-0 z-10 h-[8dvh] bg-gradient-to-b from-bg to-transparent" />
@@ -94,7 +94,7 @@ export default function StorySection() {
         {/* ALL lines rendered — smooth translateY moves them through center */}
         <motion.div
           style={{ y: textY }}
-          className="px-5 pt-[40dvh] md:px-10"
+          className="px-5 pt-[30dvh] md:px-10"
         >
           <div className="mx-auto w-full max-w-[1400px]">
             {lines.map((line, i) => {
@@ -121,7 +121,7 @@ export default function StorySection() {
               );
             })}
             {/* Extra space at end so last lines can reach center */}
-            <div className="h-[5dvh]" />
+            <div className="h-[2dvh]" />
           </div>
         </motion.div>
       </div>
