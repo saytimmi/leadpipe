@@ -14,14 +14,14 @@ export default function HeroSection() {
     <section ref={ref} className="noise relative h-[120vh]">
       <div className="sticky top-0 flex h-[100dvh] flex-col items-center justify-center overflow-hidden px-6">
         <motion.div style={{ y, opacity, scale }} className="relative z-10 w-full max-w-[1400px]">
-          {["Заявки есть.", "Кто их", "обработает?"].map((line, i) => (
+          {["Знай куда", "ушёл каждый", "доллар."].map((line, i) => (
             <div key={i} className="overflow-hidden">
               <motion.h1
                 initial={{ y: "110%" }}
                 animate={{ y: "0%" }}
                 transition={{ duration: 1, delay: 0.15 + i * 0.12, ease: [0.65, 0.05, 0, 1] }}
                 className={`font-display text-[11vw] font-900 uppercase leading-[0.92] tracking-tight sm:text-[10vw] ${
-                  i === 1 ? "text-text-muted" : i === 2 ? "text-lime" : ""
+                  i === 0 ? "" : i === 1 ? "text-text-muted" : "text-lime"
                 }`}
               >
                 {line}
@@ -36,8 +36,8 @@ export default function HeroSection() {
             className="mt-8 flex justify-end"
           >
             <p className="max-w-xs text-right font-body text-xs leading-relaxed text-text-muted sm:max-w-sm sm:text-sm">
-              LeadPipe — бот, который отвечает каждому лиду за 3 секунды,
-              <br />квалифицирует и передаёт готового клиента менеджеру.
+              Каждый лид обработан, каждый этап виден.
+              <br />Ты точно знаешь кто купит, а кто просто спросил цену.
             </p>
           </motion.div>
         </motion.div>

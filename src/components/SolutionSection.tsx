@@ -148,7 +148,7 @@ export default function SolutionSection() {
         </motion.p>
 
         {/* Capabilities + Phone side by side */}
-        <div className="grid items-start gap-12 md:gap-16 lg:grid-cols-[1fr_380px] lg:gap-16">
+        <div className="grid items-start gap-12 md:gap-16 lg:grid-cols-[1fr_320px] lg:gap-16">
           <div>
             <div className="grid gap-3 sm:grid-cols-2 md:gap-4">
               {capabilities.map((cap, i) => (
@@ -175,15 +175,15 @@ export default function SolutionSection() {
             </motion.div>
           </div>
 
-          {/* iPhone with WhatsApp */}
-          <motion.div style={{ y: phoneY }} className="flex flex-col items-center overflow-hidden lg:sticky lg:top-28">
-            <div className="relative w-[300px] sm:w-[340px] md:w-[360px]">
+          {/* iPhone with WhatsApp — real iPhone 15 proportions */}
+          <motion.div style={{ y: phoneY }} className="flex flex-col items-center overflow-hidden lg:sticky lg:top-12">
+            <div className="relative w-[260px] sm:w-[280px] md:w-[300px]">
               {/* Subtle glow */}
               <div className="absolute -inset-8 rounded-[3.5rem] bg-lime/[0.03] blur-3xl" />
 
-              {/* iPhone frame */}
-              <div className="relative overflow-hidden rounded-[2.5rem] border-[2px] border-white/[0.08] shadow-2xl shadow-black/60"
-                style={{ background: "#111B21" }}>
+              {/* iPhone frame — aspect ratio 9:19.5 like real iPhone */}
+              <div className="relative flex flex-col overflow-hidden rounded-[2.2rem] border-[2px] border-white/[0.08] shadow-2xl shadow-black/60"
+                style={{ background: "#111B21", aspectRatio: "9/19.5" }}>
 
                 {/* iOS Status bar */}
                 <div className="flex items-center justify-between px-7 pt-3 pb-0" style={{ background: "#1F2C34" }}>
@@ -240,7 +240,7 @@ export default function SolutionSection() {
                 </div>
 
                 {/* Chat area with WA wallpaper pattern */}
-                <div className="relative h-80 overflow-y-auto p-2.5 md:h-[400px]"
+                <div className="relative flex-1 overflow-y-auto p-2.5"
                   style={{ background: "#0B141A" }}>
                   {/* Subtle wallpaper overlay */}
                   <div className="pointer-events-none absolute inset-0 opacity-[0.03]"
