@@ -1,21 +1,62 @@
 import { supabase } from "@/lib/supabase";
 
-export async function generateDigest(periodDays = 1): Promise<string> {
-  const now = new Date();
-  const since = new Date(now);
-  since.setDate(since.getDate() - periodDays);
+// Shenzhen UTC+8
+const TZ_OFFSET_HOURS = 8;
 
-  const [pvRes, svRes, feRes] = await Promise.all([
-    supabase.from("lp_page_views").select("session_id, referrer, utm_source").gte("created_at", since.toISOString()),
-    supabase.from("lp_section_views").select("session_id, section, time_spent_ms").gte("created_at", since.toISOString()),
-    supabase.from("lp_form_events").select("session_id, event, step_name").gte("created_at", since.toISOString()),
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type Row = any;
+
+/** Paginated fetch — Supabase returns max 1000 rows per request */
+async function fetchAll(table: string, select: string, since: string): Promise<Row[]> {
+  const rows: Row[] = [];
+  let offset = 0;
+  const PAGE = 1000;
+  while (true) {
+    const { data } = await supabase
+      .from(table)
+      .select(select)
+      .gte("created_at", since)
+      .range(offset, offset + PAGE - 1);
+    if (!data || data.length === 0) break;
+    rows.push(...data);
+    if (data.length < PAGE) break;
+    offset += PAGE;
+  }
+  return rows;
+}
+
+/** Get "today midnight" in Shenzhen timezone as UTC ISO string */
+function todayMidnightUTC(): string {
+  const now = new Date();
+  const local = new Date(now.getTime() + TZ_OFFSET_HOURS * 3600_000);
+  local.setUTCHours(0, 0, 0, 0);
+  return new Date(local.getTime() - TZ_OFFSET_HOURS * 3600_000).toISOString();
+}
+
+/** Convert UTC created_at to Shenzhen date string YYYY-MM-DD */
+function toLocalDate(utcTimestamp: string): string {
+  const d = new Date(utcTimestamp);
+  d.setTime(d.getTime() + TZ_OFFSET_HOURS * 3600_000);
+  return d.toISOString().slice(0, 10);
+}
+
+const bar = (n: number, max: number, len = 10) => {
+  const filled = max > 0 ? Math.min(len, Math.max(0, Math.round((n / max) * len))) : 0;
+  return "\u2593".repeat(filled) + "\u2591".repeat(len - filled);
+};
+
+// ─── Full digest ─────────────────────────────────────────────
+
+export async function generateDigest(periodDays = 1): Promise<string> {
+  const since = new Date(Date.now() - periodDays * 86400_000).toISOString();
+
+  const [pageViews, sectionViews, formEvents] = await Promise.all([
+    fetchAll("lp_page_views", "session_id, referrer, utm_source", since),
+    fetchAll("lp_section_views", "session_id, section, time_spent_ms", since),
+    fetchAll("lp_form_events", "session_id, event, step_name", since),
   ]);
 
-  const pageViews = pvRes.data || [];
-  const sectionViews = svRes.data || [];
-  const formEvents = feRes.data || [];
-
-  const uniqueSessions = new Set(pageViews.map(p => p.session_id)).size;
+  const uniqueSessions = new Set(pageViews.map((p: Row) => p.session_id)).size;
 
   // Section reach
   const sectionOrder = ["hero", "story", "problem", "visibility", "solution", "form"];
@@ -47,15 +88,11 @@ export async function generateDigest(periodDays = 1): Promise<string> {
   // Top UTM
   const utmMap = new Map<string, number>();
   for (const pv of pageViews) {
-    if (pv.utm_source) utmMap.set(pv.utm_source, (utmMap.get(pv.utm_source) || 0) + 1);
+    if (pv.utm_source) utmMap.set(pv.utm_source as string, (utmMap.get(pv.utm_source as string) || 0) + 1);
   }
   const topUtm = Array.from(utmMap.entries()).sort((a, b) => b[1] - a[1]).slice(0, 5);
 
   const periodLabel = periodDays === 1 ? "24 часа" : periodDays === 7 ? "7 дней" : periodDays === 30 ? "30 дней" : `${periodDays} дн.`;
-  const bar = (n: number, max: number) => {
-    const filled = max > 0 ? Math.min(10, Math.max(0, Math.round((n / max) * 10))) : 0;
-    return "\u2593".repeat(filled) + "\u2591".repeat(10 - filled);
-  };
 
   const lines = [
     `📊 LeadPipe — статистика за ${periodLabel}`,
@@ -78,8 +115,7 @@ export async function generateDigest(periodDays = 1): Promise<string> {
     "— Воронка формы —",
     `Открыли:    ${opens}`,
     ...Array.from({ length: 8 }, (_, i) => {
-      const stepKey = `step_${i + 1}`;
-      const count = eventCounts.get(stepKey)?.size || 0;
+      const count = eventCounts.get(`step_${i + 1}`)?.size || 0;
       return { line: `Шаг ${i + 1}:      ${count}`, count };
     }).filter(s => s.count > 0).map(s => s.line),
     `Отправили:  ${submits}`,
@@ -96,33 +132,29 @@ export async function generateDigest(periodDays = 1): Promise<string> {
   return lines.join("\n");
 }
 
-/** Leads per day for the last N days */
+// ─── Leads per day ───────────────────────────────────────────
+
 export async function generateLeadsReport(days = 7): Promise<string> {
-  const now = new Date();
-  const since = new Date(now);
-  since.setDate(since.getDate() - days);
+  const since = new Date(Date.now() - days * 86400_000).toISOString();
 
-  const { data: events } = await supabase
-    .from("lp_form_events")
-    .select("session_id, event, created_at")
-    .in("event", ["submit", "open", "disqualified"])
-    .gte("created_at", since.toISOString())
-    .order("created_at", { ascending: true });
+  const events = await fetchAll(
+    "lp_form_events",
+    "session_id, event, created_at",
+    since,
+  );
 
-  const rows = events || [];
-
-  // Group by date
+  // Group by local date
   const byDate = new Map<string, { opens: Set<string>; submits: Set<string>; disq: Set<string> }>();
 
+  // Pre-fill all dates
   for (let i = 0; i < days; i++) {
-    const d = new Date(now);
-    d.setDate(d.getDate() - i);
+    const d = new Date(Date.now() - i * 86400_000 + TZ_OFFSET_HOURS * 3600_000);
     const key = d.toISOString().slice(0, 10);
     byDate.set(key, { opens: new Set(), submits: new Set(), disq: new Set() });
   }
 
-  for (const row of rows) {
-    const key = row.created_at.slice(0, 10);
+  for (const row of events) {
+    const key = toLocalDate(row.created_at);
     let entry = byDate.get(key);
     if (!entry) { entry = { opens: new Set(), submits: new Set(), disq: new Set() }; byDate.set(key, entry); }
     if (row.event === "open") entry.opens.add(row.session_id);
@@ -131,16 +163,11 @@ export async function generateLeadsReport(days = 7): Promise<string> {
   }
 
   const sorted = Array.from(byDate.entries()).sort((a, b) => b[0].localeCompare(a[0]));
-
   const totalSubmits = sorted.reduce((sum, [, d]) => sum + d.submits.size, 0);
   const totalOpens = sorted.reduce((sum, [, d]) => sum + d.opens.size, 0);
+  const maxSubmits = Math.max(...sorted.map(([, d]) => d.submits.size), 1);
 
   const dayNames = ["Вс", "Пн", "Вт", "Ср", "Чт", "Пт", "Сб"];
-  const bar = (n: number, max: number) => {
-    const filled = max > 0 ? Math.min(8, Math.max(0, Math.round((n / max) * 8))) : 0;
-    return "\u2593".repeat(filled) + "\u2591".repeat(8 - filled);
-  };
-  const maxSubmits = Math.max(...sorted.map(([, d]) => d.submits.size), 1);
 
   const lines = [
     `📋 Лиды по дням (${days} дн.)`,
@@ -155,29 +182,24 @@ export async function generateLeadsReport(days = 7): Promise<string> {
     const s = data.submits.size;
     const o = data.opens.size;
     const d = data.disq.size;
-    lines.push(`${dow} ${dd}  ${bar(s, maxSubmits)}  ✅${s}  📝${o}  ❌${d}`);
+    lines.push(`${dow} ${dd}  ${bar(s, maxSubmits, 8)}  ✅${s}  📝${o}  ❌${d}`);
   }
 
   lines.push("", "✅ заявки  📝 открытия  ❌ дисквал.");
-
   return lines.join("\n");
 }
 
-/** Today's live stats */
-export async function generateTodayStats(): Promise<string> {
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  const since = today.toISOString();
+// ─── Today stats ─────────────────────────────────────────────
 
-  const [pvRes, feRes] = await Promise.all([
-    supabase.from("lp_page_views").select("session_id").gte("created_at", since),
-    supabase.from("lp_form_events").select("session_id, event").gte("created_at", since),
+export async function generateTodayStats(): Promise<string> {
+  const since = todayMidnightUTC();
+
+  const [pageViews, formEvents] = await Promise.all([
+    fetchAll("lp_page_views", "session_id", since),
+    fetchAll("lp_form_events", "session_id, event", since),
   ]);
 
-  const pageViews = pvRes.data || [];
-  const formEvents = feRes.data || [];
-
-  const uniqueVisitors = new Set(pageViews.map(p => p.session_id)).size;
+  const uniqueVisitors = new Set(pageViews.map((p: Row) => p.session_id)).size;
 
   const eventSets = new Map<string, Set<string>>();
   for (const fe of formEvents) {
@@ -206,6 +228,8 @@ export async function generateTodayStats(): Promise<string> {
 
   return lines.join("\n");
 }
+
+// ─── Telegram helpers ────────────────────────────────────────
 
 export async function sendTelegram(chatId: string | number, text: string) {
   const token = process.env.TELEGRAM_BOT_TOKEN;

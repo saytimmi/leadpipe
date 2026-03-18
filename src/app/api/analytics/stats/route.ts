@@ -63,7 +63,10 @@ export async function GET(req: NextRequest) {
   // Referrers
   const refMap = new Map<string, number>();
   for (const pv of pageViews) {
-    const ref = pv.referrer ? new URL(pv.referrer).hostname : "Прямой";
+    let ref = "Прямой";
+    if (pv.referrer) {
+      try { ref = new URL(pv.referrer).hostname; } catch { ref = pv.referrer; }
+    }
     refMap.set(ref, (refMap.get(ref) || 0) + 1);
   }
   const topReferrers = Array.from(refMap.entries())
