@@ -53,7 +53,7 @@ export async function generateDigest(periodDays = 1): Promise<string> {
 
   const periodLabel = periodDays === 1 ? "24 часа" : periodDays === 7 ? "7 дней" : periodDays === 30 ? "30 дней" : `${periodDays} дн.`;
   const bar = (n: number, max: number) => {
-    const filled = max > 0 ? Math.round((n / max) * 10) : 0;
+    const filled = max > 0 ? Math.min(10, Math.max(0, Math.round((n / max) * 10))) : 0;
     return "\u2593".repeat(filled) + "\u2591".repeat(10 - filled);
   };
 
