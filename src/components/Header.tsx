@@ -3,6 +3,8 @@
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useFormModal } from "./FormModal";
 
+const ease: [number, number, number, number] = [0.22, 1, 0.36, 1];
+
 export default function Header() {
   const { scrollY, scrollYProgress } = useScroll();
   const bgOpacity = useTransform(scrollY, [0, 120], [0, 1]);
@@ -13,10 +15,10 @@ export default function Header() {
     <motion.header
       initial={{ y: -80, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.75, ease: [0.65, 0.05, 0, 1] }}
+      transition={{ duration: 0.75, ease }}
       className="fixed left-0 right-0 top-0 z-50"
     >
-      <motion.div style={{ opacity: bgOpacity }} className="absolute inset-0 border-b border-white/5 bg-bg/80 backdrop-blur-lg" />
+      <motion.div style={{ opacity: bgOpacity }} className="absolute inset-0 border-b border-white/5 bg-bg/85 backdrop-blur-md" />
       <div className="relative mx-auto flex max-w-[1400px] items-center justify-between px-6 py-4 lg:px-10 lg:py-5">
         <span className="font-display text-sm font-700 tracking-tight lg:text-base">
           lead<span className="text-lime">pipe</span>

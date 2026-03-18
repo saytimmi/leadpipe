@@ -58,7 +58,7 @@ export default function VisibilitySection() {
                   initial={{ y: "100%" }}
                   whileInView={{ y: "0%" }}
                   viewport={{ once: true, margin: "-50px" }}
-                  transition={{ duration: 0.75, delay: i * 0.08, ease: [0.65, 0.05, 0, 1] }}
+                  transition={{ duration: 0.75, delay: i * 0.08, ease: [0.22, 1, 0.36, 1] }}
                   className={`font-display text-4xl font-800 uppercase leading-[0.95] tracking-tight md:text-5xl lg:text-7xl ${
                     i === 3 ? "text-lime" : ""
                   }`}
@@ -138,13 +138,13 @@ export default function VisibilitySection() {
                       transition={{ delay: 0.3 + i * 0.08 }}
                     >
                       <div className="flex items-center gap-2">
-                        <span className="w-20 shrink-0 font-display text-[10px] font-500 text-text-dim md:w-24 md:text-xs">{stage.name}</span>
+                        <span className="w-16 shrink-0 font-display text-[10px] font-500 text-text-dim sm:w-20 md:w-24 md:text-xs">{stage.name}</span>
                         <div className="relative h-7 flex-1 overflow-hidden rounded bg-white/[0.02] md:h-8">
                           <motion.div
                             initial={{ width: 0 }}
                             whileInView={{ width: `${barWidth}%` }}
                             viewport={{ once: true }}
-                            transition={{ duration: 0.7, delay: 0.4 + i * 0.1, ease: [0.65, 0.05, 0, 1] }}
+                            transition={{ duration: 0.7, delay: 0.4 + i * 0.1, ease: [0.22, 1, 0.36, 1] }}
                             className={`absolute inset-y-0 left-0 rounded ${isLast ? "bg-lime/20" : "bg-white/[0.04]"}`}
                           />
                           <div className="relative flex h-full items-center justify-between px-2.5">
@@ -157,7 +157,7 @@ export default function VisibilitySection() {
                       </div>
                       {/* Hint — owner insight */}
                       {stage.hint && (
-                        <div className="ml-20 mt-1 flex items-start gap-1.5 md:ml-24">
+                        <div className="ml-16 mt-1 flex items-start gap-1.5 sm:ml-20 md:ml-24">
                           <span className="mt-0.5 text-[9px]">💡</span>
                           <p className="font-body text-[10px] leading-snug text-warm/80 md:text-[11px]">{stage.hint}</p>
                         </div>

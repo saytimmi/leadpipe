@@ -2,6 +2,8 @@
 
 import { motion } from "framer-motion";
 
+const ease: [number, number, number, number] = [0.22, 1, 0.36, 1];
+
 export default function TransitionArrow() {
   return (
     <div className="relative flex flex-col items-center justify-center py-16 md:py-24">
@@ -10,7 +12,7 @@ export default function TransitionArrow() {
         initial={{ height: 0, opacity: 0 }}
         whileInView={{ height: 80, opacity: 1 }}
         viewport={{ once: true }}
-        transition={{ duration: 0.8, ease: [0.65, 0.05, 0, 1] }}
+        transition={{ duration: 0.8, ease }}
         className="w-px bg-gradient-to-b from-warm/0 via-warm to-warm/0"
       />
 
@@ -35,7 +37,7 @@ export default function TransitionArrow() {
         initial={{ opacity: 0, y: 10 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
-        transition={{ delay: 0.6 }}
+        transition={{ delay: 0.6, duration: 0.6, ease }}
         className="mt-2 font-display text-xs font-500 uppercase tracking-[0.3em] text-text-dim"
       >
         А теперь цифры
@@ -47,7 +49,7 @@ export default function TransitionArrow() {
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
         viewport={{ once: true }}
-        transition={{ delay: 0.8 }}
+        transition={{ delay: 0.8, duration: 0.5, ease }}
         className="mt-3 text-text-dim"
       >
         <motion.path

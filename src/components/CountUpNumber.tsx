@@ -10,6 +10,10 @@ interface CountUpNumberProps {
   duration?: number;
 }
 
+function easeOutCubic(t: number) {
+  return 1 - Math.pow(1 - t, 3);
+}
+
 export default function CountUpNumber({
   target,
   suffix = "",
@@ -23,22 +27,26 @@ export default function CountUpNumber({
   useEffect(() => {
     if (!isInView) return;
 
-    const steps = 60;
-    const increment = target / steps;
-    let current = 0;
-    const interval = (duration * 1000) / steps;
+    let startTime: number | null = null;
+    let raf: number;
 
-    const timer = setInterval(() => {
-      current += increment;
-      if (current >= target) {
-        setValue(target);
-        clearInterval(timer);
+    const animate = (timestamp: number) => {
+      if (!startTime) startTime = timestamp;
+      const elapsed = timestamp - startTime;
+      const progress = Math.min(elapsed / (duration * 1000), 1);
+      const eased = easeOutCubic(progress);
+
+      setValue(Math.floor(eased * target));
+
+      if (progress < 1) {
+        raf = requestAnimationFrame(animate);
       } else {
-        setValue(Math.floor(current));
+        setValue(target);
       }
-    }, interval);
+    };
 
-    return () => clearInterval(timer);
+    raf = requestAnimationFrame(animate);
+    return () => cancelAnimationFrame(raf);
   }, [isInView, target, duration]);
 
   return (

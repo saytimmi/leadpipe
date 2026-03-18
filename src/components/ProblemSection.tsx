@@ -3,16 +3,18 @@
 import { motion } from "framer-motion";
 import { useFormModal } from "./FormModal";
 
+const ease: [number, number, number, number] = [0.22, 1, 0.36, 1];
+
 const funnel = [
   { label: "Потрачено на рекламу", value: "$2 560", sub: null, dimValue: true },
   { label: "Показы", value: "580 000", sub: "CPM ~$4.4" },
   { label: "Охваты", value: "320 000", sub: "частота 1.8" },
   { label: "Клики по рекламе", value: "12 800", sub: "CTR 2.2% · CPC $0.20", color: "text-text" },
   { label: "Оставили заявку (лиды)", value: "1 280", sub: "конверсия 10% · CPL $2", color: "text-text" },
-  { label: "Реально написали в WhatsApp", value: "890", sub: "390 потерялись между формой и чатом", color: "text-text" },
-  { label: "Назвали имя, ответили на вопросы", value: "310", sub: "580 написали и замолчали", color: "text-lime" },
-  { label: "Рассказали боль, услышали оффер", value: "145", sub: null, color: "text-lime" },
-  { label: "Дослушали презентацию", value: "58", sub: null, color: "text-lime" },
+  { label: "Написали в WhatsApp", value: "890", sub: "390 потерялись", color: "text-text" },
+  { label: "Назвали имя", value: "310", sub: "580 замолчали", color: "text-lime" },
+  { label: "Услышали оффер", value: "145", sub: null, color: "text-lime" },
+  { label: "Дослушали", value: "58", sub: null, color: "text-lime" },
   { label: "Пришли на встречу", value: "16", sub: null, color: "text-lime", big: true },
 ];
 
@@ -27,7 +29,7 @@ export default function ProblemSection() {
           {[0, 1].map(j => (
             <span key={j} className="inline-block">
               {["Стоматология", "Автосервис", "Онлайн-школа", "Салон красоты", "Клининг", "Агентство недвижимости", "Фитнес", "Юристы", "Ремонт квартир", "Доставка еды", "Клиника", "Детский центр", "Барбершоп", "Автошкола", "Мебель на заказ", "Фотостудия", "Ветеринарка", "Репетиторы", "Массаж", "Автомойка", "Цветы", "Кондитерская", "Шиномонтаж", "Пекарня"].map((biz, i) => (
-                <span key={i} className="mx-3 font-display text-lg font-700 uppercase text-text-dim md:mx-5 md:text-3xl lg:text-4xl">
+                <span key={i} className="mx-3 font-display text-sm font-700 uppercase text-text-dim md:mx-5 md:text-3xl lg:text-4xl">
                   {biz}<span className="mx-3 text-lime md:mx-5">·</span>
                 </span>
               ))}
@@ -40,7 +42,7 @@ export default function ProblemSection() {
         initial={{ opacity: 0, y: 10 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
-        transition={{ duration: 0.6 }}
+        transition={{ duration: 0.6, ease }}
         className="mb-10 text-center font-body text-sm text-text-muted md:mb-14 md:text-base"
       >
         Ты всё равно тратишь деньги на рекламу и обрабатываешь заявки.
@@ -63,7 +65,7 @@ export default function ProblemSection() {
                   initial={{ y: "100%" }}
                   whileInView={{ y: "0%" }}
                   viewport={{ once: true, margin: "-80px" }}
-                  transition={{ duration: 0.75, delay: i * 0.1, ease: [0.65, 0.05, 0, 1] }}
+                  transition={{ duration: 0.75, delay: i * 0.1, ease }}
                   className={`font-display text-4xl font-800 uppercase leading-[0.95] tracking-tight sm:text-5xl md:text-6xl lg:text-7xl ${
                     i === 2 ? "text-text-muted" : ""
                   }`}
@@ -77,7 +79,7 @@ export default function ProblemSection() {
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.3 }}
+              transition={{ duration: 0.6, delay: 0.3, ease }}
               className="mt-8 max-w-md font-body text-sm leading-relaxed text-text-muted md:text-base"
             >
               Вот реальная воронка типичного малого бизнеса за месяц. Посмотри, на каком этапе исчезают люди — и сколько на самом деле стоит один клиент.
@@ -96,7 +98,7 @@ export default function ProblemSection() {
             initial={{ opacity: 0, x: 40 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.8, ease: [0.65, 0.05, 0, 1] }}
+            transition={{ duration: 0.8, ease }}
             className="rounded-2xl border border-white/[0.04] bg-surface p-5 md:p-8"
           >
             <p className="mb-6 font-display text-[10px] font-500 uppercase tracking-[0.2em] text-text-muted">
@@ -110,7 +112,7 @@ export default function ProblemSection() {
                   initial={{ opacity: 0, x: 20 }}
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true }}
-                  transition={{ duration: 0.4, delay: i * 0.06 }}
+                  transition={{ duration: 0.4, delay: i * 0.06, ease }}
                 >
                   {/* Bar */}
                   <div className="relative overflow-hidden rounded-lg bg-white/[0.02] py-3 pl-4 pr-4 md:py-3.5">
@@ -122,14 +124,14 @@ export default function ProblemSection() {
                         i === 4 ? 24 : i === 5 ? 14 : i === 6 ? 9 : i === 7 ? 4.5 : 2
                       }%` }}
                       viewport={{ once: true }}
-                      transition={{ duration: 0.7, delay: 0.2 + i * 0.08, ease: [0.65, 0.05, 0, 1] }}
+                      transition={{ duration: 0.7, delay: 0.2 + i * 0.08, ease }}
                       className={`absolute inset-y-0 left-0 ${
                         i <= 2 ? "bg-white/[0.02]" : i <= 4 ? "bg-white/[0.03]" : "bg-lime/[0.06]"
                       }`}
                     />
 
-                    <div className="relative flex items-baseline justify-between gap-3">
-                      <span className="font-body text-[11px] text-text-muted md:text-xs">{item.label}</span>
+                    <div className="relative flex items-baseline justify-between gap-2">
+                      <span className="min-w-0 truncate font-body text-[11px] text-text-muted md:text-xs">{item.label}</span>
                       <div className="flex items-baseline gap-2 shrink-0">
                         <span className={`font-display text-sm font-800 md:text-base ${
                           (item as { big?: boolean }).big ? "text-xl text-lime md:text-2xl" :

@@ -4,6 +4,8 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef, useState, useEffect } from "react";
 import { useFormModal } from "./FormModal";
 
+const ease: [number, number, number, number] = [0.22, 1, 0.36, 1];
+
 // WhatsApp-style conversation
 type ChatItem =
   | { type: "message"; from: "client" | "bot"; text: string; time: string }
@@ -32,16 +34,22 @@ function WADateSeparator({ label, delay }: { label: string; delay: number }) {
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
+    let cancelled = false;
     const obs = new IntersectionObserver(([e]) => {
-      if (e.isIntersecting) { setTimeout(() => setVisible(true), delay * 1000); obs.disconnect(); }
+      if (e.isIntersecting) {
+        const t = setTimeout(() => { if (!cancelled) setVisible(true); }, delay * 1000);
+        obs.disconnect();
+        return () => clearTimeout(t);
+      }
     }, { threshold: 0.2 });
     obs.observe(el);
-    return () => obs.disconnect();
+    return () => { cancelled = true; obs.disconnect(); };
   }, [delay]);
   return (
     <div ref={ref} className="flex justify-center py-2" style={{ minHeight: "28px" }}>
       {visible && (
         <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.3, ease }}
           className="rounded-md px-3 py-1" style={{ background: "#1A2C34" }}>
           <span className="text-[10px] font-500 tracking-wide" style={{ color: "#8696A0", fontFamily: "system-ui" }}>{label}</span>
         </motion.div>
@@ -57,15 +65,18 @@ function WAMessage({ msg, delay }: { msg: Extract<ChatItem, { type: "message" }>
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
+    let cancelled = false;
+    let t1: ReturnType<typeof setTimeout>;
+    let t2: ReturnType<typeof setTimeout>;
     const obs = new IntersectionObserver(([e]) => {
       if (e.isIntersecting) {
-        setTimeout(() => setPhase("typing"), delay * 1000);
-        setTimeout(() => setPhase("done"), (delay + 0.4) * 1000);
+        t1 = setTimeout(() => { if (!cancelled) setPhase("typing"); }, delay * 1000);
+        t2 = setTimeout(() => { if (!cancelled) setPhase("done"); }, (delay + 1.0) * 1000);
         obs.disconnect();
       }
     }, { threshold: 0.2 });
     obs.observe(el);
-    return () => obs.disconnect();
+    return () => { cancelled = true; clearTimeout(t1); clearTimeout(t2); obs.disconnect(); };
   }, [delay]);
 
   const isBot = msg.from === "bot";
@@ -74,7 +85,12 @@ function WAMessage({ msg, delay }: { msg: Extract<ChatItem, { type: "message" }>
   return (
     <div ref={ref} className={`flex ${isBot ? "justify-start" : "justify-end"}`} style={{ minHeight: "24px" }}>
       {phase === "typing" && (
-        <div className="rounded-lg px-3 py-2" style={{ background: bubbleBg }}>
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.2 }}
+          className="rounded-lg px-3 py-2" style={{ background: bubbleBg }}
+        >
           <div className="flex gap-1">
             {[0, 1, 2].map(d => (
               <motion.span key={d} animate={{ opacity: [0.3, 1, 0.3], y: [0, -2, 0] }}
@@ -82,11 +98,11 @@ function WAMessage({ msg, delay }: { msg: Extract<ChatItem, { type: "message" }>
                 className="h-1.5 w-1.5 rounded-full" style={{ background: "#8696A0" }} />
             ))}
           </div>
-        </div>
+        </motion.div>
       )}
       {phase === "done" && (
         <motion.div initial={{ opacity: 0, scale: 0.92, y: 4 }} animate={{ opacity: 1, scale: 1, y: 0 }}
-          transition={{ duration: 0.2, ease: [0.65, 0.05, 0, 1] }}
+          transition={{ duration: 0.35, ease }}
           className={`relative max-w-[82%] px-2.5 py-1.5 ${isBot ? "rounded-tr-lg rounded-br-lg rounded-bl-lg" : "rounded-tl-lg rounded-bl-lg rounded-br-lg"}`}
           style={{ background: bubbleBg }}>
           <p className="text-[13px] leading-[1.45]" style={{ color: "#E9EDEF", fontFamily: "system-ui" }}>
@@ -134,7 +150,7 @@ export default function SolutionSection() {
           {["Почему мы", "тебе полезны"].map((word, i) => (
             <div key={i} className="overflow-hidden">
               <motion.p initial={{ y: "100%" }} whileInView={{ y: "0%" }} viewport={{ once: true }}
-                transition={{ duration: 0.75, delay: i * 0.1, ease: [0.65, 0.05, 0, 1] }}
+                transition={{ duration: 0.75, delay: i * 0.1, ease }}
                 className={`font-display text-4xl font-800 uppercase leading-[0.95] tracking-tight sm:text-5xl md:text-6xl lg:text-8xl ${
                   i === 1 ? "text-text-muted" : ""
                 }`}>{word}</motion.p>
@@ -142,7 +158,7 @@ export default function SolutionSection() {
           ))}
         </div>
 
-        <motion.p initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.3 }}
+        <motion.p initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.3, ease }}
           className="mb-16 max-w-2xl font-body text-sm leading-relaxed text-text-muted md:text-base">
           Полная система — от запуска рекламы до клиента. Бот обрабатывает, менеджер закрывает, ты видишь всю картину.
         </motion.p>
@@ -156,7 +172,7 @@ export default function SolutionSection() {
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: i * 0.06 }}
+                  transition={{ duration: 0.5, delay: i * 0.06, ease }}
                   className="rounded-xl border border-white/[0.04] bg-white/[0.01] p-4 md:p-5"
                 >
                   <h4 className={`font-display text-[10px] font-700 uppercase tracking-wider md:text-xs ${
@@ -176,7 +192,7 @@ export default function SolutionSection() {
           </div>
 
           {/* iPhone with WhatsApp — real iPhone 15 proportions */}
-          <motion.div style={{ y: phoneY }} className="flex flex-col items-center overflow-hidden lg:sticky lg:top-12">
+          <motion.div style={{ y: phoneY }} className="flex flex-col items-center overflow-hidden lg:sticky lg:top-24">
             <div className="relative w-[260px] sm:w-[280px] md:w-[300px]">
               {/* Subtle glow */}
               <div className="absolute -inset-8 rounded-[3.5rem] bg-lime/[0.03] blur-3xl" />
@@ -249,7 +265,7 @@ export default function SolutionSection() {
                   <div className="relative space-y-1">
                     {chatMessages.map((item, i) => {
                       const msgIndex = chatMessages.slice(0, i + 1).filter(m => m.type === "message").length;
-                      const baseDelay = 0.2 + (msgIndex - 1) * 0.55;
+                      const baseDelay = 0.2 + (msgIndex - 1) * 0.7;
                       if (item.type === "date") {
                         const dateDelay = i === 0 ? 0 : baseDelay;
                         return <WADateSeparator key={i} label={item.label} delay={dateDelay} />;
@@ -298,7 +314,7 @@ export default function SolutionSection() {
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
               viewport={{ once: true }}
-              transition={{ delay: 1 }}
+              transition={{ delay: 1, ease }}
               className="mt-6 text-center font-body text-xs leading-relaxed text-text-muted/60"
             >
               Клиент замолчал. Бот дожал. Встреча назначена.

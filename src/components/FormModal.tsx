@@ -213,7 +213,7 @@ export function FormModalProvider({ children }: { children: React.ReactNode }) {
               initial={{ opacity: 0, scale: 0.92, y: 30 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
-              transition={{ duration: 0.4, ease: [0.65, 0.05, 0, 1] }}
+              transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
               onClick={e => e.stopPropagation()}
               className="relative w-full max-w-md overflow-hidden rounded-2xl border border-white/[0.06] bg-surface"
             >

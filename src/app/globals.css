@@ -44,7 +44,7 @@ body {
   0% { transform: translateX(0); }
   100% { transform: translateX(-50%); }
 }
-.marquee-track { display: flex; animation: marquee-left 3s linear infinite; will-change: transform; transform: translateZ(0); }
+.marquee-track { display: flex; animation: marquee-left 35s linear infinite; will-change: transform; }
 .marquee-track:hover { animation-play-state: paused; }
 
 /* Clip reveal line by line */

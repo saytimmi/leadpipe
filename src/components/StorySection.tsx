@@ -108,7 +108,7 @@ export default function StorySection() {
         {/* Text block: padded top AND bottom so text always in center zone */}
         <motion.div
           style={{ y: textY }}
-          className="px-5 md:px-10"
+          className="px-5 will-change-transform md:px-10"
         >
           {/* Top spacer pushes first line to ~40% from top */}
           <div className="h-[38dvh]" />

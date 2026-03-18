@@ -9,6 +9,14 @@ import FormSection from "@/components/FormSection";
 import Footer from "@/components/Footer";
 import { FormModalProvider } from "@/components/FormModal";
 
+function SectionDivider() {
+  return (
+    <div className="flex justify-center">
+      <div className="h-px w-24 bg-gradient-to-r from-transparent via-white/[0.06] to-transparent" />
+    </div>
+  );
+}
+
 export default function Home() {
   return (
     <FormModalProvider>
@@ -18,8 +26,11 @@ export default function Home() {
         <StorySection />
         <TransitionArrow />
         <ProblemSection />
+        <SectionDivider />
         <VisibilitySection />
+        <SectionDivider />
         <SolutionSection />
+        <SectionDivider />
         <FormSection />
       </main>
       <Footer />
