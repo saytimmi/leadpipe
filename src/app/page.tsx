@@ -8,6 +8,8 @@ import SolutionSection from "@/components/SolutionSection";
 import FormSection from "@/components/FormSection";
 import Footer from "@/components/Footer";
 import { FormModalProvider } from "@/components/FormModal";
+import SectionTracker from "@/components/SectionTracker";
+import PageViewTracker from "@/components/PageViewTracker";
 
 function SectionDivider() {
   return (
@@ -20,18 +22,19 @@ function SectionDivider() {
 export default function Home() {
   return (
     <FormModalProvider>
+      <PageViewTracker />
       <Header />
       <main>
-        <HeroSection />
-        <StorySection />
+        <SectionTracker name="hero"><HeroSection /></SectionTracker>
+        <SectionTracker name="story"><StorySection /></SectionTracker>
         <TransitionArrow />
-        <ProblemSection />
+        <SectionTracker name="problem"><ProblemSection /></SectionTracker>
         <SectionDivider />
-        <VisibilitySection />
+        <SectionTracker name="visibility"><VisibilitySection /></SectionTracker>
         <SectionDivider />
-        <SolutionSection />
+        <SectionTracker name="solution"><SolutionSection /></SectionTracker>
         <SectionDivider />
-        <FormSection />
+        <SectionTracker name="form"><FormSection /></SectionTracker>
       </main>
       <Footer />
     </FormModalProvider>

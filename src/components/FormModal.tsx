@@ -2,6 +2,7 @@
 
 import { createContext, useContext, useState, useCallback, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { trackFormEvent } from "@/lib/analytics";
 
 interface FormData {
   name: string; business: string; hasTraffic: string; budget: string;
@@ -125,6 +126,7 @@ export function FormModalProvider({ children }: { children: React.ReactNode }) {
     setSubmitted(false);
     setDisqualified(null);
     setShowStepMsg(false);
+    trackFormEvent("open");
   }, []);
 
   const close = useCallback(() => setIsOpen(false), []);
@@ -146,8 +148,9 @@ export function FormModalProvider({ children }: { children: React.ReactNode }) {
     // Check disqualification
     if (cur.disqualify) {
       const msg = cur.disqualify(val);
-      if (msg) { setDisqualified(msg); return; }
+      if (msg) { trackFormEvent("disqualified", cur.key, val); setDisqualified(msg); return; }
     }
+    trackFormEvent(`step_${step + 1}`, cur.key, cur.type === "text" ? undefined : val);
 
     // Show gamification message
     const stepMsg = stepMessages[step];
@@ -168,6 +171,7 @@ export function FormModalProvider({ children }: { children: React.ReactNode }) {
   const submitForm = async () => {
     setLoading(true);
     try { await fetch("/api/submit", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(data) }); } catch {}
+    trackFormEvent("submit");
     setLoading(false);
     setSubmitted(true);
   };
@@ -178,8 +182,9 @@ export function FormModalProvider({ children }: { children: React.ReactNode }) {
     // Check disqualification immediately
     if (cur.disqualify) {
       const msg = cur.disqualify(opt);
-      if (msg) { setTimeout(() => setDisqualified(msg), 300); return; }
+      if (msg) { trackFormEvent("disqualified", cur.key, opt); setTimeout(() => setDisqualified(msg), 300); return; }
     }
+    trackFormEvent(`step_${step + 1}`, cur.key, opt);
 
     // Show step message or advance
     const stepMsg = stepMessages[step];
