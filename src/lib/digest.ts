@@ -96,14 +96,130 @@ export async function generateDigest(periodDays = 1): Promise<string> {
   return lines.join("\n");
 }
 
-export async function sendDigestToTelegram(text: string) {
+/** Leads per day for the last N days */
+export async function generateLeadsReport(days = 7): Promise<string> {
+  const now = new Date();
+  const since = new Date(now);
+  since.setDate(since.getDate() - days);
+
+  const { data: events } = await supabase
+    .from("lp_form_events")
+    .select("session_id, event, created_at")
+    .in("event", ["submit", "open", "disqualified"])
+    .gte("created_at", since.toISOString())
+    .order("created_at", { ascending: true });
+
+  const rows = events || [];
+
+  // Group by date
+  const byDate = new Map<string, { opens: Set<string>; submits: Set<string>; disq: Set<string> }>();
+
+  for (let i = 0; i < days; i++) {
+    const d = new Date(now);
+    d.setDate(d.getDate() - i);
+    const key = d.toISOString().slice(0, 10);
+    byDate.set(key, { opens: new Set(), submits: new Set(), disq: new Set() });
+  }
+
+  for (const row of rows) {
+    const key = row.created_at.slice(0, 10);
+    let entry = byDate.get(key);
+    if (!entry) { entry = { opens: new Set(), submits: new Set(), disq: new Set() }; byDate.set(key, entry); }
+    if (row.event === "open") entry.opens.add(row.session_id);
+    if (row.event === "submit") entry.submits.add(row.session_id);
+    if (row.event === "disqualified") entry.disq.add(row.session_id);
+  }
+
+  const sorted = Array.from(byDate.entries()).sort((a, b) => b[0].localeCompare(a[0]));
+
+  const totalSubmits = sorted.reduce((sum, [, d]) => sum + d.submits.size, 0);
+  const totalOpens = sorted.reduce((sum, [, d]) => sum + d.opens.size, 0);
+
+  const dayNames = ["Вс", "Пн", "Вт", "Ср", "Чт", "Пт", "Сб"];
+  const bar = (n: number, max: number) => {
+    const filled = max > 0 ? Math.min(8, Math.max(0, Math.round((n / max) * 8))) : 0;
+    return "\u2593".repeat(filled) + "\u2591".repeat(8 - filled);
+  };
+  const maxSubmits = Math.max(...sorted.map(([, d]) => d.submits.size), 1);
+
+  const lines = [
+    `📋 Лиды по дням (${days} дн.)`,
+    "",
+    `Всего заявок: ${totalSubmits}  |  Открытий формы: ${totalOpens}`,
+    "",
+  ];
+
+  for (const [date, data] of sorted) {
+    const dow = dayNames[new Date(date + "T12:00:00").getDay()];
+    const dd = date.slice(8, 10) + "." + date.slice(5, 7);
+    const s = data.submits.size;
+    const o = data.opens.size;
+    const d = data.disq.size;
+    lines.push(`${dow} ${dd}  ${bar(s, maxSubmits)}  ✅${s}  📝${o}  ❌${d}`);
+  }
+
+  lines.push("", "✅ заявки  📝 открытия  ❌ дисквал.");
+
+  return lines.join("\n");
+}
+
+/** Today's live stats */
+export async function generateTodayStats(): Promise<string> {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const since = today.toISOString();
+
+  const [pvRes, feRes] = await Promise.all([
+    supabase.from("lp_page_views").select("session_id").gte("created_at", since),
+    supabase.from("lp_form_events").select("session_id, event").gte("created_at", since),
+  ]);
+
+  const pageViews = pvRes.data || [];
+  const formEvents = feRes.data || [];
+
+  const uniqueVisitors = new Set(pageViews.map(p => p.session_id)).size;
+
+  const eventSets = new Map<string, Set<string>>();
+  for (const fe of formEvents) {
+    let s = eventSets.get(fe.event);
+    if (!s) { s = new Set(); eventSets.set(fe.event, s); }
+    s.add(fe.session_id);
+  }
+
+  const opens = eventSets.get("open")?.size || 0;
+  const submits = eventSets.get("submit")?.size || 0;
+  const disq = eventSets.get("disqualified")?.size || 0;
+
+  const lines = [
+    `⚡ LeadPipe — сегодня`,
+    "",
+    `👁 Визиты: ${pageViews.length}`,
+    `👤 Уникальные: ${uniqueVisitors}`,
+    `📝 Открыли форму: ${opens}`,
+    `✅ Заявки: ${submits}`,
+    `❌ Дисквал.: ${disq}`,
+    "",
+    uniqueVisitors > 0
+      ? `📈 Конверсия: ${Math.round((submits / uniqueVisitors) * 100)}%`
+      : "📈 Конверсия: —",
+  ];
+
+  return lines.join("\n");
+}
+
+export async function sendTelegram(chatId: string | number, text: string) {
   const token = process.env.TELEGRAM_BOT_TOKEN;
-  const chatId = process.env.TELEGRAM_CHAT_ID;
-  if (!token || !chatId) throw new Error("Telegram not configured");
+  if (!token) throw new Error("Telegram not configured");
 
   await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ chat_id: chatId, text }),
   });
+}
+
+export async function sendDigestToTelegram(text: string) {
+  const chatId = process.env.TELEGRAM_CHAT_ID;
+  if (!chatId) throw new Error("TELEGRAM_CHAT_ID not set");
+  await sendTelegram(chatId, text);
 }
