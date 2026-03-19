@@ -1,19 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
-import { supabase } from "@/lib/supabase";
+import { sql } from "@/lib/db";
 
 export async function POST(req: NextRequest) {
   const body = await req.json();
-  const country = req.headers.get("x-vercel-ip-country") || undefined;
+  const country = req.headers.get("x-vercel-ip-country") || null;
 
-  await supabase.from("lp_page_views").insert({
-    session_id: body.session_id,
-    referrer: body.referrer,
-    utm_source: body.utm_source,
-    utm_medium: body.utm_medium,
-    utm_campaign: body.utm_campaign,
-    user_agent: body.user_agent,
-    country,
-  });
+  await sql`INSERT INTO lp_page_views (session_id, referrer, utm_source, utm_medium, utm_campaign, user_agent, country)
+    VALUES (${body.session_id}, ${body.referrer}, ${body.utm_source}, ${body.utm_medium}, ${body.utm_campaign}, ${body.user_agent}, ${country})`;
 
   return NextResponse.json({ ok: true });
 }

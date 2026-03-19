@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import { supabase } from "@/lib/supabase";
+import { sql } from "@/lib/db";
 
 export async function POST(req: NextRequest) {
   const { session_id, section } = await req.json();
-  await supabase.from("lp_section_views").insert({ session_id, section });
+  await sql`INSERT INTO lp_section_views (session_id, section) VALUES (${session_id}, ${section})`;
   return NextResponse.json({ ok: true });
 }

@@ -1,4 +1,4 @@
-import { supabase } from "@/lib/supabase";
+import { sql } from "@/lib/db";
 
 // Shenzhen UTC+8
 const TZ_OFFSET_HOURS = 8;
@@ -6,23 +6,11 @@ const TZ_OFFSET_HOURS = 8;
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type Row = any;
 
-/** Paginated fetch — Supabase returns max 1000 rows per request */
-async function fetchAll(table: string, select: string, since: string): Promise<Row[]> {
-  const rows: Row[] = [];
-  let offset = 0;
-  const PAGE = 1000;
-  while (true) {
-    const { data } = await supabase
-      .from(table)
-      .select(select)
-      .gte("created_at", since)
-      .range(offset, offset + PAGE - 1);
-    if (!data || data.length === 0) break;
-    rows.push(...data);
-    if (data.length < PAGE) break;
-    offset += PAGE;
-  }
-  return rows;
+/** Convert UTC created_at to Shenzhen date string YYYY-MM-DD */
+function toLocalDate(utcTimestamp: string): string {
+  const d = new Date(utcTimestamp);
+  d.setTime(d.getTime() + TZ_OFFSET_HOURS * 3600_000);
+  return d.toISOString().slice(0, 10);
 }
 
 /** Get "today midnight" in Shenzhen timezone as UTC ISO string */
@@ -31,13 +19,6 @@ function todayMidnightUTC(): string {
   const local = new Date(now.getTime() + TZ_OFFSET_HOURS * 3600_000);
   local.setUTCHours(0, 0, 0, 0);
   return new Date(local.getTime() - TZ_OFFSET_HOURS * 3600_000).toISOString();
-}
-
-/** Convert UTC created_at to Shenzhen date string YYYY-MM-DD */
-function toLocalDate(utcTimestamp: string): string {
-  const d = new Date(utcTimestamp);
-  d.setTime(d.getTime() + TZ_OFFSET_HOURS * 3600_000);
-  return d.toISOString().slice(0, 10);
 }
 
 const bar = (n: number, max: number, len = 10) => {
@@ -51,9 +32,9 @@ export async function generateDigest(periodDays = 1): Promise<string> {
   const since = new Date(Date.now() - periodDays * 86400_000).toISOString();
 
   const [pageViews, sectionViews, formEvents] = await Promise.all([
-    fetchAll("lp_page_views", "session_id, referrer, utm_source", since),
-    fetchAll("lp_section_views", "session_id, section, time_spent_ms", since),
-    fetchAll("lp_form_events", "session_id, event, step_name", since),
+    sql`SELECT session_id, referrer, utm_source FROM lp_page_views WHERE created_at >= ${since}`,
+    sql`SELECT session_id, section, time_spent_ms FROM lp_section_views WHERE created_at >= ${since}`,
+    sql`SELECT session_id, event, step_name FROM lp_form_events WHERE created_at >= ${since}`,
   ]);
 
   const uniqueSessions = new Set(pageViews.map((p: Row) => p.session_id)).size;
@@ -137,11 +118,7 @@ export async function generateDigest(periodDays = 1): Promise<string> {
 export async function generateLeadsReport(days = 7): Promise<string> {
   const since = new Date(Date.now() - days * 86400_000).toISOString();
 
-  const events = await fetchAll(
-    "lp_form_events",
-    "session_id, event, created_at",
-    since,
-  );
+  const events = await sql`SELECT session_id, event, created_at FROM lp_form_events WHERE created_at >= ${since}`;
 
   // Group by local date
   const byDate = new Map<string, { opens: Set<string>; submits: Set<string>; disq: Set<string> }>();
@@ -195,8 +172,8 @@ export async function generateTodayStats(): Promise<string> {
   const since = todayMidnightUTC();
 
   const [pageViews, formEvents] = await Promise.all([
-    fetchAll("lp_page_views", "session_id", since),
-    fetchAll("lp_form_events", "session_id, event", since),
+    sql`SELECT session_id FROM lp_page_views WHERE created_at >= ${since}`,
+    sql`SELECT session_id, event FROM lp_form_events WHERE created_at >= ${since}`,
   ]);
 
   const uniqueVisitors = new Set(pageViews.map((p: Row) => p.session_id)).size;

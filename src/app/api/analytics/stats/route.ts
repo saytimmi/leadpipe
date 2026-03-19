@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { supabase } from "@/lib/supabase";
+import { sql } from "@/lib/db";
 
 const STATS_KEY = process.env.STATS_SECRET || "leadpipe2024";
 
@@ -12,25 +12,11 @@ export async function GET(req: NextRequest) {
   const period = req.nextUrl.searchParams.get("period") || "7d";
   const since = periodToDate(period);
 
-  // Fetch all data in parallel
-  const [pvRes, svRes, feRes] = await Promise.all([
-    supabase
-      .from("lp_page_views")
-      .select("session_id, referrer, utm_source, created_at")
-      .gte("created_at", since),
-    supabase
-      .from("lp_section_views")
-      .select("session_id, section, time_spent_ms, created_at")
-      .gte("created_at", since),
-    supabase
-      .from("lp_form_events")
-      .select("session_id, event, step_name, value, created_at")
-      .gte("created_at", since),
+  const [pageViews, sectionViews, formEvents] = await Promise.all([
+    sql`SELECT session_id, referrer, utm_source, created_at FROM lp_page_views WHERE created_at >= ${since}`,
+    sql`SELECT session_id, section, time_spent_ms, created_at FROM lp_section_views WHERE created_at >= ${since}`,
+    sql`SELECT session_id, event, step_name, value, created_at FROM lp_form_events WHERE created_at >= ${since}`,
   ]);
-
-  const pageViews = pvRes.data || [];
-  const sectionViews = svRes.data || [];
-  const formEvents = feRes.data || [];
 
   const uniqueSessions = new Set(pageViews.map(p => p.session_id)).size;
 
@@ -85,9 +71,8 @@ export async function GET(req: NextRequest) {
     .slice(0, 10);
 
   // Conversion rate
-  const opens = eventCounts.get("open")?.size || 0;
   const submits = eventCounts.get("submit")?.size || 0;
-  const conversionRate = opens > 0 ? `${Math.round((submits / uniqueSessions) * 100)}%` : "0%";
+  const conversionRate = uniqueSessions > 0 ? `${Math.round((submits / uniqueSessions) * 100)}%` : "0%";
 
   return NextResponse.json({
     period,

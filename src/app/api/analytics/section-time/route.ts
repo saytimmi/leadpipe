@@ -1,20 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
-import { supabase } from "@/lib/supabase";
+import { sql } from "@/lib/db";
 
 export async function POST(req: NextRequest) {
   const { session_id, section, time_spent_ms } = await req.json();
-  // Update the existing section view record with time spent
-  const { data } = await supabase
-    .from("lp_section_views")
-    .select("id")
-    .eq("session_id", session_id)
-    .eq("section", section)
-    .order("created_at", { ascending: false })
-    .limit(1)
-    .single();
 
-  if (data) {
-    await supabase.from("lp_section_views").update({ time_spent_ms }).eq("id", data.id);
+  const rows = await sql`SELECT id FROM lp_section_views
+    WHERE session_id = ${session_id} AND section = ${section}
+    ORDER BY created_at DESC LIMIT 1`;
+
+  if (rows.length > 0) {
+    await sql`UPDATE lp_section_views SET time_spent_ms = ${time_spent_ms} WHERE id = ${rows[0].id}`;
   }
 
   return NextResponse.json({ ok: true });
