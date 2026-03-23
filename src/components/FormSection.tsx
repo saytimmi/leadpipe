@@ -120,14 +120,6 @@ export default function FormSection() {
           >
             Оставить заявку
           </button>
-          <a
-            href="https://wa.me/77001234567?text=Привет! Хочу узнать про LeadPipe"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="font-body text-sm text-text-muted transition-colors hover:text-text"
-          >
-            или написать в WhatsApp
-          </a>
         </motion.div>
       </div>
     </section>
