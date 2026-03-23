@@ -2,37 +2,11 @@
 
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
-import { useFormModal } from "./FormModal";
-import CountUpNumber from "./CountUpNumber";
 
-const metrics = [
-  { label: "Бюджет", value: 2560, suffix: " $" },
-  { label: "Охваты", value: 320000, suffix: "" },
-  { label: "Клики", value: 12800, suffix: "" },
-  { label: "Лиды", value: 1280, suffix: "", accent: true },
-  { label: "Квалифицированы", value: 310, suffix: "", accent: true },
-  { label: "Клиенты", value: 16, suffix: "", accent: true },
-  { label: "Цена лида", value: 2, suffix: " $" },
-  { label: "Цена клиента", value: 160, suffix: " $", accent: true },
-];
-
-const qualStages = [
-  { name: "Показы", count: 580000, isCurrency: false, loss: null, hint: "CPM $4.4 — дешёвый трафик → обсудить качество с таргетологом" },
-  { name: "Охваты", count: 320000, loss: null, hint: "320к уникальных → обсудить сегменты с таргетологом" },
-  { name: "Клики", count: 12800, loss: null, hint: "CTR 2.2% · CPC $0.20 → креативщик молодец" },
-  { name: "Лиды", count: 1280, loss: "−11520", hint: "Конверсия 10% · CPL $2 → обсудить качество лидов" },
-  { name: "Написали", count: 890, loss: "−390", hint: "390 потерялись между формой и чатом → автоответ нужен" },
-  { name: "Имя", count: 310, loss: "−580", hint: "Менеджер не отвечает вовремя → обсудить с РОПом" },
-  { name: "Боль", count: 145, loss: "−165", hint: "Скрипт не раскрывает потребность → обсудить с маркетологом" },
-  { name: "Презентация", count: 58, loss: "−87", hint: "Продукт не доносится → обсудить с РОПом" },
-  { name: "Встреча", count: 16, loss: "−42", hint: "Нет дожима → обсудить с менеджером" },
-];
-
-const features = [
-  "Видишь расход по каждой кампании — какая реклама приносит клиентов, а какая сжирает бюджет",
-  "Помогает таргетологу понять, где кликабельность хуже и что менять",
-  "Видишь на каком этапе переписки люди уходят и почему",
-  "Подсказки: какой этап просел и с кем из команды это обсудить",
+const creatives = [
+  { id: "#3", label: "Фото до/после", leads: 127, conversations: 43, qualified: 19, paid: 7, winner: true },
+  { id: "#5", label: "Видео с мастером", leads: 89, conversations: 51, qualified: 24, paid: 4, winner: true },
+  { id: "#1", label: "Акция «скидка 30%»", leads: 341, conversations: 112, qualified: 8, paid: 0, winner: false },
 ];
 
 export default function VisibilitySection() {
@@ -40,7 +14,6 @@ export default function VisibilitySection() {
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "center center"] });
   const dashScale = useTransform(scrollYProgress, [0, 1], [0.88, 1]);
   const dashOpacity = useTransform(scrollYProgress, [0, 0.4], [0, 1]);
-  const { open } = useFormModal();
 
   return (
     <section ref={ref} id="visibility" className="px-6 py-28 md:py-40 lg:px-10">
@@ -50,9 +23,9 @@ export default function VisibilitySection() {
           <div className="h-px flex-1 bg-white/[0.04]" />
         </div>
 
-        <div className="mb-16 grid gap-8 lg:grid-cols-2 lg:gap-10">
+        <div className="mb-16">
           <div>
-            {["И ты", "наконец", "видишь", "всё"].map((word, i) => (
+            {["Рентген", "бюджета"].map((word, i) => (
               <div key={i} className="overflow-hidden">
                 <motion.p
                   initial={{ y: "100%" }}
@@ -60,32 +33,21 @@ export default function VisibilitySection() {
                   viewport={{ once: true, margin: "-50px" }}
                   transition={{ duration: 0.75, delay: i * 0.08, ease: [0.22, 1, 0.36, 1] }}
                   className={`font-display text-4xl font-800 uppercase leading-[0.95] tracking-tight md:text-5xl lg:text-7xl ${
-                    i === 3 ? "text-lime" : ""
+                    i === 1 ? "text-lime" : ""
                   }`}
                 >{word}</motion.p>
               </div>
             ))}
           </div>
-          <div className="flex items-end">
-            <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.3 }}>
-              <p className="max-w-md font-body text-sm leading-relaxed text-text-muted md:text-base">
-                Одна страница — вся картина. От рекламы до клиента. Система сама подсказывает какой этап просел и с кем из команды это обсудить.
-              </p>
-              <div className="mt-5 space-y-2.5">
-                {features.map((f, i) => (
-                  <motion.div key={i} initial={{ opacity: 0, x: -10 }} whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true }} transition={{ delay: 0.4 + i * 0.08 }} className="flex gap-3">
-                    <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-lime" />
-                    <p className="font-body text-xs leading-relaxed text-text-muted md:text-sm">{f}</p>
-                  </motion.div>
-                ))}
-              </div>
-              <button onClick={open}
-                className="mt-8 cursor-pointer rounded-full border border-lime/20 px-6 py-3.5 font-display text-xs font-700 uppercase tracking-[0.15em] text-lime transition-all active:bg-lime/5 hover:bg-lime/5 md:px-8 md:py-4">
-                Разобраться
-              </button>
-            </motion.div>
-          </div>
+          <motion.p
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.3 }}
+            className="mt-6 max-w-xl font-body text-sm leading-relaxed text-text-muted md:text-base"
+          >
+            И вот ты открываешь LeadPipe и видишь то, что никогда не покажет рекламный кабинет:
+          </motion.p>
         </div>
 
         {/* Dashboard */}
@@ -102,73 +64,107 @@ export default function VisibilitySection() {
 
           <div className="p-4 md:p-8 lg:p-10">
             <div className="mb-5 flex items-center justify-between">
-              <h3 className="font-display text-xs font-700 uppercase tracking-wider md:text-sm">Воронка за март</h3>
+              <h3 className="font-display text-xs font-700 uppercase tracking-wider md:text-sm">Эффективность креативов</h3>
               <span className="flex items-center gap-1.5 font-display text-[10px] text-lime">
                 <span className="h-1.5 w-1.5 rounded-full bg-lime" />Обновлено 2 мин назад
               </span>
             </div>
 
-            <div className="grid grid-cols-2 gap-2 md:grid-cols-4 md:gap-3">
-              {metrics.map((m) => (
-                <div key={m.label} className={`rounded-xl p-3 md:p-4 ${m.accent ? "border border-lime/10 bg-lime/[0.03]" : "bg-white/[0.02]"}`}>
-                  <div className={`font-display text-base font-800 md:text-xl lg:text-2xl ${m.accent ? "text-lime" : "text-text"}`}>
-                    <CountUpNumber target={m.value} suffix={m.suffix} />
-                  </div>
-                  <div className="mt-1 font-display text-[8px] font-500 uppercase tracking-wider text-text-dim md:text-[9px]">{m.label}</div>
-                </div>
-              ))}
+            {/* Header row */}
+            <div className="mb-3 hidden items-center gap-2 px-3 md:flex">
+              <span className="flex-1 font-display text-[9px] font-500 uppercase tracking-wider text-text-dim">Объявление</span>
+              <span className="w-16 text-center font-display text-[9px] font-500 uppercase tracking-wider text-text-dim">Заявки</span>
+              <span className="w-16 text-center font-display text-[9px] font-500 uppercase tracking-wider text-text-dim">Диалоги</span>
+              <span className="w-16 text-center font-display text-[9px] font-500 uppercase tracking-wider text-text-dim">Квалиф.</span>
+              <span className="w-20 text-center font-display text-[9px] font-500 uppercase tracking-wider text-text-dim">Оплаты</span>
             </div>
 
-            {/* Qualification stages with hints */}
-            <div className="mt-5 rounded-xl bg-white/[0.02] p-4 md:p-5">
-              <div className="mb-4 font-display text-[9px] font-700 uppercase tracking-wider text-text-dim md:text-[10px]">
-                Этапы квалификации
-              </div>
+            {/* Creative rows */}
+            <div className="space-y-2">
+              {creatives.map((c, i) => (
+                <motion.div
+                  key={c.id}
+                  initial={{ opacity: 0, x: -15 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: 0.3 + i * 0.1, ease: [0.22, 1, 0.36, 1] }}
+                  className={`rounded-xl p-3 md:p-4 ${
+                    c.winner ? "bg-white/[0.02]" : "border border-warm/20 bg-warm/[0.03]"
+                  }`}
+                >
+                  {/* Desktop layout */}
+                  <div className="hidden items-center gap-2 md:flex">
+                    <div className="flex-1">
+                      <span className={`font-display text-xs font-700 ${c.winner ? "text-lime" : "text-warm"}`}>
+                        {c.id}
+                      </span>
+                      <span className="ml-2 font-body text-sm text-text-muted">{c.label}</span>
+                    </div>
+                    <span className="w-16 text-center font-display text-sm font-600 text-text-muted">{c.leads}</span>
+                    <span className="w-16 text-center font-display text-sm font-600 text-text-muted">{c.conversations}</span>
+                    <span className="w-16 text-center font-display text-sm font-600 text-text-muted">{c.qualified}</span>
+                    <span className={`w-20 text-center font-display text-lg font-800 ${
+                      c.paid > 0 ? "text-lime" : "text-warm"
+                    }`}>
+                      {c.paid}
+                    </span>
+                  </div>
 
-              <div className="space-y-2">
-                {qualStages.map((stage, i) => {
-                  const maxCount = qualStages[0].count;
-                  const barWidth = (stage.count / maxCount) * 100;
-                  const isLast = i === qualStages.length - 1;
-                  return (
-                    <motion.div key={stage.name}
-                      initial={{ opacity: 0, x: -15 }}
-                      whileInView={{ opacity: 1, x: 0 }}
-                      viewport={{ once: true }}
-                      transition={{ delay: 0.3 + i * 0.08 }}
-                    >
-                      <div className="flex items-center gap-2">
-                        <span className="w-16 shrink-0 font-display text-[10px] font-500 text-text-dim sm:w-20 md:w-24 md:text-xs">{stage.name}</span>
-                        <div className="relative h-7 flex-1 overflow-hidden rounded bg-white/[0.02] md:h-8">
-                          <motion.div
-                            initial={{ width: 0 }}
-                            whileInView={{ width: `${barWidth}%` }}
-                            viewport={{ once: true }}
-                            transition={{ duration: 0.7, delay: 0.4 + i * 0.1, ease: [0.22, 1, 0.36, 1] }}
-                            className={`absolute inset-y-0 left-0 rounded ${isLast ? "bg-lime/20" : "bg-white/[0.04]"}`}
-                          />
-                          <div className="relative flex h-full items-center justify-between px-2.5">
-                            <span className={`font-display text-xs font-800 ${isLast ? "text-lime" : "text-text"}`}>
-                              {stage.count.toLocaleString("ru-RU")}{(stage as { isCurrency?: boolean }).isCurrency ? " ₸" : ""}
-                            </span>
-                            {stage.loss && <span className="font-display text-[10px] font-500 text-warm">{stage.loss}</span>}
-                          </div>
-                        </div>
+                  {/* Mobile layout */}
+                  <div className="md:hidden">
+                    <div className="mb-2 flex items-center gap-2">
+                      <span className={`font-display text-xs font-700 ${c.winner ? "text-lime" : "text-warm"}`}>
+                        {c.id}
+                      </span>
+                      <span className="font-body text-sm text-text-muted">{c.label}</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <div className="flex gap-4 text-xs text-text-dim font-body">
+                        <span>{c.leads} заявок</span>
+                        <span>{c.qualified} квалиф.</span>
                       </div>
-                      {/* Hint — owner insight */}
-                      {stage.hint && (
-                        <div className="ml-16 mt-1 flex items-start gap-1.5 sm:ml-20 md:ml-24">
-                          <span className="mt-0.5 text-[9px]">💡</span>
-                          <p className="font-body text-[10px] leading-snug text-warm/80 md:text-[11px]">{stage.hint}</p>
-                        </div>
-                      )}
-                    </motion.div>
-                  );
-                })}
-              </div>
+                      <span className={`font-display text-lg font-800 ${
+                        c.paid > 0 ? "text-lime" : "text-warm"
+                      }`}>
+                        {c.paid} {c.paid === 0 ? "оплат" : "оплат"}
+                      </span>
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
             </div>
           </div>
         </motion.div>
+
+        <div className="mt-10 md:mt-14 mx-auto max-w-xl space-y-3 text-center">
+          <motion.p
+            initial={{ opacity: 0, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.2 }}
+            className="font-body text-base text-text md:text-lg"
+          >
+            341 заявка — и ни одной оплаты. Треть бюджета в мусорку.
+          </motion.p>
+          <motion.p
+            initial={{ opacity: 0, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.35 }}
+            className="font-body text-sm text-text-muted md:text-base"
+          >
+            Без LeadPipe ты бы думал что объявление #1 — лучшее. Потому что 341 заявка.
+          </motion.p>
+          <motion.p
+            initial={{ opacity: 0, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.5 }}
+            className="font-display text-base font-600 text-lime md:text-lg"
+          >
+            За один месяц это экономит $800–1 200 рекламного бюджета.
+          </motion.p>
+        </div>
       </div>
     </section>
   );
