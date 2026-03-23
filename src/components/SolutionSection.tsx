@@ -2,6 +2,7 @@
 
 import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import { useRef, useState, useEffect } from "react";
+import IphoneFrame from "./IphoneFrame";
 
 const ease: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
@@ -219,131 +220,67 @@ export default function SolutionSection() {
             </p>
           </div>
 
-          {/* iPhone with WhatsApp — real iPhone 15 proportions */}
+          {/* iPhone with WhatsApp */}
           <motion.div style={{ y: phoneY }} className="flex flex-col items-center overflow-hidden lg:sticky lg:top-24">
             <div className="relative w-[260px] sm:w-[280px] md:w-[300px]">
               {/* Subtle glow */}
               <div className="absolute -inset-8 rounded-[3.5rem] bg-lime/[0.03] blur-3xl" />
 
-              {/* iPhone frame — aspect ratio 9:19.5 like real iPhone */}
-              <div className="relative flex flex-col overflow-hidden rounded-[2.2rem] border-[2px] border-white/[0.08] shadow-2xl shadow-black/60"
-                style={{ background: "#111B21", aspectRatio: "9/19.5" }}>
-
-                {/* iOS Status bar */}
-                <div className="flex items-center justify-between px-7 pt-3 pb-0" style={{ background: "#1F2C34" }}>
-                  <span className="text-[12px] font-600" style={{ color: "#E9EDEF", fontFamily: "system-ui" }}>9:41</span>
-                  <div className="h-[24px] w-[80px] rounded-full" style={{ background: "#111B21" }} />
-                  <div className="flex items-center gap-1">
-                    {/* Signal */}
-                    <div className="flex items-end gap-[1.5px]">
-                      {[5, 7, 9, 11].map((h, i) => (
-                        <div key={i} className="w-[3px] rounded-sm" style={{ height: h, background: "#E9EDEF" }} />
-                      ))}
-                    </div>
-                    {/* WiFi */}
-                    <svg width="12" height="10" viewBox="0 0 12 10" className="ml-1">
-                      <path d="M6 9.5a0.8 0.8 0 100-1.6 0.8 0.8 0 000 1.6z" fill="#E9EDEF"/>
-                      <path d="M3.5 7a3.5 3.5 0 015 0" stroke="#E9EDEF" strokeWidth="1.1" fill="none" strokeLinecap="round"/>
-                      <path d="M1.5 5a6 6 0 019 0" stroke="#E9EDEF" strokeWidth="1.1" fill="none" strokeLinecap="round"/>
+              <IphoneFrame>
+                <div className="flex h-full w-full flex-col" style={{ background: "#111B21" }}>
+                  {/* WhatsApp header */}
+                  <div className="flex items-center gap-2 px-3 py-2 shrink-0" style={{ background: "#1F2C34" }}>
+                    <svg width="16" height="16" viewBox="0 0 20 20" fill="none">
+                      <path d="M12 15L7 10L12 5" stroke="#00A884" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
                     </svg>
-                    {/* Battery */}
-                    <div className="ml-1 flex items-center">
-                      <div className="h-[10px] w-[20px] rounded-[2px] border border-[#E9EDEF]/60 p-[1.5px]">
-                        <div className="h-full w-[75%] rounded-[1px]" style={{ background: "#E9EDEF" }} />
-                      </div>
-                      <div className="h-[4px] w-[1.5px] rounded-r-sm" style={{ background: "#E9EDEF", opacity: 0.4 }} />
+                    <div className="flex h-7 w-7 items-center justify-center rounded-full" style={{ background: "#00A884" }}>
+                      <span className="text-[9px] font-700" style={{ color: "#111B21" }}>LP</span>
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-[12px] font-500" style={{ color: "#E9EDEF", fontFamily: "system-ui" }}>LeadPipe</p>
+                      <p className="text-[9px]" style={{ color: "#00A884", fontFamily: "system-ui" }}>в сети</p>
                     </div>
                   </div>
-                </div>
 
-                {/* WhatsApp header */}
-                <div className="flex items-center gap-2.5 px-3 py-2" style={{ background: "#1F2C34" }}>
-                  {/* Back arrow */}
-                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                    <path d="M12 15L7 10L12 5" stroke="#00A884" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>
-                  {/* Avatar */}
-                  <div className="flex h-9 w-9 items-center justify-center rounded-full" style={{ background: "#00A884" }}>
-                    <span className="text-[11px] font-700" style={{ color: "#111B21" }}>LP</span>
+                  {/* Chat area */}
+                  <div className="relative flex-1 overflow-y-auto p-2" style={{ background: "#0B141A" }}>
+                    <AnimatePresence mode="wait">
+                      <motion.div
+                        key={activeNiche}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.25 }}
+                        className="relative space-y-1"
+                      >
+                        {nicheChats[activeNiche].map((item, i) => {
+                          const msgIndex = nicheChats[activeNiche].slice(0, i + 1).filter(m => m.type === "message").length;
+                          const baseDelay = 0.2 + (msgIndex - 1) * 0.7;
+                          if (item.type === "date") {
+                            const dateDelay = i === 0 ? 0 : baseDelay;
+                            return <WADateSeparator key={i} label={item.label} delay={dateDelay} />;
+                          }
+                          return <WAMessage key={i} msg={item} delay={baseDelay} />;
+                        })}
+                      </motion.div>
+                    </AnimatePresence>
                   </div>
-                  <div className="flex-1">
-                    <p className="text-[14px] font-500" style={{ color: "#E9EDEF", fontFamily: "system-ui" }}>LeadPipe</p>
-                    <p className="text-[11px]" style={{ color: "#00A884", fontFamily: "system-ui" }}>в сети</p>
-                  </div>
-                  {/* WhatsApp icons */}
-                  <div className="flex items-center gap-4">
-                    <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-                      <path d="M3 9.5V4.5C3 3.4 3.9 2.5 5 2.5H13C14.1 2.5 15 3.4 15 4.5V10.5C15 11.6 14.1 12.5 13 12.5H10L7 15.5V12.5H5C3.9 12.5 3 11.6 3 10.5V9.5Z" stroke="#8696A0" strokeWidth="1.2"/>
-                    </svg>
-                    <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-                      <circle cx="9" cy="4" r="1" fill="#8696A0"/>
-                      <circle cx="9" cy="9" r="1" fill="#8696A0"/>
-                      <circle cx="9" cy="14" r="1" fill="#8696A0"/>
-                    </svg>
-                  </div>
-                </div>
 
-                {/* Chat area with WA wallpaper pattern */}
-                <div className="relative flex-1 overflow-y-auto p-2.5"
-                  style={{ background: "#0B141A" }}>
-                  {/* Subtle wallpaper overlay */}
-                  <div className="pointer-events-none absolute inset-0 opacity-[0.03]"
-                    style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Ccircle cx='30' cy='30' r='1'/%3E%3C/g%3E%3C/svg%3E\")" }} />
-
-                  <AnimatePresence mode="wait">
-                    <motion.div
-                      key={activeNiche}
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
-                      transition={{ duration: 0.25 }}
-                      className="relative space-y-1"
-                    >
-                      {nicheChats[activeNiche].map((item, i) => {
-                        const msgIndex = nicheChats[activeNiche].slice(0, i + 1).filter(m => m.type === "message").length;
-                        const baseDelay = 0.2 + (msgIndex - 1) * 0.7;
-                        if (item.type === "date") {
-                          const dateDelay = i === 0 ? 0 : baseDelay;
-                          return <WADateSeparator key={i} label={item.label} delay={dateDelay} />;
-                        }
-                        return <WAMessage key={i} msg={item} delay={baseDelay} />;
-                      })}
-                    </motion.div>
-                  </AnimatePresence>
-                </div>
-
-                {/* WhatsApp input bar */}
-                <div className="flex items-center gap-1.5 px-2 py-1.5" style={{ background: "#111B21" }}>
-                  {/* Emoji button */}
-                  <svg width="22" height="22" viewBox="0 0 22 22" fill="none" className="shrink-0">
-                    <circle cx="11" cy="11" r="8.5" stroke="#8696A0" strokeWidth="1.2"/>
-                    <circle cx="8.5" cy="9.5" r="1" fill="#8696A0"/>
-                    <circle cx="13.5" cy="9.5" r="1" fill="#8696A0"/>
-                    <path d="M8 13.5C8.8 14.6 10 15 11 15C12 15 13.2 14.6 14 13.5" stroke="#8696A0" strokeWidth="1.1" strokeLinecap="round"/>
-                  </svg>
-                  {/* Input field */}
-                  <div className="flex flex-1 items-center rounded-full px-3 py-2" style={{ background: "#1F2C34" }}>
-                    <span className="text-[13px]" style={{ color: "#8696A0", fontFamily: "system-ui" }}>Сообщение</span>
-                  </div>
-                  {/* Attachment */}
-                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" className="shrink-0">
-                    <path d="M14.5 10.5L9.5 15.5C7.8 17.2 5 17.2 3.3 15.5C1.6 13.8 1.6 11 3.3 9.3L10 2.6C11.1 1.5 12.9 1.5 14 2.6C15.1 3.7 15.1 5.5 14 6.6L7.3 13.3C6.7 13.9 5.8 13.9 5.2 13.3C4.6 12.7 4.6 11.8 5.2 11.2L10.5 5.9" stroke="#8696A0" strokeWidth="1.1" strokeLinecap="round"/>
-                  </svg>
-                  {/* Mic */}
-                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full" style={{ background: "#00A884" }}>
-                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                      <path d="M8 1.5C7.2 1.5 6.5 2.2 6.5 3V8C6.5 8.8 7.2 9.5 8 9.5C8.8 9.5 9.5 8.8 9.5 8V3C9.5 2.2 8.8 1.5 8 1.5Z" fill="#111B21"/>
-                      <path d="M4.5 7V8C4.5 9.9 6.1 11.5 8 11.5C9.9 11.5 11.5 9.9 11.5 8V7" stroke="#111B21" strokeWidth="1.2" strokeLinecap="round"/>
-                      <path d="M8 11.5V14" stroke="#111B21" strokeWidth="1.2" strokeLinecap="round"/>
-                    </svg>
+                  {/* Input bar */}
+                  <div className="flex items-center gap-1 px-2 py-1.5 shrink-0" style={{ background: "#111B21" }}>
+                    <div className="flex flex-1 items-center rounded-full px-2.5 py-1.5" style={{ background: "#1F2C34" }}>
+                      <span className="text-[11px]" style={{ color: "#8696A0", fontFamily: "system-ui" }}>Сообщение</span>
+                    </div>
+                    <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full" style={{ background: "#00A884" }}>
+                      <svg width="12" height="12" viewBox="0 0 16 16" fill="none">
+                        <path d="M8 1.5C7.2 1.5 6.5 2.2 6.5 3V8C6.5 8.8 7.2 9.5 8 9.5C8.8 9.5 9.5 8.8 9.5 8V3C9.5 2.2 8.8 1.5 8 1.5Z" fill="#111B21"/>
+                        <path d="M4.5 7V8C4.5 9.9 6.1 11.5 8 11.5C9.9 11.5 11.5 9.9 11.5 8V7" stroke="#111B21" strokeWidth="1.2" strokeLinecap="round"/>
+                        <path d="M8 11.5V14" stroke="#111B21" strokeWidth="1.2" strokeLinecap="round"/>
+                      </svg>
+                    </div>
                   </div>
                 </div>
-
-                {/* Home indicator */}
-                <div className="flex items-center justify-center py-2" style={{ background: "#111B21" }}>
-                  <div className="h-1 w-28 rounded-full bg-white/10" />
-                </div>
-              </div>
+              </IphoneFrame>
             </div>
 
             {/* Caption below phone */}
