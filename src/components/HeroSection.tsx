@@ -16,7 +16,7 @@ export default function HeroSection() {
     <section ref={ref} className="noise relative h-[120vh]">
       <div className="sticky top-0 flex h-[100dvh] flex-col items-center justify-center overflow-hidden px-6">
         <motion.div style={{ y, opacity, scale }} className="relative z-10 w-full max-w-[1400px] will-change-transform">
-          {["Знай куда", "ушёл каждый", "доллар."].map((line, i) => (
+          {["Умная воронка", "от рекламы", "до оплаты."].map((line, i) => (
             <div key={i} className="overflow-hidden">
               <motion.h1
                 initial={{ y: "110%" }}
@@ -38,9 +38,20 @@ export default function HeroSection() {
             className="mt-8 flex justify-end"
           >
             <p className="max-w-xs text-right font-body text-xs leading-relaxed text-text-muted sm:max-w-sm sm:text-sm">
-              Каждый лид обработан, каждый этап виден.
-              <br />Ты точно знаешь кто купит, а кто просто спросил цену.
+              AI-агент сам отвечает клиентам и ведёт по каждому этапу до визита.
+              <br />А ты видишь какой креатив реально приносит деньги, а какой сливает бюджет.
             </p>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.8, delay: 1.2, ease }}
+            className="mt-4 flex justify-end"
+          >
+            <motion.p className="text-xs md:text-sm text-text-muted font-body tracking-wide text-right">
+              Instagram · WhatsApp · CRM — всё связано. В реальном времени.
+            </motion.p>
           </motion.div>
         </motion.div>
 
