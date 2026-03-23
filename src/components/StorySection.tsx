@@ -10,66 +10,69 @@ const lines: { text: string; color?: string; big?: boolean }[] = [
   { text: "" },
 
   { text: "Стоматология, салон красоты, автосервис,", color: "dim" },
-  { text: "клининг, онлайн-школа, фитнес — неважно.", color: "dim" },
+  { text: "клининг, фитнес, онлайн-школа,", color: "dim" },
+  { text: "ремонт квартир, недвижимость — неважно.", color: "dim" },
 
   { text: "" },
 
   { text: "Ты нанял таргетолога.", color: "dim" },
-  { text: "Он запустил три кампании.", color: "dim" },
-  { text: "Бюджет — $2 560.", color: "lime" },
+  { text: "Он запустил 6 объявлений в Instagram.", color: "dim" },
+  { text: "Бюджет — $3 100 за месяц.", color: "lime" },
 
   { text: "" },
 
-  { text: "Через неделю он пишет:", color: "dim" },
-  { text: "«1 280 лидов. Лид — $2.»", color: "lime" },
-  { text: "Ты думаешь — классно." },
+  { text: "Через неделю пишет:", color: "dim" },
+  { text: "«847 заявок, лид по $3.60 —", color: "lime" },
+  { text: "отличный результат!»", color: "lime" },
+  { text: "Ты думаешь — ну вроде неплохо." },
 
   { text: "" },
 
-  { text: "Но дешёвый лид" },
-  { text: "≠ хороший лид.", color: "warm", big: true },
+  { text: "Но подожди." },
+  { text: "847 человек написали в WhatsApp.", big: true },
+  { text: "А дальше что?", color: "warm", big: true },
 
   { text: "" },
 
-  { text: "В WhatsApp написали 890." },
-  { text: "390 — потерялись между формой и чатом.", color: "warm" },
+  { text: "312 — написали вечером или в выходные.", color: "warm" },
+  { text: "Админ ответил через 4-6 часов.", color: "warm" },
+  { text: "Они уже записались к конкуренту.", color: "warm", big: true },
 
   { text: "" },
 
-  { text: "Вовремя ответили — 400." },
-  { text: "490 написали вечером или в выходные.", color: "warm" },
-  { text: "Ответ через 5-10 часов.", color: "warm" },
-  { text: "Они ушли.", color: "warm", big: true },
+  { text: "168 — спросили цену и пропали.", color: "warm" },
+  { text: "Никто не написал им повторно.", color: "warm" },
 
   { text: "" },
 
-  { text: "Имя назвали — 310." },
-  { text: "Дослушали — 58." },
-  { text: "На встречу пришли —" },
-  { text: "16.", color: "warm", big: true },
+  { text: "94 — хотели записаться,", color: "warm" },
+  { text: "но им не ответили на второе сообщение.", color: "warm" },
 
   { text: "" },
 
-  { text: "Лид — $2.", color: "lime" },
-  { text: "Клиент — $160.", color: "warm", big: true },
+  { text: "В итоге до оплаты дошли" },
+  { text: "11 человек.", color: "warm", big: true },
 
   { text: "" },
 
-  { text: "1 280 лидов написали." },
-  { text: "Но сколько из них реально готовы купить?" },
-  { text: "А сколько просто спросили цену и ушли?", color: "warm" },
+  { text: "Лид стоил $3.60.", color: "lime" },
+  { text: "Клиент который заплатил — $281.", color: "warm", big: true },
+
+  { text: "" },
+
+  { text: "А теперь главный вопрос." },
+
+  { text: "" },
+
+  { text: "Эти 11 клиентов —" },
+  { text: "они пришли с какого объявления?" },
+  { text: "С первого? С третьего? С шестого?", color: "dim" },
+
+  { text: "" },
+
   { text: "Ты не знаешь.", color: "warm", big: true },
-
-  { text: "" },
-
-  { text: "Таргетолог не видит." },
-  { text: "Менеджер не видит." },
-  { text: "Ты — тоже.", color: "warm", big: true },
-
-  { text: "" },
-
-  { text: "Между «лид» и «клиент» —" },
-  { text: "чёрная дыра.", color: "warm", big: true },
+  { text: "Таргетолог не знает.", color: "warm" },
+  { text: "Никто не знает.", color: "warm", big: true },
 ];
 
 const colorMap: Record<string, string> = {
@@ -90,7 +93,7 @@ export default function StorySection() {
   const textY = useTransform(scrollYProgress, [0, 1], ["0%", "-50%"]);
 
   return (
-    <section ref={ref} id="story" className="relative" style={{ height: "200vh" }}>
+    <section ref={ref} id="story" className="relative" style={{ height: "260vh" }}>
       <div className="sticky top-0 h-[100dvh] overflow-hidden">
         {/* Gradient masks */}
         <div className="pointer-events-none absolute inset-x-0 top-0 z-10 h-[8dvh] bg-gradient-to-b from-bg to-transparent" />
