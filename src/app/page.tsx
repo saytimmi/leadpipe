@@ -3,8 +3,9 @@ import HeroSection from "@/components/HeroSection";
 import StorySection from "@/components/StorySection";
 import TransitionArrow from "@/components/TransitionArrow";
 import ProblemSection from "@/components/ProblemSection";
-import VisibilitySection from "@/components/VisibilitySection";
 import SolutionSection from "@/components/SolutionSection";
+import VisibilitySection from "@/components/VisibilitySection";
+import SocialProof from "@/components/SocialProof";
 import FormSection from "@/components/FormSection";
 import Footer from "@/components/Footer";
 import { FormModalProvider } from "@/components/FormModal";
@@ -30,9 +31,11 @@ export default function Home() {
         <TransitionArrow />
         <SectionTracker name="problem"><ProblemSection /></SectionTracker>
         <SectionDivider />
+        <SectionTracker name="solution"><SolutionSection /></SectionTracker>
+        <SectionDivider />
         <SectionTracker name="visibility"><VisibilitySection /></SectionTracker>
         <SectionDivider />
-        <SectionTracker name="solution"><SolutionSection /></SectionTracker>
+        <SectionTracker name="proof"><SocialProof /></SectionTracker>
         <SectionDivider />
         <SectionTracker name="form"><FormSection /></SectionTracker>
       </main>
