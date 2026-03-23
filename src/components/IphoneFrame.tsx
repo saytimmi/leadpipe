@@ -33,7 +33,7 @@ export default function IphoneFrame({ children, className, style, ...props }: Ip
       {/* Screen content slot */}
       {children && (
         <div
-          className="absolute z-0 overflow-hidden"
+          className="absolute z-[1] overflow-hidden"
           style={{
             left: `${LEFT_PCT}%`,
             top: `${TOP_PCT}%`,
@@ -51,7 +51,7 @@ export default function IphoneFrame({ children, className, style, ...props }: Ip
         viewBox={`0 0 ${PHONE_WIDTH} ${PHONE_HEIGHT}`}
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
-        className="absolute inset-0 size-full"
+        className="pointer-events-none absolute inset-0 z-[2] size-full"
         style={{ transform: "translateZ(0)" }}
       >
         <g mask="url(#screenPunch)">
