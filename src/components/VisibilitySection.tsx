@@ -19,7 +19,7 @@ export default function VisibilitySection() {
     <section ref={ref} id="visibility" className="px-6 py-28 md:py-40 lg:px-10">
       <div className="mx-auto max-w-[1400px]">
         <div className="mb-8 flex items-center gap-4">
-          <span className="font-display text-[10px] font-700 uppercase tracking-[0.3em] text-lime">03</span>
+          <span className="font-display text-[10px] font-700 uppercase tracking-[0.3em] text-lime">04</span>
           <div className="h-px flex-1 bg-white/[0.04]" />
         </div>
 
