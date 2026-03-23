@@ -1,8 +1,7 @@
 "use client";
 
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import { useRef, useState, useEffect } from "react";
-import { useFormModal } from "./FormModal";
 
 const ease: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
@@ -11,7 +10,7 @@ type ChatItem =
   | { type: "message"; from: "client" | "bot"; text: string; time: string }
   | { type: "date"; label: string };
 
-const chatMessages: ChatItem[] = [
+const dentalMessages: ChatItem[] = [
   { type: "date", label: "14 МАРТА" },
   { type: "message", from: "client", text: "здрасте, хочу на чистку зубов записаться", time: "21:32" },
   { type: "message", from: "bot", text: "Добрый вечер! Отлично что написали 😊 Как вас зовут?", time: "21:32" },
@@ -25,6 +24,44 @@ const chatMessages: ChatItem[] = [
   { type: "message", from: "client", text: "ой да, закрутилась просто. давайте на субботу!", time: "18:47" },
   { type: "message", from: "bot", text: "Записала! Суббота, 11:00, доктор Алия Сериковна 📍 ул. Абая 52, 2 этаж. За 2 часа напомню. Будут вопросы — пишите сюда!", time: "18:47" },
   { type: "message", from: "client", text: "спасибо большое 🙏", time: "18:48" },
+];
+
+const repairMessages: ChatItem[] = [
+  { type: "date", label: "14 МАРТА" },
+  { type: "message", from: "client", text: "здравствуйте, сколько стоит ремонт кухни?", time: "21:47" },
+  { type: "message", from: "bot", text: "Добрый вечер! Подскажите, какой у вас метраж кухни примерно?", time: "21:47" },
+  { type: "message", from: "client", text: "12 квадратов", time: "21:48" },
+  { type: "message", from: "bot", text: "Отлично. А что хотите — освежить стены и потолок, или полностью: пол, плитка, мебель под ключ?", time: "21:48" },
+  { type: "message", from: "client", text: "полностью хочу, надоело уже", time: "21:49" },
+  { type: "message", from: "bot", text: "Понимаю) Полный ремонт кухни 12м² у нас от 850 000 ₸ — с материалами и работой. Делаем за 2-3 недели. Когда удобно чтобы замерщик приехал? Могу предложить завтра после 14:00 или субботу утром.", time: "21:49" },
+  { type: "date", label: "16 МАРТА" },
+  { type: "message", from: "bot", text: "Здравствуйте! Вы ещё думаете насчёт ремонта кухни? На эту неделю есть свободная бригада — если записаться на замер сейчас, можем начать уже через 5 дней 🙂", time: "10:15" },
+  { type: "message", from: "client", text: "да давайте на субботу замерщика", time: "10:22" },
+  { type: "message", from: "bot", text: "Записала! Суббота, 10:00. Замерщик Ерлан приедет, посмотрит кухню и посчитает точную стоимость — бесплатно. За 2 часа напомню!", time: "10:22" },
+];
+
+const fitnessMessages: ChatItem[] = [
+  { type: "date", label: "14 МАРТА" },
+  { type: "message", from: "client", text: "привет, сколько стоит абонемент?", time: "22:31" },
+  { type: "message", from: "bot", text: "Привет! У нас два варианта — безлимит за 35 000 ₸/мес и утренний (до 14:00) за 25 000. Вы раньше занимались или хотите начать?", time: "22:31" },
+  { type: "message", from: "client", text: "хочу начать, но не уверена", time: "22:33" },
+  { type: "message", from: "bot", text: "Тогда приходите на пробную тренировку — бесплатно, познакомитесь с тренером и залом. Если понравится — запишетесь. Без давления 🙂 Когда удобно — завтра вечером или в субботу утром?", time: "22:33" },
+  { type: "message", from: "client", text: "а в субботу во сколько?", time: "22:35" },
+  { type: "message", from: "bot", text: "В субботу групповая HIIT в 10:00 — отличный вариант для старта, тренер Серик, очень внимательный к новичкам. Или персональная в 11:30.", time: "22:35" },
+  { type: "message", from: "client", text: "давайте на групповую", time: "22:36" },
+  { type: "message", from: "bot", text: "Записала! Суббота, 10:00, групповая HIIT, тренер Серик. Адрес: ул. Жандосова 58, 2 этаж. Возьмите кроссовки и воду. За 2 часа напомню 🙂", time: "22:36" },
+];
+
+const nicheChats = {
+  dental: dentalMessages,
+  repair: repairMessages,
+  fitness: fitnessMessages,
+};
+
+const nicheLabels = [
+  { id: "dental" as const, label: "Стоматология" },
+  { id: "repair" as const, label: "Ремонт квартир" },
+  { id: "fitness" as const, label: "Фитнес" },
 ];
 
 /* WhatsApp date pill */
@@ -123,20 +160,11 @@ function WAMessage({ msg, delay }: { msg: Extract<ChatItem, { type: "message" }>
   );
 }
 
-const capabilities = [
-  { title: "Полная картина", desc: "От рекламы до клиента. Не «лид по 2 200» — а реальная цена того, кто пришёл и заплатил.", color: "lime" },
-  { title: "Эффективность кампаний", desc: "Какое объявление приносит клиентов, а какое жрёт бюджет. Данные для таргетолога.", color: "lime" },
-  { title: "Мгновенная обработка", desc: "Ответ за 3 секунды. Ночью, в выходные. Бот спрашивает имя, боль, предлагает время.", color: "warm" },
-  { title: "Квалификация по шагам", desc: "Имя → боль → презентация → встреча. Видно где уходят и почему.", color: "warm" },
-  { title: "Дожим и закрытие", desc: "Замолчал? Напомнит. Не отвечает 3 дня? Закроет. Никаких мёртвых лидов.", color: "warm" },
-  { title: "Горячий клиент → менеджеру", desc: "Не лид, а: Айгерим, чистка, первый раз, завтра 11:00. Осталось встретить.", color: "lime" },
-];
-
 export default function SolutionSection() {
   const ref = useRef(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "center center"] });
   const phoneY = useTransform(scrollYProgress, [0, 1], [40, 0]);
-  const { open } = useFormModal();
+  const [activeNiche, setActiveNiche] = useState<"dental" | "repair" | "fitness">("dental");
 
   return (
     <section ref={ref} id="solution" className="px-6 py-28 md:py-40 lg:px-10">
@@ -147,7 +175,7 @@ export default function SolutionSection() {
         </div>
 
         <div className="mb-6">
-          {["Почему мы", "тебе полезны"].map((word, i) => (
+          {["AI-агент", "который продаёт за тебя"].map((word, i) => (
             <div key={i} className="overflow-hidden">
               <motion.p initial={{ y: "100%" }} whileInView={{ y: "0%" }} viewport={{ once: true }}
                 transition={{ duration: 0.75, delay: i * 0.1, ease }}
@@ -158,37 +186,37 @@ export default function SolutionSection() {
           ))}
         </div>
 
-        <motion.p initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.3, ease }}
-          className="mb-16 max-w-2xl font-body text-sm leading-relaxed text-text-muted md:text-base">
-          Полная система — от запуска рекламы до клиента. Бот обрабатывает, менеджер закрывает, ты видишь всю картину.
-        </motion.p>
+        <div className="mb-16 max-w-lg space-y-4 font-body text-sm leading-relaxed text-text-muted md:text-base">
+          <p className="text-text">Представь что у тебя появился идеальный продавец в WhatsApp.</p>
+          <p>Он отвечает за 3 секунды. Днём, ночью, в выходные — без пауз.</p>
+          <p>Он не пишет «Здравствуйте, чем могу помочь?» и не просит «выберите из списка.»</p>
+          <p className="text-text">Он разговаривает как живой человек:</p>
+        </div>
 
-        {/* Capabilities + Phone side by side */}
+        {/* Niche tabs + Phone side by side */}
         <div className="grid items-start gap-12 md:gap-16 lg:grid-cols-[1fr_320px] lg:gap-16">
           <div>
-            <div className="grid gap-3 sm:grid-cols-2 md:gap-4">
-              {capabilities.map((cap, i) => (
-                <motion.div key={cap.title}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: i * 0.06, ease }}
-                  className="rounded-xl border border-white/[0.04] bg-white/[0.01] p-4 md:p-5"
+            {/* Niche tabs */}
+            <div className="mb-6 flex flex-wrap gap-2">
+              {nicheLabels.map((niche) => (
+                <button
+                  key={niche.id}
+                  onClick={() => setActiveNiche(niche.id)}
+                  className={`rounded-full px-4 py-2 font-display text-xs font-600 transition-colors ${
+                    activeNiche === niche.id
+                      ? "bg-lime text-bg"
+                      : "bg-white/[0.06] text-text-muted hover:text-text"
+                  }`}
                 >
-                  <h4 className={`font-display text-[10px] font-700 uppercase tracking-wider md:text-xs ${
-                    cap.color === "lime" ? "text-lime" : "text-warm"
-                  }`}>{cap.title}</h4>
-                  <p className="mt-2 font-body text-[11px] leading-relaxed text-text-muted md:text-xs">{cap.desc}</p>
-                </motion.div>
+                  {niche.label}
+                </button>
               ))}
             </div>
 
-            <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.4 }} className="mt-8">
-              <button onClick={open}
-                className="cursor-pointer rounded-full bg-lime px-6 py-3.5 font-display text-xs font-700 uppercase tracking-[0.15em] text-bg transition-shadow active:shadow-[0_0_30px_rgba(204,255,0,0.2)] md:px-8 md:py-4">
-                Хочу так же
-              </button>
-            </motion.div>
+            {/* "Живой менеджер" note */}
+            <p className="mb-4 font-body text-xs text-text-muted md:text-sm">
+              Если клиент задаёт вопрос, на который бот не может ответить — он сразу переключает на живого менеджера.
+            </p>
           </div>
 
           {/* iPhone with WhatsApp — real iPhone 15 proportions */}
@@ -262,17 +290,26 @@ export default function SolutionSection() {
                   <div className="pointer-events-none absolute inset-0 opacity-[0.03]"
                     style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Ccircle cx='30' cy='30' r='1'/%3E%3C/g%3E%3C/svg%3E\")" }} />
 
-                  <div className="relative space-y-1">
-                    {chatMessages.map((item, i) => {
-                      const msgIndex = chatMessages.slice(0, i + 1).filter(m => m.type === "message").length;
-                      const baseDelay = 0.2 + (msgIndex - 1) * 0.7;
-                      if (item.type === "date") {
-                        const dateDelay = i === 0 ? 0 : baseDelay;
-                        return <WADateSeparator key={i} label={item.label} delay={dateDelay} />;
-                      }
-                      return <WAMessage key={i} msg={item} delay={baseDelay} />;
-                    })}
-                  </div>
+                  <AnimatePresence mode="wait">
+                    <motion.div
+                      key={activeNiche}
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      transition={{ duration: 0.25 }}
+                      className="relative space-y-1"
+                    >
+                      {nicheChats[activeNiche].map((item, i) => {
+                        const msgIndex = nicheChats[activeNiche].slice(0, i + 1).filter(m => m.type === "message").length;
+                        const baseDelay = 0.2 + (msgIndex - 1) * 0.7;
+                        if (item.type === "date") {
+                          const dateDelay = i === 0 ? 0 : baseDelay;
+                          return <WADateSeparator key={i} label={item.label} delay={dateDelay} />;
+                        }
+                        return <WAMessage key={i} msg={item} delay={baseDelay} />;
+                      })}
+                    </motion.div>
+                  </AnimatePresence>
                 </div>
 
                 {/* WhatsApp input bar */}
@@ -322,6 +359,19 @@ export default function SolutionSection() {
               <span className="text-text-muted">Без менеджера. Без потерянных лидов.</span>
             </motion.p>
           </motion.div>
+        </div>
+
+        {/* Analytics bridge */}
+        <div className="mt-20 md:mt-28 mx-auto max-w-2xl text-center space-y-4">
+          <p className="font-display text-lg font-600 text-text md:text-xl">
+            А теперь самое важное.
+          </p>
+          <p className="font-body text-base leading-relaxed text-text-muted md:text-lg">
+            Этот продавец записывает каждый шаг. Кто написал, с какого объявления пришёл, на каком этапе разговора замолчал, кого дожал, кто записался и кто заплатил.
+          </p>
+          <p className="font-body text-base leading-relaxed text-text md:text-lg">
+            Вот откуда берётся аналитика. Не из рекламного кабинета. Из реальных разговоров с реальными людьми.
+          </p>
         </div>
       </div>
     </section>
