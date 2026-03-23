@@ -175,12 +175,12 @@ export default function SolutionSection() {
         </div>
 
         <div className="mb-6">
-          {["AI-агент", "который продаёт за тебя"].map((word, i) => (
+          {["AI-агент который", "сопровождает клиента", "на каждом этапе"].map((word, i) => (
             <div key={i} className="overflow-hidden">
               <motion.p initial={{ y: "100%" }} whileInView={{ y: "0%" }} viewport={{ once: true }}
                 transition={{ duration: 0.75, delay: i * 0.1, ease }}
                 className={`font-display text-4xl font-800 uppercase leading-[0.95] tracking-tight sm:text-5xl md:text-6xl lg:text-8xl ${
-                  i === 1 ? "text-text-muted" : ""
+                  i === 2 ? "text-text-muted" : ""
                 }`}>{word}</motion.p>
             </div>
           ))}
