@@ -6,16 +6,13 @@ import { useFormModal } from "./FormModal";
 const ease: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
 const funnel = [
-  { label: "Потрачено на рекламу", value: "$2 560", sub: null, dimValue: true },
-  { label: "Показы", value: "580 000", sub: "CPM ~$4.4" },
-  { label: "Охваты", value: "320 000", sub: "частота 1.8" },
-  { label: "Клики по рекламе", value: "12 800", sub: "CTR 2.2% · CPC $0.20", color: "text-text" },
-  { label: "Оставили заявку (лиды)", value: "1 280", sub: "конверсия 10% · CPL $2", color: "text-text" },
-  { label: "Написали в WhatsApp", value: "890", sub: "390 потерялись", color: "text-text" },
-  { label: "Назвали имя", value: "310", sub: "580 замолчали", color: "text-lime" },
-  { label: "Услышали оффер", value: "145", sub: null, color: "text-lime" },
-  { label: "Дослушали", value: "58", sub: null, color: "text-lime" },
-  { label: "Пришли на встречу", value: "16", sub: null, color: "text-lime", big: true },
+  { label: "Увидели рекламу", value: "634 000", sub: null, dimValue: true },
+  { label: "Кликнули", value: "8 370", sub: "CTR 1.3% · CPC $0.37" },
+  { label: "Написали в WhatsApp", value: "847", sub: "Лид $3.60", color: "text-lime" },
+  { label: "Получили быстрый ответ", value: "380", sub: "467 ждали часами", color: "text-text" },
+  { label: "Назвали имя, описали что нужно", value: "174", sub: null, color: "text-text" },
+  { label: "Услышали оффер до конца", value: "63", sub: null, color: "text-text-muted" },
+  { label: "Пришли / заплатили", value: "11", sub: null, color: "text-lime", big: true },
 ];
 
 export default function ProblemSection() {
@@ -82,7 +79,7 @@ export default function ProblemSection() {
               transition={{ duration: 0.6, delay: 0.3, ease }}
               className="mt-8 max-w-md font-body text-sm leading-relaxed text-text-muted md:text-base"
             >
-              Вот реальная воронка типичного малого бизнеса за месяц. Посмотри, на каком этапе исчезают люди — и сколько на самом деле стоит один клиент.
+              Вот реальная воронка типичного бизнеса за месяц. Посмотри, на каком этапе люди уходят — и сколько на самом деле стоит один клиент.
             </motion.p>
 
             <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.5 }} className="mt-8">
@@ -120,13 +117,13 @@ export default function ProblemSection() {
                     <motion.div
                       initial={{ width: 0 }}
                       whileInView={{ width: `${
-                        i === 0 ? 100 : i === 1 ? 85 : i === 2 ? 65 : i === 3 ? 28 :
-                        i === 4 ? 24 : i === 5 ? 14 : i === 6 ? 9 : i === 7 ? 4.5 : 2
+                        i === 0 ? 100 : i === 1 ? 50 : i === 2 ? 14 : i === 3 ? 6 :
+                        i === 4 ? 3 : i === 5 ? 1.5 : 0.8
                       }%` }}
                       viewport={{ once: true }}
                       transition={{ duration: 0.7, delay: 0.2 + i * 0.08, ease }}
                       className={`absolute inset-y-0 left-0 ${
-                        i <= 2 ? "bg-white/[0.02]" : i <= 4 ? "bg-white/[0.03]" : "bg-lime/[0.06]"
+                        i <= 1 ? "bg-white/[0.02]" : i <= 2 ? "bg-white/[0.03]" : "bg-lime/[0.06]"
                       }`}
                     />
 
@@ -159,10 +156,10 @@ export default function ProblemSection() {
               className="mt-6 flex items-baseline justify-between border-t border-white/[0.04] pt-5"
             >
               <span className="font-body text-xs text-text-muted">Цена одного клиента:</span>
-              <span className="font-display text-2xl font-900 text-lime md:text-3xl">$160</span>
+              <span className="font-display text-2xl font-900 text-lime md:text-3xl">$281</span>
             </motion.div>
             <p className="mt-2 font-body text-[10px] text-text-muted/60">
-              1 280 лидов → 16 клиентов. Конверсия 1.25%. А могло быть 60+.
+              847 заявок → 11 клиентов. А таргетолог рапортует «лид по $3.60, всё отлично».
             </p>
           </motion.div>
         </div>
